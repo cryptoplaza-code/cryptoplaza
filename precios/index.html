@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Precios Cripto en Tiempo Real</title>
+  <link rel="icon" href="https://s2.coinmarketcap.com/static/img/coins/64x64/1.png" type="image/png">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #0e1117;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    .crypto {
+      margin: 10px 0;
+      font-size: 1.5em;
+    }
+    .error {
+      color: #f55;
+      font-size: 1em;
+    }
+  </style>
+</head>
+<body>
+  <h1>Precios en Tiempo Real</h1>
+  <div class="crypto" id="btc">BTC: $...</div>
+  <div class="crypto" id="eth">ETH: $...</div>
+  <div class="crypto" id="sol">SOL: $...</div>
+  <div class="crypto" id="bnb">BNB: $...</div>
+  <div id="error" class="error"></div>
+
+  <script>
+    async function fetchPrices() {
+      const errorDiv = document.getElementById('error');
+      try {
+        const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,binancecoin&vs_currencies=usd');
+        const data = await res.json();
+
+        document.getElementById('btc').innerText = `BTC: $${data.bitcoin.usd.toLocaleString()}`;
+        document.getElementById('eth').innerText = `ETH: $${data.ethereum.usd.toLocaleString()}`;
+        document.getElementById('sol').innerText = `SOL: $${data.solana.usd.toLocaleString()}`;
+        document.getElementById('bnb').innerText = `BNB: $${data.binancecoin.usd.toLocaleString()}`;
+        errorDiv.innerText = ''; // limpia errores si todo va bien
+      } catch (err) {
+        errorDiv.innerText = 'No se pudo obtener los precios. Reintentando...';
+        console.error('Error:', err);
+      }
+    }
+
+    fetchPrices();
+    setInterval(fetchPrices, 10000);
+  </script>
+</body>
+</html>
+
