@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Simulador de Tesorería con Cripto</title>
+  <link rel="icon" href="https://cryptologos.cc/logos/bitcoin-btc-logo.svg?v=026" type="image/svg+xml" />
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- jsPDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <!-- html2canvas para capturar el gráfico -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <!-- SheetJS para Excel -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <style>
+    body {
+      background: #121212;
+      color: #f1f1f1;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      margin-bottom: 1rem;
+      color: #ffcc00;
+    }
+    .contenedor {
+      background: #1e1e1e;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(255, 204, 0, 0.2);
+      max-width: 800px;
+      width: 100%;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      color: #ccc;
+    }
+    input {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.3rem;
+      border: none;
+      border-radius: 8px;
+    }
+    button {
+      margin-top: 1.2rem;
+      padding: 0.7rem 1.5rem;
+      background-color: #ffcc00;
+      color: #121212;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #e6b800;
+    }
+    .resultado {
+      margin-top: 2rem;
+      padding: 1rem;
+      background-color: #2a2a2a;
+      border-radius: 8px;
+    }
+    .resultado span {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    canvas {
+      margin-top: 2rem;
+      background-color: #fff;
+      border-radius: 10px;
+    }
+    .export-buttons {
+      margin-top: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Simulador de Tesorería con Criptoactivos</h1>
+  <div class="contenedor">
+    <label for="monto">Tesorería inicial (€):</label>
+    <input type="number" id="monto" value="100000" />
+
+    <label for="horizonte">Horizonte temporal (años):</label>
+    <input type="number" id="horizonte" value="5" />
+
+    <label for="porcentajeCripto">% en Criptoactivos:</label>
+    <input type="number" id="porcentajeCripto" value="30" />
+
+    <label for="beneficioCripto">Rentabilidad esperada Cripto (% anual):</label>
+    <input type="number" id="beneficioCripto" value="12" />
+
+    <label for="volatilidad">Volatilidad cripto anual (%):</label>
+    <input type="number" id="volatilidad" value="20" />
+
+    <label for="beneficioTradicional">Rentabilidad tradicional (% anual):</label>
+    <input type="number" id="beneficioTradicional" value="2" />
+
+    <label for="inflacion">Inflación estimada (% anual):</label>
+    <input type="number" id="inflacion" value="3" />
+
+    <button onclick="simular()">Simular</button>
+
+    <div class="resultado" id="resultado"></div>
+
+    <canvas id="grafico" height="100"></canvas>
+
+    <div class="export-buttons">
+      <button onclick="exportarPDF()">📄 Exportar PDF</button>
+      <button onclick="exportarExcel()">📊 Exportar Excel</button>
+    </div>
+  </div>
+
+  <script>
+    let chart;
+    let simData;
+
+    function simular() {
+      const monto = parseFloat(document.getElementById('monto').value);
+      const añosTotales = parseInt(document.getElementById('horizonte').value);
+      const porcentajeCripto = parseFloat(document.getElementById('porcentajeCripto').value) / 100;
+      const rentabilidadCriptoBase = parseFloat(document.getElementById('beneficioCripto').value) / 100;
+      const volatilidad = parseFloat(document.getElementById('volatilidad').value) / 100;
+      const rentabilidadTradicional = parseFloat(document.getElementById('beneficioTradicional').value) / 100;
+      const inflacion = parseFloat(document.getElementById('inflacion').value) / 100;
+
+      const montoCripto = monto * porcentajeCripto;
+      const montoTradicional = monto * (1 - porcentajeCripto);
+
+      const años = [];
+      const tradicional = [], mixto = [];
+      const tradicionalReal = [], mixtoReal = [];
+
+      for (let i = 0; i <= añosTotales; i++) {
+        años.push("Año " + i);
+
+        const rTradicional = Math.pow(1 + rentabilidadTradicional, i);
+        const criptoRand = rentabilidadCriptoBase + (Math.random() * 2 - 1) * volatilidad;
+        const rCripto = Math.pow(1 + criptoRand, i);
+
+        const tNominal = monto * rTradicional;
+        const mNominal = montoCripto * rCripto + montoTradicional * rTradicional;
+
+        const factorInflacion = Math.pow(1 + inflacion, i);
+        const tReal = tNominal / factorInflacion;
+        const mReal = mNominal / factorInflacion;
+
+        tradicional.push(tNominal);
+        mixto.push(mNominal);
+        tradicionalReal.push(tReal);
+        mixtoReal.push(mReal);
+      }
+
+      simData = { años, tradicional, mixto, tradicionalReal, mixtoReal };
+
+      const finalT = tradicional[añosTotales];
+      const finalM = mixto[añosTotales];
+      const finalTR = tradicionalReal[añosTotales];
+      const finalMR = mixtoReal[añosTotales];
+
+      document.getElementById('resultado').innerHTML = `
+        <span><strong>Escenario Nominal:</strong></span>
+        <span>• Tradicional: ${finalT.toFixed(2)} €</span>
+        <span>• Mixto: ${finalM.toFixed(2)} €</span>
+        <span>• Diferencia: ${(finalM - finalT).toFixed(2)} € (${((finalM / finalT - 1)*100).toFixed(2)} %)</span>
+        <br/>
+        <span><strong>Escenario Ajustado por Inflación:</strong></span>
+        <span>• Tradicional real: ${finalTR.toFixed(2)} €</span>
+        <span>• Mixto real: ${finalMR.toFixed(2)} €</span>
+        <span>• Diferencia: ${(finalMR - finalTR).toFixed(2)} € (${((finalMR / finalTR - 1)*100).toFixed(2)} %)</span>
+      `;
+
+      if (chart) chart.destroy();
+      const ctx = document.getElementById('grafico').getContext('2d');
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: años,
+          datasets: [
+            { label: 'Tradicional (€)', data: tradicional, borderColor: '#00bfff', tension: 0.3 },
+            { label: 'Mixto Cripto (€)', data: mixto, borderColor: '#ffcc00', tension: 0.3 },
+            { label: 'Tradicional Real (€)', data: tradicionalReal, borderDash: [5,5], borderColor: '#00ffff', tension: 0.3 },
+            { label: 'Mixto Real (€)', data: mixtoReal, borderDash: [5,5], borderColor: '#ffd700', tension: 0.3 },
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { labels: { color: '#fff' } }
+          },
+          scales: {
+            x: { ticks: { color: '#ccc' } },
+            y: { ticks: { color: '#ccc' } }
+          }
+        }
+      });
+    }
+
+    async function exportarPDF() {
+      if (!simData) return alert("Primero ejecuta una simulación.");
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      doc.setFontSize(14);
+      doc.text("Simulación Tesorería con Criptoactivos", 20, 20);
+
+      simData.años.forEach((año, i) => {
+        const y = 30 + i * 8;
+        doc.setFontSize(10);
+        doc.text(`${año}: T: ${simData.tradicional[i].toFixed(2)} | M: ${simData.mixto[i].toFixed(2)} | T(real): ${simData.tradicionalReal[i].toFixed(2)} | M(real): ${simData.mixtoReal[i].toFixed(2)}`, 15, y);
+      });
+
+      // Captura del gráfico
+      const canvas = document.getElementById('grafico');
+      const imgData = await html2canvas(canvas).then(c => c.toDataURL('image/png'));
+      doc.addPage();
+      doc.setFontSize(12);
+      doc.text("Evolución Gráfica:", 15, 20);
+      doc.addImage(imgData, 'PNG', 15, 30, 180, 90);
+
+      doc.save("simulador-cripto.pdf");
+    }
+
+    function exportarExcel() {
+      if (!simData) return alert("Primero ejecuta una simulación.");
+      const wb = XLSX.utils.book_new();
+      const wsData = [
+        ["Año", "Tradicional", "Mixto", "Tradicional Real", "Mixto Real"],
+        ...simData.años.map((año, i) => [
+          año,
+          simData.tradicional[i].toFixed(2),
+          simData.mixto[i].toFixed(2),
+          simData.tradicionalReal[i].toFixed(2),
+          simData.mixtoReal[i].toFixed(2)
+        ])
+      ];
+      const ws = XLSX.utils.aoa_to_sheet(wsData);
+      XLSX.utils.book_append_sheet(wb, ws, "Simulación");
+      XLSX.writeFile(wb, "simulador-cripto.xlsx");
+    }
+  </script>
+</body>
+</html>
+
