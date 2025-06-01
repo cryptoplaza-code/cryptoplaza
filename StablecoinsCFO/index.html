@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Interactiva para CFOs: Stablecoins en la Tesorería Corporativa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Visualization & Content Choices: 
+        - Introducción: Text. Goal: Inform. Method: HTML/CSS.
+        - ¿Qué Son?: Definition (Text) + Characteristics (HTML list with Unicode icons). Goal: Inform. Method: HTML/CSS.
+        - Tipos: Cards (HTML/CSS with Unicode icons). Goal: Compare/Organize. Method: HTML/CSS.
+        - Ventajas: Dynamic Stats (HTML/CSS Big Numbers for 96% cost saving, 3-8% yield). Bar Chart (Chart.js/Canvas for cost comparison [100 vs 4]). Goal: Inform/Compare. Method: HTML/CSS, Chart.js.
+        - Riesgos: Accordion (HTML/CSS/JS for Operativos, Financieros, Regulatorios, Reputacionales). Goal: Organize/Inform. Method: HTML/CSS/JS.
+        - Regulación: Cards for regions (HTML/CSS with Unicode flags). Goal: Inform. Method: HTML/CSS.
+        - Implementación: Flow steps (HTML/CSS for Evaluación, Infraestructura) & Strategy Cards (HTML/CSS for Conservador, Balanceado, Innovador). Goal: Organize. Method: HTML/CSS.
+        - Casos de Éxito: Stat cards (HTML/CSS Big Numbers for 94% cost reduction, $8.7M yield). Goal: Inform. Method: HTML/CSS.
+        - Conclusión: Text + Recommendations (HTML list). Goal: Inform/Organize. Method: HTML/CSS.
+        CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8F9FA; color: #343A40; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        .card { background-color: #FFFFFF; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); padding: 1.5rem; margin-bottom: 1.5rem; }
+        .nav-link { padding: 0.5rem 1rem; border-radius: 0.375rem; transition: background-color 0.3s, color 0.3s; }
+        .nav-link:hover, .nav-link.active { background-color: #007BFF; color: white; }
+        .section-title { font-size: 2rem; font-weight: 700; color: #007BFF; margin-bottom: 1rem; padding-top: 4.5rem; margin-top: -3.5rem; } /* Padding for sticky nav offset */
+        .subsection-title { font-size: 1.5rem; font-weight: 600; color: #0056b3; margin-bottom: 0.75rem; }
+        .big-number { font-size: 2.5rem; font-weight: 700; color: #28A745; }
+        .accent-positive { color: #28A745; }
+        .accent-warning { color: #FFC107; }
+        .accent-info { color: #007BFF; }
+        .flow-step { display: flex; align-items: center; padding: 0.75rem; border: 1px solid #DEE2E6; border-radius: 0.375rem; margin-bottom: 0.5rem; background-color: #F8F9FA; }
+        .flow-step-number { background-color: #007BFF; color: white; border-radius: 9999px; width: 1.75rem; height: 1.75rem; display: inline-flex; align-items: center; justify-content: center; font-weight: 600; margin-right: 0.75rem; flex-shrink: 0; }
+        .accordion-button { background-color: #E9ECEF; color: #343A40; padding: 0.75rem 1rem; width: 100%; text-align: left; border: none; border-radius: 0.375rem; cursor: pointer; transition: background-color 0.3s; font-weight: 600; margin-bottom: 0.25rem; display: flex; justify-content: space-between; align-items: center; }
+        .accordion-button:hover { background-color: #DEE2E6; }
+        .accordion-content { padding: 1rem; border: 1px solid #DEE2E6; border-top: none; border-radius: 0 0 0.375rem 0.375rem; display: none; }
+        .accordion-content.open { display: block; }
+        .chart-container { position: relative; width: 100%; max-width: 500px; margin-left: auto; margin-right: auto; height: 300px; max-height: 350px; padding: 1rem; background-color: #FFFFFF; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        @media (min-width: 768px) { .chart-container { height: 320px; } }
+        .tab-button { padding: 0.5rem 1rem; margin-right: 0.5rem; border-radius: 0.375rem 0.375rem 0 0; background-color: #E9ECEF; cursor: pointer; font-weight: 500; }
+        .tab-button.active { background-color: #007BFF; color: white; }
+        .tab-content { padding: 1rem; border: 1px solid #DEE2E6; border-top: none; border-radius: 0 0 0.375rem 0.375rem; display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <nav id="navbar" class="bg-white shadow-md sticky top-0 z-50 overflow-x-auto whitespace-nowrap">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <span class="font-bold text-lg text-blue-700">Tesorería con Stablecoins</span>
+                <div class="flex space-x-2 text-sm">
+                    <a href="#introduccion" class="nav-link">Introducción</a>
+                    <a href="#que-son" class="nav-link">¿Qué Son?</a>
+                    <a href="#tipos" class="nav-link">Tipos</a>
+                    <a href="#ventajas" class="nav-link">Ventajas</a>
+                    <a href="#riesgos" class="nav-link">Riesgos</a>
+                    <a href="#regulacion" class="nav-link">Regulación</a>
+                    <a href="#implementacion" class="nav-link">Implementación</a>
+                    <a href="#casos-exito" class="nav-link">Casos de Éxito</a>
+                    <a href="#conclusion" class="nav-link">Conclusión</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16 px-4 text-center">
+        <div class="container mx-auto max-w-3xl">
+            <h1 class="text-4xl font-bold mb-3">Guía Interactiva para CFOs</h1>
+            <p class="text-2xl mb-4">Stablecoins en la Tesorería Corporativa</p>
+            <p class="text-sm">Basado en el informe de Crypto Plaza Consulting (Mayo 2025)</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6">
+        <section id="introduccion" class="card">
+            <h2 class="section-title">Introducción: Optimizando la Tesorería Moderna</h2>
+            <p class="mb-2">En un panorama financiero global en constante transformación, los Directores Financieros (CFOs) buscan continuamente optimizar la gestión de la tesorería. Las <strong>stablecoins</strong> emergen como un instrumento financiero innovador, ofreciendo nuevas soluciones para la liquidez, pagos internacionales y diversificación de activos.</p>
+            <p>Esta guía interactiva explora cómo las stablecoins pueden integrarse estratégicamente para potenciar la eficiencia operativa y la flexibilidad financiera de su corporación, basándose en los análisis y recomendaciones de expertos.</p>
+        </section>
+
+        <section id="que-son" class="card">
+            <h2 class="section-title">¿Qué Son las Stablecoins y Por Qué Son Relevantes?</h2>
+            <p class="mb-4">Las stablecoins son criptoactivos diseñados para mantener un <strong>valor estable</strong>, generalmente anclado a un activo de referencia como una moneda fiduciaria (USD, EUR), materias primas (oro), o una cesta de activos. A diferencia de criptomonedas volátiles, combinan la estabilidad de activos tradicionales con la eficiencia y transparencia de la tecnología blockchain.</p>
+            <h3 class="subsection-title">Características Fundamentales:</h3>
+            <ul class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <li class="flex items-center p-3 bg-gray-50 rounded-md"><span class="text-2xl mr-3">🛡️</span>Estabilidad de precio y paridad.</li>
+                <li class="flex items-center p-3 bg-gray-50 rounded-md"><span class="text-2xl mr-3">🔍</span>Transparencia en registros blockchain.</li>
+                <li class="flex items-center p-3 bg-gray-50 rounded-md"><span class="text-2xl mr-3">⏱️</span>Disponibilidad 24/7, sin horarios bancarios.</li>
+                <li class="flex items-center p-3 bg-gray-50 rounded-md"><span class="text-2xl mr-3">🌍</span>Transferencia global rápida y eficiente.</li>
+                <li class="flex items-center p-3 bg-gray-50 rounded-md"><span class="text-2xl mr-3">💻</span>Programabilidad mediante contratos inteligentes.</li>
+            </ul>
+        </section>
+
+        <section id="tipos" class="card">
+            <h2 class="section-title">Explorando los Tipos de Stablecoins</h2>
+            <p class="mb-4">Comprender los diferentes tipos de stablecoins es crucial para seleccionar la más adecuada a las necesidades de su tesorería. Cada tipo tiene un mecanismo de estabilización y un perfil de riesgo distinto.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="p-4 border rounded-lg hover:shadow-lg transition-shadow">
+                    <h3 class="font-semibold text-lg accent-info mb-1"><span class="text-xl mr-2">💵</span>Respaldadas por Fiat</h3>
+                    <p class="text-sm">Mantienen reservas 1:1 en monedas tradicionales (USDC, BUSD). Ofrecen alta transparencia con auditorías regulares.</p>
+                </div>
+                <div class="p-4 border rounded-lg hover:shadow-lg transition-shadow">
+                    <h3 class="font-semibold text-lg accent-positive mb-1"><span class="text-xl mr-2">🔗</span>Respaldadas por Cripto</h3>
+                    <p class="text-sm">Usan otros criptoactivos como colateral, usualmente sobre-colateralizadas (DAI). Más descentralizadas.</p>
+                </div>
+                <div class="p-4 border rounded-lg hover:shadow-lg transition-shadow">
+                    <h3 class="font-semibold text-lg accent-warning mb-1"><span class="text-xl mr-2">🥇</span>Respaldadas por Materias Primas</h3>
+                    <p class="text-sm">Vinculadas al valor de activos físicos como el oro (PAXG). Ofrecen exposición a estos mercados.</p>
+                </div>
+                <div class="p-4 border rounded-lg hover:shadow-lg transition-shadow">
+                    <h3 class="font-semibold text-lg text-purple-600 mb-1"><span class="text-xl mr-2">⚙️</span>Algorítmicas</h3>
+                    <p class="text-sm">Ajustan su oferta mediante algoritmos para mantener la estabilidad (FRAX). Pueden ser más complejas.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="ventajas" class="card">
+            <h2 class="section-title">Ventajas Estratégicas para la Tesorería Corporativa</h2>
+            <p class="mb-6">La integración de stablecoins ofrece beneficios tangibles que pueden transformar la gestión financiera de una empresa, desde la optimización de costes hasta la generación de nuevos rendimientos.</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="text-center p-4 bg-green-50 rounded-lg">
+                    <div class="big-number">96%</div>
+                    <p class="font-semibold">Máximo ahorro en costos de transferencias internacionales.</p>
+                </div>
+                <div class="text-center p-4 bg-blue-50 rounded-lg">
+                    <div class="big-number text-blue-600">Minutos</div>
+                    <p class="font-semibold">Liquidación de pagos vs. días en sistemas tradicionales.</p>
+                </div>
+                <div class="text-center p-4 bg-yellow-50 rounded-lg">
+                    <div class="big-number text-yellow-600">3-8%</div>
+                    <p class="font-semibold">Yields anuales potenciales en plataformas institucionales.</p>
+                </div>
+            </div>
+             <div class="mb-6">
+                <h3 class="subsection-title">Comparativa de Costos Transaccionales</h3>
+                <p class="text-sm mb-2 text-center">Este gráfico ilustra la drástica reducción de costos posible al utilizar stablecoins para pagos internacionales en comparación con los métodos bancarios tradicionales.</p>
+                <div class="chart-container">
+                    <canvas id="costChart"></canvas>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="subsection-title accent-info">Eficiencia Operativa Mejorada</h3>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li>Reducción de comisiones y tiempos de liquidación.</li>
+                        <li>Operatividad continua 24/7/365, eliminando festivos bancarios.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title accent-positive">Gestión de Liquidez Optimizada</h3>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li>Mayor flexibilidad en el manejo de flujos de efectivo globales.</li>
+                        <li>Posibilidad de generar rendimientos sobre reservas ociosas.</li>
+                        <li>Microgestión de fondos sin las trabas tradicionales.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title accent-warning">Diversificación Geográfica y de Riesgos</h3>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li>Alternativas para la cobertura de riesgos cambiarios.</li>
+                        <li>Minimización del riesgo país al operar fuera del sistema bancario convencional.</li>
+                        <li>Acceso simplificado a mercados y ecosistemas financieros globales.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="subsection-title text-purple-600">Innovación y Automatización Financiera</h3>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li>Automatización de pagos (proveedores, nóminas) mediante contratos inteligentes.</li>
+                        <li>Programabilidad del dinero para implementar lógica de negocio en transacciones.</li>
+                        <li>Integración potencial con sistemas ERP y plataformas financieras corporativas.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="riesgos" class="card">
+            <h2 class="section-title">Riesgos y Consideraciones Clave</h2>
+            <p class="mb-4">Si bien las ventajas son atractivas, es fundamental abordar los riesgos asociados con la adopción de stablecoins. Una debida diligencia exhaustiva es imprescindible.</p>
+            <div id="riesgosAccordion">
+                <div>
+                    <button class="accordion-button" data-target="riesgos-operativos"><span class="text-xl mr-2">🛠️</span>Riesgos Operativos <span class="arrow transform transition-transform duration-300">&#9662;</span></button>
+                    <div id="riesgos-operativos" class="accordion-content">
+                        <ul class="list-disc pl-5 space-y-1">
+                            <li><strong>Custodia y seguridad:</strong> Necesidad de soluciones robustas (multi-sig, MPC).</li>
+                            <li><strong>Gestión de claves privadas:</strong> Procedimientos seguros son críticos.</li>
+                            <li><strong>Dependencia tecnológica:</strong> Exposición a fallos de red blockchain o congestión.</li>
+                            <li><strong>Errores de contratos inteligentes:</strong> Potenciales vulnerabilidades.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div>
+                    <button class="accordion-button" data-target="riesgos-financieros"><span class="text-xl mr-2">📉</span>Riesgos Financieros <span class="arrow transform transition-transform duration-300">&#9662;</span></button>
+                    <div id="riesgos-financieros" class="accordion-content">
+                        <ul class="list-disc pl-5 space-y-1">
+                            <li><strong>Riesgo de contraparte:</strong> Solvencia y transparencia del emisor.</li>
+                            <li><strong>Riesgo de liquidez:</strong> Profundidad de mercado en exchanges y plataformas.</li>
+                            <li><strong>Riesgo de descorrelación (de-peg):</strong> Pérdida temporal de paridad con el activo subyacente.</li>
+                            <li><strong>Volatilidad del colateral (para crypto-backed):</strong> Impacto en la estabilidad.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div>
+                    <button class="accordion-button" data-target="riesgos-regulatorios"><span class="text-xl mr-2">📜</span>Riesgos Regulatorios <span class="arrow transform transition-transform duration-300">&#9662;</span></button>
+                    <div id="riesgos-regulatorios" class="accordion-content">
+                        <ul class="list-disc pl-5 space-y-1">
+                            <li><strong>Incertidumbre normativa:</strong> Marco legal en evolución en distintas jurisdicciones.</li>
+                            <li><strong>Cumplimiento fiscal:</strong> Implicaciones tributarias según el tratamiento local.</li>
+                            <li><strong>Requisitos AML/KYC:</strong> Adaptación a normativas contra blanqueo de capitales.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div>
+                    <button class="accordion-button" data-target="riesgos-reputacionales"><span class="text-xl mr-2">📢</span>Riesgos Reputacionales <span class="arrow transform transition-transform duration-300">&#9662;</span></button>
+                    <div id="riesgos-reputacionales" class="accordion-content">
+                        <ul class="list-disc pl-5 space-y-1">
+                            <li><strong>Percepción de stakeholders:</strong> Posible escepticismo de accionistas o inversores tradicionales.</li>
+                            <li><strong>Comunicación corporativa:</strong> Necesidad de una estrategia clara para explicar la adopción.</li>
+                            <li><strong>Auditoría y transparencia:</strong> Exigencia de procesos verificables para mantener la confianza.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="regulacion" class="card">
+            <h2 class="section-title">Marco Regulatorio Actual (Mayo 2025)</h2>
+            <p class="mb-4">El panorama regulatorio para stablecoins está madurando globalmente, con iniciativas clave buscando aportar claridad y seguridad al mercado. Es vital mantenerse actualizado sobre estos desarrollos.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                <div class="p-3 border rounded-md bg-gray-50"><span class="text-xl mr-1">🇺🇸</span><strong>EE.UU.:</strong> Implementación del "Digital Asset Market Structure Act", marco específico para emisores regulados.</div>
+                <div class="p-3 border rounded-md bg-gray-50"><span class="text-xl mr-1">🇪🇺</span><strong>UE:</strong> MiCA (Markets in Crypto-Assets) en plena aplicación, con requisitos de capital y transparencia.</div>
+                <div class="p-3 border rounded-md bg-gray-50"><span class="text-xl mr-1">🇬🇧</span><strong>Reino Unido:</strong> Régimen específico bajo la FCA, foco en reservas auditables y protección al consumidor.</div>
+                <div class="p-3 border rounded-md bg-gray-50"><span class="text-xl mr-1">🇸🇬</span><strong>Singapur:</strong> Marco de licencias para emisores bajo la MAS, con énfasis en la estabilidad financiera.</div>
+            </div>
+            <h3 class="subsection-title">Tendencias Regulatorias Destacadas:</h3>
+            <ul class="list-disc pl-5 space-y-1">
+                <li>Creciente exigencia de auditorías independientes y transparencia en tiempo real de las reservas.</li>
+                <li>Desarrollo de marcos para stablecoins emitidas por entidades bancarias tradicionales.</li>
+                <li>Implementación de estándares técnicos para la interoperabilidad entre jurisdicciones.</li>
+                <li>Coordinación internacional (FSB) para la armonización regulatoria global.</li>
+            </ul>
+        </section>
+
+        <section id="implementacion" class="card">
+            <h2 class="section-title">Implementación en la Estrategia de Tesorería</h2>
+            <p class="mb-4">Adoptar stablecoins requiere una planificación cuidadosa y una ejecución por fases. A continuación, se detallan los pasos clave y enfoques estratégicos.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="subsection-title">Fases de Implementación:</h3>
+                    <div class="space-y-2">
+                        <div class="flow-step"><span class="flow-step-number">1</span><strong>Análisis de Necesidades:</strong> Identificar áreas de mayor valor (pagos, liquidez, yield).</div>
+                        <div class="flow-step"><span class="flow-step-number">2</span><strong>Selección de Stablecoins:</strong> Evaluar según riesgo, respaldo, transparencia y liquidez.</div>
+                        <div class="flow-step"><span class="flow-step-number">3</span><strong>Definición de Alcance:</strong> Determinar % de tesorería a diversificar (inicio recomendado 1-5%).</div>
+                        <div class="flow-step"><span class="flow-step-number">4</span><strong>Infraestructura y Custodia:</strong> Seleccionar proveedores institucionales (Fireblocks, Copper).</div>
+                        <div class="flow-step"><span class="flow-step-number">5</span><strong>Integración de Sistemas:</strong> Conexión con ERPs y plataformas de tesorería.</div>
+                        <div class="flow-step"><span class="flow-step-number">6</span><strong>Políticas y Procedimientos:</strong> Desarrollar guías internas para gestión y control.</div>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="subsection-title">Enfoques Estratégicos:</h3>
+                    <div id="strategyTabs" class="mb-4">
+                        <button class="tab-button active" data-target="conservador">Conservador</button>
+                        <button class="tab-button" data-target="balanceado">Balanceado</button>
+                        <button class="tab-button" data-target="innovador">Innovador</button>
+                    </div>
+                    <div id="conservador" class="tab-content active">
+                        <h4 class="font-semibold accent-info mb-2">Enfoque Conservador</h4>
+                        <ul class="list-disc pl-5 text-sm space-y-1">
+                            <li>Foco en stablecoins fiat con auditorías regulares y robustas.</li>
+                            <li>Implementación gradual, limitada a operaciones específicas de bajo riesgo.</li>
+                            <li>Uso exclusivo de proveedores con seguros y, preferiblemente, licencias bancarias.</li>
+                            <li>Prioridad en la preservación de capital y cumplimiento normativo estricto.</li>
+                        </ul>
+                    </div>
+                    <div id="balanceado" class="tab-content">
+                        <h4 class="font-semibold accent-positive mb-2">Enfoque Balanceado</h4>
+                        <ul class="list-disc pl-5 text-sm space-y-1">
+                            <li>Combinación de diferentes tipos de stablecoins según necesidades y apetito de riesgo.</li>
+                            <li>Integración con plataformas reguladas para generación de yield moderado.</li>
+                            <li>Automatización parcial de procesos financieros mediante contratos inteligentes.</li>
+                            <li>Búsqueda de optimización de costes y eficiencia, manteniendo un control de riesgo prudente.</li>
+                        </ul>
+                    </div>
+                    <div id="innovador" class="tab-content">
+                        <h4 class="font-semibold accent-warning mb-2">Enfoque Innovador</h4>
+                        <ul class="list-disc pl-5 text-sm space-y-1">
+                            <li>Implementación de estrategias avanzadas de Finanzas Descentralizadas (DeFi) institucionales.</li>
+                            <li>Uso de stablecoins para optimización fiscal internacional (con asesoramiento especializado).</li>
+                            <li>Exploración o desarrollo de soluciones propietarias basadas en infraestructura blockchain.</li>
+                            <li>Mayor tolerancia al riesgo en busca de rendimientos superiores y ventajas competitivas disruptivas.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="casos-exito" class="card">
+            <h2 class="section-title">Casos de Éxito y Ejemplos Reales</h2>
+            <p class="mb-4">Empresas pioneras ya están cosechando los beneficios de integrar stablecoins en sus operaciones de tesorería, demostrando el potencial transformador de esta tecnología.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="p-4 border rounded-lg text-center bg-blue-50">
+                    <h3 class="font-semibold mb-1 accent-info">Pagos Internacionales</h3>
+                    <p class="text-3xl font-bold accent-info">94%</p>
+                    <p class="text-sm">Reducción en costes de transferencias (multinacional europea a LATAM).</p>
+                    <p class="text-xs mt-1">Ahorro anual: €1.2 millones.</p>
+                </div>
+                <div class="p-4 border rounded-lg text-center bg-green-50">
+                    <h3 class="font-semibold mb-1 accent-positive">Gestión de Liquidez</h3>
+                    <p class="text-3xl font-bold accent-positive">22%</p>
+                    <p class="text-sm">Reducción en necesidades de financiación (grupo industrial global).</p>
+                    <p class="text-xs mt-1">Optimización de capital circulante.</p>
+                </div>
+                <div class="p-4 border rounded-lg text-center bg-yellow-50">
+                    <h3 class="font-semibold mb-1 accent-warning">Tesorería Estratégica</h3>
+                    <p class="text-3xl font-bold accent-warning">$8.7M</p>
+                    <p class="text-sm">Yield adicional anual (empresa Fortune 500, 3% de reservas).</p>
+                    <p class="text-xs mt-1">Mitigación de riesgos inflacionarios.</p>
+                </div>
+                <div class="p-4 border rounded-lg text-center bg-purple-50">
+                     <h3 class="font-semibold mb-1 text-purple-600">Automatización Financiera</h3>
+                    <p class="text-3xl font-bold text-purple-600">78%</p>
+                    <p class="text-sm">Reducción en tiempo de procesamiento administrativo (e-commerce).</p>
+                    <p class="text-xs mt-1">Pagos automáticos a proveedores.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="conclusion" class="card">
+            <h2 class="section-title">Conclusión: El Futuro de la Tesorería es Ahora</h2>
+            <p class="mb-4">La incorporación de stablecoins en la estrategia de tesorería corporativa no es una tendencia pasajera, sino una evolución significativa en la gestión financiera. Para los CFOs que buscan optimizar operaciones, reducir costos y diversificar riesgos, las stablecoins ofrecen herramientas versátiles que complementan los instrumentos tradicionales, abriendo una ventaja competitiva en eficiencia y flexibilidad estratégica.</p>
+            <h3 class="subsection-title">Recomendaciones Clave para CFOs:</h3>
+            <ul class="list-disc pl-5 space-y-2">
+                <li><strong>Enfoque gradual y medido:</strong> Iniciar con un porcentaje conservador, priorizando stablecoins con alta transparencia y respaldo regulatorio.</li>
+                <li><strong>Formación y capacitación interna:</strong> Desarrollar competencias dentro del equipo financiero sobre tecnología blockchain y activos digitales.</li>
+                <li><strong>Alianzas estratégicas:</strong> Establecer relaciones con proveedores especializados en soluciones de custodia y gestión institucional de activos digitales.</li>
+                <li><strong>Monitorización continua del entorno:</strong> Implementar sistemas de seguimiento para adaptarse ágilmente a la evolución regulatoria y tecnológica.</li>
+                <li><strong>Medición de resultados y KPIs:</strong> Definir indicadores claros para evaluar el impacto en eficiencia, costos y gestión de riesgos.</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-10 px-4 text-center text-sm">
+        <div class="container mx-auto">
+            <p class="font-semibold text-white mb-1">Crypto Plaza Consulting</p>
+            <p>Especialistas en estrategias de adopción de criptoactivos para corporaciones.</p>
+            <p>Contacto: contacto@cryptoplaza.es | Web: www.cryptoplaza.es</p>
+            <p class="mt-3">&copy; 2025 Crypto Plaza Consulting. Todos los derechos reservados.</p>
+            <p class="text-xs mt-2">AVISO LEGAL: Este documento tiene fines informativos y no constituye asesoramiento financiero, legal o fiscal. Cada organización debe evaluar su situación particular y consultar con asesores especializados antes de implementar estrategias basadas en stablecoins.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Sticky Navbar Logic & Active Link Highlighting
+            const navbar = document.getElementById('navbar');
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-link');
+            let navbarHeight = navbar.offsetHeight;
+
+            function highlightNavLink() {
+                let scrollY = window.pageYOffset;
+                navbarHeight = navbar.offsetHeight; // Recalculate in case of resize
+
+                sections.forEach(current => {
+                    const sectionHeight = current.offsetHeight;
+                    const sectionTop = current.offsetTop - navbarHeight - 50; // Adjusted offset
+                    let sectionId = current.getAttribute('id');
+                    
+                    let correspondingLink = document.querySelector('.nav-link[href="#' + sectionId + '"]');
+
+                    if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+                        navLinks.forEach(link => link.classList.remove('active'));
+                        if(correspondingLink) correspondingLink.classList.add('active');
+                    } else {
+                         if(correspondingLink) correspondingLink.classList.remove('active');
+                    }
+                });
+                 // If at the very top or bottom, specific links might need handling
+                if (scrollY < sections[0].offsetTop - navbarHeight - 50) {
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    if(navLinks[0]) navLinks[0].classList.add('active');
+                }
+            }
+            window.addEventListener('scroll', highlightNavLink);
+            highlightNavLink(); // Initial call
+
+            // Smooth scroll for nav links
+            navLinks.forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        const elementPosition = targetElement.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - navbar.offsetHeight;
+            
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: "smooth"
+                        });
+                    }
+                });
+            });
+            
+            // Accordion
+            const accordionButtons = document.querySelectorAll('.accordion-button');
+            accordionButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetId = button.dataset.target;
+                    const content = document.getElementById(targetId);
+                    const arrow = button.querySelector('.arrow');
+
+                    // Close other open accordions in the same group if desired
+                    // For this example, allows multiple open
+                    
+                    if (content.style.display === "block") {
+                        content.style.display = "none";
+                        if(arrow) arrow.style.transform = "rotate(0deg)";
+                    } else {
+                        content.style.display = "block";
+                        if(arrow) arrow.style.transform = "rotate(180deg)";
+                    }
+                });
+            });
+
+            // Tabs for Strategies
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetId = button.dataset.target;
+                    
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    
+                    tabContents.forEach(content => {
+                        if (content.id === targetId) {
+                            content.classList.add('active');
+                        } else {
+                            content.classList.remove('active');
+                        }
+                    });
+                });
+            });
+
+
+            // Chart.js: Cost Comparison
+            const costCtx = document.getElementById('costChart').getContext('2d');
+            // Function to wrap labels for Chart.js
+            function wrapChartLabels(label, maxLength = 16) {
+                if (typeof label !== 'string' || label.length <= maxLength) {
+                    return label;
+                }
+                const words = label.split(' ');
+                const lines = [];
+                let currentLine = '';
+                for (const word of words) {
+                    if ((currentLine + word).length > maxLength && currentLine.length > 0) {
+                        lines.push(currentLine.trim());
+                        currentLine = '';
+                    }
+                    currentLine += word + ' ';
+                }
+                if (currentLine.trim().length > 0) {
+                    lines.push(currentLine.trim());
+                }
+                return lines.length > 0 ? lines : [label];
+            }
+
+            new Chart(costCtx, {
+                type: 'bar',
+                data: {
+                    labels: [wrapChartLabels('Costo Transaccional Tradicional'), wrapChartLabels('Costo con Stablecoins (Estimado)')],
+                    datasets: [{
+                        label: 'Costo Relativo (%)',
+                        data: [100, 4], // Representing 100% for traditional, 4% for stablecoins (96% reduction)
+                        backgroundColor: ['#FFC107', '#28A745'],
+                        borderColor: ['#FFC107', '#28A745'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y', // Makes bars horizontal for better label display with long text
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Costo Relativo (%)' },
+                            ticks: {
+                                callback: function(value) { return value + '%' }
+                            }
+                        },
+                        y: {
+                             ticks: {
+                                autoSkip: false // Ensure all labels are shown, especially with wrapped text
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                title: function(tooltipItems) {
+                                    const item = tooltipItems[0];
+                                    let label = item.chart.data.labels[item.dataIndex];
+                                    return Array.isArray(label) ? label.join(' ') : label;
+                                },
+                                label: function(context) {
+                                    return `Costo: ${context.parsed.x}%`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
