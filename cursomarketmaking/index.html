@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curso: Estrategias de Market Making en Crypto</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Visualization & Content Choices:
+        - Course Title & Objective: Goal: Inform. Method: Prominent text display in header and 'Visión General'. Interaction: None. Justification: Primary course identifiers.
+        - Navigation Tabs: Goal: Navigate. Method: Clickable tabs. Interaction: Click to switch active content section. Justification: Standard SPA navigation for easy access to different content blocks.
+        - Modules (General): Goal: Organize, Inform. Method: Clickable titles/headers for each module within the 'Módulos' section. Interaction: Click to expand/collapse (accordion style), revealing bulleted list of topics. Unicode characters for expand/collapse icons. Justification: Allows users to focus on specific modules of interest and manage information density.
+        - Module 1 - AMM Market Share: Goal: Inform (illustrative). Method: Simple Bar Chart (Chart.js) with placeholder data showing hypothetical AMM market shares. Interaction: Tooltips on hover. Justification: Visually represent the concept of market share distribution, even with illustrative data, and demonstrate chart integration as per requirements. The chart container is styled for responsiveness. Library: Chart.js.
+        - Module Topics (textual): Goal: Inform. Method: Bulleted lists within each expanded module. Interaction: None beyond module expansion. Justification: Clear presentation of detailed content for each module.
+        - Formato & Precio: Goal: Inform. Method: Structured text sections and bullet points. Interaction: None. Justification: Clear presentation of logistical and financial information.
+        - Módulo Especial: Goal: Inform (about reservation). Method: Text stating content is reserved. Interaction: None. Justification: Accurately reflects report.
+        - All textual content from the report is mapped to relevant sections in the SPA for comprehensive coverage.
+        -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .tab-active {
+            border-bottom-width: 2px;
+            border-color: #0284c7; /* sky-600 */
+            color: #0284c7; /* sky-600 */
+            font-weight: 600;
+        }
+        .tab-inactive {
+            color: #78716c; /* stone-500 */
+        }
+        .module-header {
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .module-header:hover {
+            background-color: #f5f5f4; /* stone-100 */
+        }
+        .module-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out, padding 0.5s ease-out;
+        }
+        .module-content.open {
+            max-height: 1000px; /* Adjust as needed for content */
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* max-w-2xl */
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; /* Base height */
+            max-height: 350px;
+        }
+        @media (min-width: 768px) { /* md breakpoint */
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .section-intro {
+            font-size: 1.125rem; /* text-lg */
+            color: #57534e; /* stone-600 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body class="bg-stone-100 text-stone-800">
+
+    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-5xl">
+        
+        <header class="text-center mb-8 py-6 bg-white shadow-lg rounded-lg">
+            <h1 class="text-3xl sm:text-4xl font-bold text-sky-700 mb-2">Curso de Especialización en Estrategias de Market Making en Crypto</h1>
+        </header>
+
+        <nav class="bg-white shadow-md rounded-lg mb-8">
+            <ul class="flex justify-center space-x-2 sm:space-x-4 p-4">
+                <li><button data-tab="vision-general" class="tab-button py-2 px-3 sm:px-4 rounded-md tab-active">Visión General</button></li>
+                <li><button data-tab="modulos" class="tab-button py-2 px-3 sm:px-4 rounded-md tab-inactive">Módulos</button></li>
+                <li><button data-tab="formato-precio" class="tab-button py-2 px-3 sm:px-4 rounded-md tab-inactive">Formato y Precio</button></li>
+            </ul>
+        </nav>
+
+        <main id="content-area">
+            
+            <section id="vision-general" class="content-section bg-white p-6 sm:p-8 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-semibold text-sky-600 mb-4">Objetivo del Curso</h2>
+                <p class="section-intro">
+                    Este curso está diseñado para que puedas dominar la provisión de liquidez en protocolos DeFi. A lo largo de las sesiones, comprenderás los mecanismos subyacentes, los riesgos asociados y las estrategias más rentables, incluyendo estructuras avanzadas como el trading de volatilidad y correlaciones. El objetivo es proporcionarte un conocimiento profundo y práctico para que puedas desenvolverte con éxito en el dinámico mundo del market making en crypto.
+                </p>
+                <p class="text-stone-700 leading-relaxed">
+                    Explora los diferentes módulos para conocer en detalle el temario y descubre la estructura del curso, así como la inversión necesaria para convertirte en un especialista.
+                </p>
+            </section>
+
+            <section id="modulos" class="content-section hidden bg-white p-6 sm:p-8 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-semibold text-sky-600 mb-6">Contenido del Curso: Módulos</h2>
+                <p class="section-intro">
+                    El curso se estructura en 10 módulos temáticos, cada uno diseñado para construir tu conocimiento desde los fundamentos hasta las estrategias más sofisticadas. Haz clic en cada módulo para ver los temas específicos que se tratarán. Esta sección te permitirá entender la progresión del aprendizaje y los conceptos clave que dominarás.
+                </p>
+                <div id="modules-accordion" class="space-y-4">
+                </div>
+            </section>
+
+            <section id="formato-precio" class="content-section hidden bg-white p-6 sm:p-8 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-semibold text-sky-600 mb-6">Formato y Precio del Curso</h2>
+                <p class="section-intro">
+                    Aquí encontrarás todos los detalles sobre la estructura del curso, la modalidad de impartición, los materiales que recibirás, el proyecto final y la inversión requerida. También se incluye información sobre beneficios adicionales al inscribirte.
+                </p>
+                
+                <div class="grid md:grid-cols-2 gap-6 mb-6">
+                    <div class="bg-stone-50 p-6 rounded-lg border border-stone-200">
+                        <h3 class="text-xl font-semibold text-sky-700 mb-3">Formato del Curso</h3>
+                        <ul class="list-disc list-inside space-y-2 text-stone-700">
+                            <li><strong>Duración:</strong> 10 sesiones (1 módulo por semana).</li>
+                            <li><strong>Modalidad:</strong> Online (vídeos + sesiones en directo).</li>
+                            <li><strong>Material extra:</strong> simuladores, hojas de cálculo, dashboards en Dune/Flipside, quizzes semanales, casos reales.</li>
+                            <li><strong>Proyecto final:</strong> Diseñar una estrategia LP para un protocolo real con métricas de evaluación. Auditoría de estrategias realizadas.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-stone-50 p-6 rounded-lg border border-stone-200">
+                        <h3 class="text-xl font-semibold text-sky-700 mb-3">Inversión y Beneficios</h3>
+                        <p class="text-3xl font-bold text-sky-600 mb-3">4.500 €</p>
+                        <ul class="list-disc list-inside space-y-2 text-stone-700 mb-4">
+                            <li>Incluye acceso completo.</li>
+                            <li>Soporte durante 3 meses.</li>
+                            <li>Análisis personalizado de estrategia final.</li>
+                        </ul>
+                        <div class="mt-4 p-4 bg-sky-50 border-l-4 border-sky-500 text-sky-700 rounded-md">
+                            <p class="font-semibold">Beneficio Adicional:</p>
+                            <p>Realizar este curso te permitirá entrar en el grupo privado de Crypto Plaza que tiene un coste de 50 euros mensuales sin los 1.000 euros de cuota inicial.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="text-center mt-12 py-6 border-t border-stone-300">
+            <p class="text-stone-600">&copy; <span id="currentYear"></span> Curso de Especialización en Market Making. Todos los derechos reservados.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        const courseData = {
+            modules: [
+                {
+                    title: "Módulo 1: Fundamentos de los AMM (Automated Market Makers)",
+                    content: [
+                        "Historia y evolución: Constant Product (Uniswap v2) vs Concentrated Liquidity (Uniswap v3, v4). Curve, Aerodrome (modelos ve)",
+                        "Diferencias entre AMM y order book.",
+                        "Funciones de pricing: $x \\cdot y = k$, bonding curves, curva de CPMM y CFMM.",
+                        "Estructura de pools: 50/50, 80/20, stable pools, multi-asset pools.",
+                        "Estado actual del trading en AMM y su market share."
+                    ],
+                    chart: true 
+                },
+                {
+                    title: "Módulo 2: Impermanent Loss (IL) y sus implicaciones (Underperformance by Divergence)",
+                    content: [
+                        "Qué es IL y cómo se calcula. Concepto de Underperformance by Divergence.",
+                        "Análisis gráfico del IL en distintos escenarios de precios.",
+                        "Relación entre IL y la divergencia.",
+                        "Estrategias para mitigar el IL (rebalanceos, rangos estrechos, coberturas)."
+                    ]
+                },
+                {
+                    title: "Módulo 3: Loss vs Rebalancing (LVR)",
+                    content: [
+                        "Concepto y diferencia clave con IL.",
+                        "Cómo el arbitraje externo captura valor.",
+                        "Cálculo del LVR y ejemplos numéricos.",
+                        "Cómo afecta el tipo de oráculo y la frecuencia de actualizaciones."
+                    ]
+                },
+                {
+                    title: "Módulo 4: Gamma Exposure y Convexidad",
+                    content: [
+                        "Introducción al concepto de gamma en LP.",
+                        "Relación con la sensibilidad de IL.",
+                        "Cómo afecta la gamma a estrategias delta-neutral.",
+                        "Casos de estudio: Uniswap v3 y GMX v2."
+                    ]
+                },
+                {
+                    title: "Módulo 5: Atribución de rentabilidad en estrategias",
+                    content: [
+                        "Separación de fuentes de retorno:",
+                        "Comisiones.",
+                        "Revalorización de activos.",
+                        "Rebalanceos / reinversiones.",
+                        "Incentivos externos.",
+                        "Herramientas para atribución (Dune, Flipside, simuladores).",
+                        "Análisis de rentabilidad vs benchmark pasivo."
+                    ]
+                },
+                {
+                    title: "Módulo 6: Estrategias Delta-Neutral y Direccionales",
+                    content: [
+                        "LP delta-neutral con coberturas en perp DEXs (e.g., Uniswap + dYdX).",
+                        "Posicionamiento direccional con rangos adaptativos.",
+                        "Market making direccional vs pasivo.",
+                        "Ajuste dinámico de rangos: gestión activa vs set-and-forget."
+                    ]
+                },
+                {
+                    title: "Módulo 7: Estrategias de Volatilidad y Correlación",
+                    content: [
+                        "Exposición implícita a la volatilidad mediante IL.",
+                        "Cómo estructurar una posición que se beneficie de la volatilidad.",
+                        "Pares correlacionados y su explotación."
+                    ]
+                },
+                {
+                    title: "Módulo 8: Estrategias Sofisticadas y Apalancamiento",
+                    content: [
+                        "LP con apalancamiento: riesgos y oportunidades.",
+                        "Combinación de opciones y LP. Opciones perpetuas.",
+                        "Vaults automatizados.",
+                        "Riesgo sistémico y gestión de drawdowns."
+                    ]
+                },
+                {
+                    title: "Módulo 9: Auditoría de estrategias y análisis de ballenas en LP",
+                    content: [
+                        "Cómo auditar LPs en la blockchain: herramientas y metodologías.",
+                        "Identificación de posiciones relevantes: top LPs por volumen bloqueado y rentabilidad.",
+                        "Análisis de comportamiento: rangos, timing, rotación y ajustes de liquidez.",
+                        "Casos de estudio:",
+                        "Proveedores institucionales en Uniswap v3.",
+                        "Estrategias replicables vs estrategias \"smart money\".",
+                        "Análisis de operativas.",
+                        "Técnicas de replicación y benchmarking."
+                    ]
+                },
+                {
+                    title: "Módulo 10: Módulo Especial",
+                    content: [
+                        "Contenido reservado que se revelará sólo a los participantes."
+                    ]
+                }
+            ]
+        };
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const tabs = document.querySelectorAll('.tab-button');
+            const contentSections = document.querySelectorAll('.content-section');
+            const modulesAccordion = document.getElementById('modules-accordion');
+
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => {
+                        t.classList.remove('tab-active');
+                        t.classList.add('tab-inactive');
+                    });
+                    tab.classList.add('tab-active');
+                    tab.classList.remove('tab-inactive');
+
+                    const target = tab.getAttribute('data-tab');
+                    contentSections.forEach(section => {
+                        if (section.id === target) {
+                            section.classList.remove('hidden');
+                        } else {
+                            section.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+
+            courseData.modules.forEach((module, index) => {
+                const moduleElement = document.createElement('div');
+                moduleElement.classList.add('border', 'border-stone-200', 'rounded-lg', 'overflow-hidden');
+
+                const header = document.createElement('div');
+                header.classList.add('module-header', 'p-4', 'sm:p-5', 'bg-stone-50', 'hover:bg-stone-100', 'flex', 'justify-between', 'items-center');
+                header.innerHTML = `<h3 class="text-lg font-semibold text-sky-700">${module.title}</h3>
+                                    <span class="text-sky-600 text-xl transform transition-transform duration-300">&#x25BC;</span>`; // Down arrow
+
+                const contentDiv = document.createElement('div');
+                contentDiv.classList.add('module-content', 'px-4', 'sm:px-5', 'bg-white');
+                
+                const ul = document.createElement('ul');
+                ul.classList.add('list-disc', 'list-inside', 'space-y-2', 'text-stone-700');
+                module.content.forEach(item => {
+                    const li = document.createElement('li');
+                    li.innerHTML = item.replace(/\$x \\cdot y = k\$/g, '<i>x &middot; y = k</i>'); // Basic styling for formula
+                    ul.appendChild(li);
+                });
+                contentDiv.appendChild(ul);
+
+                if (module.chart && module.title.includes("Módulo 1")) {
+                    const chartContainerDiv = document.createElement('div');
+                    chartContainerDiv.classList.add('chart-container', 'mt-4', 'mb-2');
+                    const canvas = document.createElement('canvas');
+                    canvas.id = `moduleChart${index}`;
+                    chartContainerDiv.appendChild(canvas);
+                    contentDiv.appendChild(chartContainerDiv);
+
+                    setTimeout(() => { // Ensure canvas is in DOM for Chart.js
+                         if (document.getElementById(canvas.id)) {
+                            new Chart(document.getElementById(canvas.id), {
+                                type: 'bar',
+                                data: {
+                                    labels: ['Uniswap v2', 'Uniswap v3', 'Curve', 'Aerodrome', 'Otros'],
+                                    datasets: [{
+                                        label: 'Market Share AMM (Ejemplo)',
+                                        data: [25, 35, 20, 10, 10],
+                                        backgroundColor: [
+                                            'rgba(59, 130, 246, 0.7)',  // blue-500
+                                            'rgba(14, 165, 233, 0.7)', // sky-500
+                                            'rgba(34, 197, 94, 0.7)',  // green-500
+                                            'rgba(249, 115, 22, 0.7)', // orange-500
+                                            'rgba(168, 85, 247, 0.7)'  // purple-500
+                                        ],
+                                        borderColor: [
+                                            'rgba(59, 130, 246, 1)',
+                                            'rgba(14, 165, 233, 1)',
+                                            'rgba(34, 197, 94, 1)',
+                                            'rgba(249, 115, 22, 1)',
+                                            'rgba(168, 85, 247, 1)'
+                                        ],
+                                        borderWidth: 1
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true,
+                                            ticks: {
+                                                callback: function(value) { return value + "%" }
+                                            }
+                                        },
+                                        x: {
+                                            ticks: {
+                                                maxRotation: 0,
+                                                minRotation: 0,
+                                                autoSkip: false, 
+                                                callback: function(value, index, values) {
+                                                    const label = this.getLabelForValue(value);
+                                                    if (label.length > 16) {
+                                                        return label.substring(0, 15) + '...';
+                                                    }
+                                                    return label;
+                                                }
+                                            }
+                                        }
+                                    },
+                                    plugins: {
+                                        tooltip: {
+                                            callbacks: {
+                                                label: function(context) {
+                                                    let label = context.dataset.label || '';
+                                                    if (label) {
+                                                        label += ': ';
+                                                    }
+                                                    if (context.parsed.y !== null) {
+                                                        label += context.parsed.y + '%';
+                                                    }
+                                                    return label;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }, 0);
+                }
+                
+                moduleElement.appendChild(header);
+                moduleElement.appendChild(contentDiv);
+                modulesAccordion.appendChild(moduleElement);
+
+                header.addEventListener('click', () => {
+                    const isOpen = contentDiv.classList.contains('open');
+                    document.querySelectorAll('#modules-accordion .module-content.open').forEach(openContent => {
+                        if (openContent !== contentDiv) {
+                            openContent.classList.remove('open');
+                            openContent.previousElementSibling.querySelector('span').style.transform = 'rotate(0deg)';
+                        }
+                    });
+                    contentDiv.classList.toggle('open');
+                    header.querySelector('span').style.transform = contentDiv.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+                     if (contentDiv.classList.contains('open') && module.chart && module.title.includes("Módulo 1")) {
+                        const chartCanvas = document.getElementById(`moduleChart${index}`);
+                        if (chartCanvas && chartCanvas.offsetParent !== null) { // Check if visible
+                            // Chart already initialized, or will be by setTimeout
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
