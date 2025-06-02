@@ -7,130 +7,207 @@
   <link rel="icon" href="https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=026" type="image/svg+xml">
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f4f7fa;
-      color: #333;
-      padding: 20px;
-      max-width: 600px;
-      margin: auto;
+      font-family: 'Arial', sans-serif; /* Use a common corporate font */
+      background: #f8f9fa; /* Light, neutral background */
+      color: #343a40; /* Standard dark text color */
+      padding: 30px;
+      max-width: 750px; /* Slightly wider content area */
+      margin: 40px auto;
+      line-height: 1.6;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05); /* Subtle shadow for depth */
+      border-radius: 8px;
+      border: 1px solid #e9ecef; /* Light border around the main content area */
     }
-
     h1 {
       text-align: center;
-      color: #111;
+      color: #0056b3; /* Primary corporate blue */
+      margin-bottom: 30px;
+      font-size: 2.2em;
+      font-weight: 700;
     }
-
+    main {
+      margin-top: 20px;
+    }
     form {
       background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03); /* Even lighter shadow for the form */
+      border: 1px solid #dee2e6; /* Light border for the form */
     }
-
     label {
       display: block;
-      margin: 15px 0 5px;
+      margin: 15px 0 8px;
+      font-weight: 700;
+      color: #495057; /* Slightly muted label color */
+      font-size: 1em;
     }
-
     select {
       width: 100%;
-      padding: 8px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
+      padding: 10px 15px;
+      border-radius: 5px;
+      border: 1px solid #ced4da;
+      margin-bottom: 20px;
+      box-sizing: border-box;
+      font-size: 1em;
+      appearance: none; /* Remove default select styling */
+      background-color: #fff;
+      background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20256%20448%22%20enable-background%3D%22new%200%200%20256%20448%22%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E.arrow%7Bfill%3A%23495057%3B%7D%3C%2Fstyle%3E%3Cpath%20class%3D%22arrow%22%20d%3D%22M255.9%20168c0%20-9.4%20-3.8%20-18.2%20-10%20-24.7l-112-112c-12.4%20-12.4%20-32.8%20-12.4%20-45.2%200l-112%20112c-12.4%2012.4%20-12.4%2032.8%200%2045.2c12.4%2012.4%2032.8%2012.4%2045.2%200l86.8%20-86.8l86.8%2086.8c12.4%2012.4%2032.8%2012.4%2045.2%200c6.2%20-6.1%2010%20-15%2010%20-24.4z%22%2F%3E%3C%2Fsvg%3E');
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 12px;
+      padding-right: 30px;
+      cursor: pointer; /* Indicate it's interactive */
     }
-
+    select:hover {
+        border-color: #007bff; /* Highlight border on hover */
+    }
+    select:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+    select::-ms-expand {
+        display: none; /* Hide default arrow in IE */
+    }
     button {
-      margin-top: 20px;
-      background: #3399ff;
+      margin-top: 30px;
+      background: #007bff; /* Standard Bootstrap primary blue */
       color: white;
       border: none;
-      padding: 12px;
+      padding: 12px 20px;
       width: 100%;
-      border-radius: 8px;
-      font-size: 16px;
+      border-radius: 5px;
+      font-size: 1.1em;
       cursor: pointer;
+      transition: background 0.3s ease, transform 0.1s ease;
+      font-weight: 600;
+      text-transform: uppercase; /* Make button text uppercase */
+      letter-spacing: 0.5px;
     }
-
     button:hover {
-      background: #2288ee;
+      background: #0056b3; /* Darker blue on hover */
     }
-
+     button:active {
+      transform: scale(0.99); /* Subtle press effect */
+    }
+    button:focus {
+      outline: none;
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
     .resultado {
-      margin-top: 20px;
-      padding: 20px;
-      border-radius: 12px;
+      margin-top: 30px;
+      padding: 25px;
+      border-radius: 8px;
       text-align: center;
-      font-size: 18px;
+      font-size: 1.1em;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
     }
-
-    .verde { background: #d4edda; color: #155724; }
-    .amarillo { background: #fff3cd; color: #856404; }
-    .rojo { background: #f8d7da; color: #721c24; }
-
+    .resultado.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .verde { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; } /* Green for success */
+    .amarillo { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; } /* Yellow for warning */
+    .rojo { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; } /* Red for danger */
     .score-num {
-      font-size: 24px;
+      font-size: 2.2em; /* Slightly larger score number */
       font-weight: bold;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
+      color: #343a40;
     }
-
     .cta a {
       display: inline-block;
-      margin-top: 10px;
-      color: #0077cc;
+      margin-top: 20px; /* More space above CTA */
+      color: #007bff; /* CTA link color matching button */
       text-decoration: none;
-      font-weight: 500;
+      font-weight: 600;
+      border-bottom: 1px solid transparent;
+      transition: border-bottom 0.2s ease;
     }
-
     .cta a:hover {
-      text-decoration: underline;
+      border-bottom-color: #0056b3; /* Underline on hover */
+    }
+    @media (max-width: 768px) {
+      body { padding: 15px; margin: 20px auto; }
+      form { padding: 20px; }
+      .resultado { padding: 20px; }
+      h1 { font-size: 1.8em; margin-bottom: 20px; }
+      .score-num { font-size: 1.8em; }
+      label { font-size: 0.95em; }
+      button { font-size: 1em; padding: 10px 15px; }
+      select { font-size: 0.95em; }
+      .cta a { margin-top: 15px; font-size: 0.95em; }
+    }
+    .brand {
+      text-align: center;
+      font-size: 1.1em; /* Slightly larger than body text */
+      color: #5a6268; /* Muted grey color */
+      margin-bottom: 10px; /* Space below the brand */
+      font-weight: 600;
     }
   </style>
 </head>
 <body>
+  <div class="brand">Crypto Plaza Consulting</div>
+  <h1>Crypto Readiness Scorecard para Tesorería Corporativa</h1>
+  <main>
+    <section>
+      <form id="scoreForm" autocomplete="off">
+        <label for="estrategia">¿Su empresa ha definido una estrategia clara para la posible integración de criptoactivos en la tesorería?</label>
+        <select id="estrategia" name="estrategia" required>
+          <option value="" disabled selected>Seleccione una opción</option>
+          <option value="3">Sí, formalizada e integrada en la estrategia financiera.</option>
+          <option value="2">En discusión y análisis estratégico.</option>
+          <option value="1">Interés inicial, sin plan definido.</option>
+          <option value="0">No se ha considerado aún.</option>
+        </select>
 
-  <h1>Crypto Readiness Scorecard</h1>
+        <label for="riesgos">¿Se han evaluado y documentado los riesgos específicos (volatilidad, seguridad, regulación) asociados a la tenencia o gestión de criptoactivos?</label>
+        <select id="riesgos" name="riesgos" required>
+          <option value="" disabled selected>Seleccione una opción</option>
+          <option value="3">Sí, con un marco de gestión de riesgos establecido.</option>
+          <option value="2">Evaluación en curso.</option>
+          <option value="1">Identificación básica de riesgos.</option>
+          <option value="0">No se han evaluado formalmente.</option>
+        </select>
 
-  <form id="scoreForm">
-    <label>¿La empresa tiene experiencia previa con activos digitales?</label>
-    <select name="experiencia">
-      <option value="2">Sí, amplia</option>
-      <option value="1">Sí, básica</option>
-      <option value="0">No</option>
-    </select>
+        <label for="cumplimiento">¿Se ha analizado el impacto regulatorio y de cumplimiento (fiscal, contable, ALD/CFT) de integrar criptoactivos en sus operaciones?</label>
+        <select id="cumplimiento" name="cumplimiento" required>
+          <option value="" disabled selected>Seleccione una opción</option>
+          <option value="3">Análisis completo con asesoría experta.</option>
+          <option value="2">Revisión inicial con equipo legal/fiscal.</option>
+          <option value="1">Conocimiento general de la normativa.</option>
+          <option value="0">Aspectos regulatorios no revisados.</option>
+        </select>
 
-    <label>¿Dispone de equipo interno o asesoría legal sobre criptoactivos?</label>
-    <select name="legal">
-      <option value="2">Sí, equipo interno</option>
-      <option value="1">Asesoría externa</option>
-      <option value="0">No</option>
-    </select>
+        <label for="tecnologia">¿Dispone de la infraestructura tecnológica o planes para integrar plataformas de gestión de criptoactivos (custodia, trading, contabilidad)?</label>
+        <select id="tecnologia" name="tecnologia" required>
+          <option value="" disabled selected>Seleccione una opción</option>
+          <option value="3">Infraestructura robusta o plan de implementación avanzado.</option>
+          <option value="2">Evaluación de proveedores y soluciones tecnológicas.</option>
+          <option value="1">Interés en tecnología, sin pasos concretos.</option>
+          <option value="0">No se ha evaluado la necesidad tecnológica.</option>
+        </select>
 
-    <label>¿Tiene una política clara de custodia de claves y wallets?</label>
-    <select name="custodia">
-      <option value="2">Sí, formalizada</option>
-      <option value="1">En desarrollo</option>
-      <option value="0">No</option>
-    </select>
+        <label for="equipo">¿Su equipo financiero y contable tiene el conocimiento o acceso a expertos para manejar transacciones y reportes de criptoactivos?</label>
+        <select id="equipo" name="equipo" required>
+          <option value="" disabled selected>Seleccione una opción</option>
+          <option value="3">Equipo capacitado y/o acceso a consultoría especializada.</option>
+          <option value="2">Capacitación en curso o planificación de asesoría.</option>
+          <option value="1">Conocimiento básico entre miembros del equipo.</option>
+          <option value="0">Falta de conocimiento o recursos internos/externos.</option>
+        </select>
 
-    <label>¿Ha integrado sistemas contables o ERP compatibles con cripto?</label>
-    <select name="erp">
-      <option value="2">Totalmente</option>
-      <option value="1">Parcialmente</option>
-      <option value="0">No</option>
-    </select>
-
-    <label>¿Conoce los riesgos fiscales y contables asociados?</label>
-    <select name="fiscal">
-      <option value="2">Sí, con expertos</option>
-      <option value="1">De forma general</option>
-      <option value="0">No</option>
-    </select>
-
-    <button type="submit">Calcular Score</button>
-  </form>
-
-  <div id="resultado" class="resultado" style="display: none;"></div>
-
+        <button type="submit">Calcular Readiness Score</button>
+      </form>
+    </section>
+    <section>
+      <div id="resultado" class="resultado" aria-live="polite"></div>
+    </section>
+  </main>
   <script>
     const form = document.getElementById('scoreForm');
     const resultado = document.getElementById('resultado');
@@ -138,34 +215,44 @@
     form.addEventListener('submit', function(e) {
       e.preventDefault();
 
-      const data = new FormData(form);
+      const selects = form.querySelectorAll('select');
       let total = 0;
-      for (let value of data.values()) {
-        total += parseInt(value);
+      let incompleto = false;
+      selects.forEach(sel => {
+        if (sel.value === "") {
+          incompleto = true;
+        } else {
+          total += parseInt(sel.value, 10);
+        }
+      });
+
+      if (incompleto) {
+        resultado.innerHTML = "Por favor, responde todas las preguntas antes de calcular tu Score.";
+        resultado.className = "resultado rojo visible";
+        resultado.style.display = "block";
+        return;
       }
 
       const score = total;
- // Score de 0 a 10
-
+      const maxScore = 15;
       let mensaje = '';
       let clase = '';
 
-      if (score >= 8) {
-        mensaje = `✅ Tu empresa ha obtenido un Score de ${score}/10. Está muy preparada para integrar criptoactivos. ¡Es momento de pasar a la acción!<br><br><span class="cta"><a href="https://cryptoflow.xyz/scorecard" target="_blank">Descarga nuestra guía gratuita para integrar criptoactivos sin riesgos</a></span>`;
+      if (score >= 12) {
+        mensaje = `✅ Tu empresa ha obtenido un Score de ${score}/${maxScore}. Nivel de preparación muy alto. ¡Excelente base para integrar criptoactivos en tu tesorería!<br><br><span class="cta"><a href="https://cryptoflow.xyz/scorecard" target="_blank" rel="noopener">Descarga nuestra guía avanzada para optimizar tu estrategia con criptoactivos</a></span>`;
         clase = 'verde';
-      } else if (score >= 5) {
-        mensaje = `⚠️ Tu Score es de ${score}/10. Preparación intermedia. Aún hay aspectos clave por revisar antes de integrar criptoactivos.<br><br><span class="cta"><a href="https://cryptoflow.xyz/scorecard" target="_blank">Accede al recurso gratuito para mejorar tu preparación</a></span>`;
+      } else if (score >= 7) {
+        mensaje = `⚠️ Tu Score es de ${score}/${maxScore}. Nivel de preparación intermedio. Existen áreas clave que requieren atención para una integración segura y eficiente.<br><br><span class="cta"><a href="https://cryptoflow.xyz/scorecard" target="_blank" rel="noopener">Accede a recursos clave para fortalecer la preparación de tu empresa</a></span>`;
         clase = 'amarillo';
       } else {
-        mensaje = `🚫 Tu Score es de ${score}/10. Nivel bajo de preparación. Es recomendable formar equipo, revisar procesos y buscar asesoramiento.<br><br><span class="cta"><a href="https://cryptoflow.xyz/scorecard" target="_blank">Empieza con nuestra checklist gratuita paso a paso</a></span>`;
+        mensaje = `🚫 Tu Score es de ${score}/${maxScore}. Nivel de preparación inicial. Es crucial establecer bases sólidas en estrategia, riesgo y tecnología antes de proceder.<br><br><span class="cta"><a href="YOUR_CALENDLY_LINK_HERE" target="_blank" rel="noopener">Agenda una consultoría previa gratuita de 30 minutos</a></span>`;
         clase = 'rojo';
       }
 
-      resultado.innerHTML = `<div class="score-num">Score: ${score}/10</div>${mensaje}`;
-      resultado.className = 'resultado ' + clase;
+      resultado.innerHTML = `<div class="score-num">Score: ${score}/${maxScore}</div>${mensaje}`;
+      resultado.className = 'resultado ' + clase + ' visible';
       resultado.style.display = 'block';
     });
   </script>
-
 </body>
 </html>
