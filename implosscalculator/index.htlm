@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Impermanent Loss | Crypto Market Making Pro</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, #00d4ff, #7c3aed);
+            border-radius: 2px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 5px #00d4ff; }
+            to { box-shadow: 0 0 20px #7c3aed, 0 0 30px #00d4ff; }
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #00d4ff, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #a0a0a0;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.1);
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #00d4ff;
+            font-weight: bold;
+        }
+
+        input[type="number"], select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="number"]:focus, select:focus {
+            outline: none;
+            border-color: #00d4ff;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #00d4ff, #7c3aed);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
+        }
+
+        .results {
+            margin-top: 25px;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border-left: 4px solid #00d4ff;
+        }
+
+        .result-value {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .positive { color: #00ff88; }
+        .negative { color: #ff4757; }
+        .neutral { color: #00d4ff; }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-bottom: 20px;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(124, 58, 237, 0.1));
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin-top: 40px;
+            border: 2px solid rgba(0, 212, 255, 0.3);
+        }
+
+        .cta-title {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #00d4ff, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta-description {
+            font-size: 1.1rem;
+            color: #a0a0a0;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .course-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .feature {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 4px solid #00d4ff;
+        }
+
+        .feature h4 {
+            color: #00d4ff;
+            margin-bottom: 10px;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            padding: 18px 40px;
+            background: linear-gradient(135deg, #00d4ff, #7c3aed);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin: 10px;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0, 212, 255, 0.4);
+        }
+
+        .warning-box {
+            background: rgba(255, 71, 87, 0.1);
+            border: 2px solid rgba(255, 71, 87, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .warning-title {
+            color: #ff4757;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .course-features {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧠 Calculadora de Impermanent Loss</h1>
+            <p class="subtitle">Descubre el impacto real del IL en tus estrategias de Market Making DeFi</p>
+        </div>
+
+        <div class="main-grid">
+            <div class="card">
+                <h3 style="color: #00d4ff; margin-bottom: 20px;">📊 Configuración de la Posición</h3>
+                
+                <div class="input-group">
+                    <label for="tokenA">Token A (ej: ETH)</label>
+                    <input type="text" id="tokenA" value="ETH" placeholder="Token A">
+                </div>
+
+                <div class="input-group">
+                    <label for="tokenB">Token B (ej: USDC)</label>
+                    <input type="text" id="tokenB" value="USDC" placeholder="Token B">
+                </div>
+
+                <div class="input-group">
+                    <label for="initialPriceA">Precio inicial Token A ($)</label>
+                    <input type="number" id="initialPriceA" value="2000" min="0" step="0.01">
+                </div>
+
+                <div class="input-group">
+                    <label for="finalPriceA">Precio final Token A ($)</label>
+                    <input type="number" id="finalPriceA" value="2500" min="0" step="0.01">
+                </div>
+
+                <div class="input-group">
+                    <label for="investment">Inversión inicial ($)</label>
+                    <input type="number" id="investment" value="10000" min="0" step="100">
+                </div>
+
+                <div class="input-group">
+                    <label for="feeRate">Tasa de comisiones (%)</label>
+                    <select id="feeRate">
+                        <option value="0.05">0.05% (Stable pairs)</option>
+                        <option value="0.3" selected>0.30% (Standard)</option>
+                        <option value="1">1.00% (Exotic pairs)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="volume">Volumen diario estimado ($)</label>
+                    <input type="number" id="volume" value="100000" min="0" step="1000">
+                </div>
+
+                <button class="calculate-btn" onclick="calculateIL()">
+                    🚀 Calcular Impermanent Loss
+                </button>
+
+                <div class="results" id="results" style="display: none;">
+                    <h4 style="color: #00d4ff; margin-bottom: 15px;">📈 Resultados</h4>
+                    <div class="result-item">
+                        <span>Impermanent Loss:</span>
+                        <span class="result-value" id="ilValue">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Valor HODLing:</span>
+                        <span class="result-value neutral" id="holdValue">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Valor LP Pool:</span>
+                        <span class="result-value neutral" id="lpValue">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Comisiones estimadas (30d):</span>
+                        <span class="result-value positive" id="feesValue">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span>P&L Neto (LP vs HODL):</span>
+                        <span class="result-value" id="netPL">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 style="color: #00d4ff; margin-bottom: 20px;">📊 Visualización del IL</h3>
+                <div class="chart-container">
+                    <canvas id="ilChart"></canvas>
+                </div>
+                
+                <div class="warning-box">
+                    <div class="warning-title">⚠️ Concepto Clave: Loss vs Rebalancing (LVR)</div>
+                    <p>El IL tradicional no captura toda la pérdida real. El LVR (Loss vs Rebalancing) considera cómo los arbitrajistas capturan valor de los LPs. En nuestro curso aprenderás a calcular y mitigar el LVR efectivo.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="cta-section">
+            <h2 class="cta-title">🎓 ¿Quieres Dominar el Market Making DeFi?</h2>
+            <p class="cta-description">
+                Esta calculadora es solo una introducción básica. En nuestro curso de especialización aprenderás estrategias avanzadas, análisis de ballenas, gamma exposure, y técnicas de trading de volatilidad que los profesionales no comparten.
+            </p>
+
+            <div class="course-features">
+                <div class="feature">
+                    <h4>🌀 Gamma Exposure</h4>
+                    <p>Comprende la convexidad y sensibilidad de tus posiciones LP</p>
+                </div>
+                <div class="feature">
+                    <h4>🔍 Análisis LVR</h4>
+                    <p>Calcula las pérdidas reales por arbitraje externo</p>
+                </div>
+                <div class="feature">
+                    <h4>⚖️ Estrategias Delta-Neutral</h4>
+                    <p>Combina LP con coberturas en perp DEXs</p>
+                </div>
+                <div class="feature">
+                    <h4>🌪️ Trading de Volatilidad</h4>
+                    <p>Estructuras que se benefician de la volatilidad implícita</p>
+                </div>
+                <div class="feature">
+                    <h4>🔍 Auditoría de Ballenas</h4>
+                    <p>Replica estrategias de LPs institucionales exitosos</p>
+                </div>
+                <div class="feature">
+                    <h4>🧠 Estrategias Sofisticadas</h4>
+                    <p>LP con apalancamiento y combinación con opciones</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <a href="#" class="cta-btn pulse">🚀 Inscribirme al Curso (4.500€)</a>
+                <a href="#" class="cta-btn">📞 Consulta Personalizada Gratis</a>
+            </div>
+
+            <div style="margin-top: 20px; color: #a0a0a0;">
+                <p><strong>Bonus:</strong> Acceso al grupo privado de Crypto Plaza (valor 1.050€) incluido</p>
+                <p>10 módulos • Material extra • 3 meses de soporte • Proyecto final</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let chart;
+
+        function isValidNumber(value) {
+            return typeof value === 'number' && !isNaN(value) && isFinite(value);
+        }
+
+        function calculateIL() {
+            const initialPrice = parseFloat(document.getElementById('initialPriceA').value);
+            const finalPrice = parseFloat(document.getElementById('finalPriceA').value);
+            const investment = parseFloat(document.getElementById('investment').value);
+            const feeRate = parseFloat(document.getElementById('feeRate').value);
+            const volume = parseFloat(document.getElementById('volume').value);
+
+            // Validación de inputs
+            if (!isValidNumber(initialPrice) || initialPrice <= 0 ||
+                !isValidNumber(finalPrice) || finalPrice <= 0 ||
+                !isValidNumber(investment) || investment <= 0 ||
+                !isValidNumber(feeRate) || feeRate < 0 ||
+                !isValidNumber(volume) || volume < 0) {
+                document.getElementById('results').style.display = 'none';
+                if (chart) chart.destroy();
+                return;
+            }
+
+            // Cálculo de Impermanent Loss
+            const priceRatio = finalPrice / initialPrice;
+            const ilPercentage = (2 * Math.sqrt(priceRatio)) / (1 + priceRatio) - 1;
+            const ilAmount = investment * ilPercentage;
+
+            // Valor HODLing (50/50 split inicial)
+            const holdValue = investment * (0.5 + 0.5 * priceRatio);
+
+            // Valor LP Pool
+            const lpValue = holdValue + ilAmount;
+
+            // Comisiones estimadas (30 días)
+            const dailyFees = (volume * feeRate) / 100;
+            const monthlyFees = dailyFees * 30;
+
+            // P&L Neto
+            const netPL = ilAmount + monthlyFees;
+
+            // Actualizar resultados
+            document.getElementById('ilValue').textContent = `${ilAmount.toFixed(2)}$ (${(ilPercentage * 100).toFixed(2)}%)`;
+            document.getElementById('ilValue').className = `result-value ${ilAmount < 0 ? 'negative' : 'positive'}`;
+
+            document.getElementById('holdValue').textContent = `${holdValue.toFixed(2)}$`;
+            document.getElementById('lpValue').textContent = `${lpValue.toFixed(2)}$`;
+            document.getElementById('feesValue').textContent = `+${monthlyFees.toFixed(2)}$`;
+
+            document.getElementById('netPL').textContent = `${netPL.toFixed(2)}$`;
+            document.getElementById('netPL').className = `result-value ${netPL < 0 ? 'negative' : 'positive'}`;
+
+            document.getElementById('results').style.display = 'block';
+
+            // Crear gráfico
+            createILChart(initialPrice, finalPrice);
+        }
+
+        function createILChart(initialPrice, finalPrice) {
+            const ctx = document.getElementById('ilChart').getContext('2d');
+            if (chart) {
+                chart.destroy();
+            }
+
+            // Generar datos para el gráfico con rangos dinámicos
+            const priceRanges = [];
+            const ilData = [];
+            const currentPriceData = [];
+
+            // Determinar rango dinámico basado en precios inicial y final
+            const minRange = Math.min(initialPrice, finalPrice);
+            const maxRange = Math.max(initialPrice, finalPrice);
+            const padding = (maxRange - minRange) * 0.5; // 50% de padding
+            const minPrice = Math.max(minRange - padding, minRange * 0.3); // No menos del 30% del precio mínimo
+            const maxPrice = maxRange + padding;
+
+            const steps = 150;
+            const stepSize = (maxPrice - minPrice) / steps;
+
+            for (let i = 0; i <= steps; i++) {
+                const price = minPrice + (i * stepSize);
+                const ratio = price / initialPrice;
+                const il = (2 * Math.sqrt(ratio)) / (1 + ratio) - 1;
+                priceRanges.push(price);
+                ilData.push(il * 100);
+                // Marcar el precio actual
+                if (Math.abs(price - finalPrice) < stepSize * 0.8) {
+                    currentPriceData.push({x: price, y: il * 100});
+                } else {
+                    currentPriceData.push(null);
+                }
+            }
+
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: priceRanges.map(p => p.toFixed(0)),
+                    datasets: [
+                        {
+                            label: 'Impermanent Loss (%)',
+                            data: ilData,
+                            borderColor: '#00d4ff',
+                            backgroundColor: 'rgba(0, 212, 255, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 0,
+                            pointHoverRadius: 5
+                        },
+                        {
+                            label: `Precio Actual (${finalPrice})`,
+                            data: currentPriceData.map(point => point ? point.y : null),
+                            borderColor: '#ff4757',
+                            backgroundColor: '#ff4757',
+                            pointRadius: function(context) {
+                                return context.parsed.y !== null ? 8 : 0;
+                            },
+                            pointHoverRadius: 10,
+                            showLine: false,
+                            pointBorderWidth: 3,
+                            pointBorderColor: '#ffffff'
+                        },
+                        {
+                            label: `Precio Inicial (${initialPrice})`,
+                            data: priceRanges.map((price, i) => Math.abs(price - initialPrice) < stepSize * 0.8 ? ilData[i] : null),
+                            borderColor: '#7c3aed',
+                            backgroundColor: '#7c3aed',
+                            pointRadius: function(context) {
+                                return context.parsed.y !== null ? 6 : 0;
+                            },
+                            pointHoverRadius: 8,
+                            showLine: false,
+                            pointBorderWidth: 2,
+                            pointBorderColor: '#ffffff'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#ffffff',
+                                usePointStyle: true,
+                                padding: 20
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#ffffff',
+                            bodyColor: '#ffffff',
+                            borderColor: '#00d4ff',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.dataset.label || '';
+                                    const value = context.parsed.y;
+                                    if (value !== null) {
+                                        return `${label}: ${value.toFixed(3)}%`;
+                                    }
+                                    return '';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Precio Token A ($)',
+                                color: '#ffffff',
+                                font: { size: 14, weight: 'bold' }
+                            },
+                            ticks: {
+                                color: '#a0a0a0',
+                                maxTicksLimit: 8,
+                                callback: function(value, index) {
+                                    const price = this.getLabelForValue(value);
+                                    return price;
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Impermanent Loss (%)',
+                                color: '#ffffff',
+                                font: { size: 14, weight: 'bold' }
+                            },
+                            ticks: {
+                                color: '#a0a0a0',
+                                callback: function(value) {
+                                    return value.toFixed(1) + '%';
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Calcular automáticamente al cambiar valores
+        document.querySelectorAll('input, select').forEach(element => {
+            element.addEventListener('input', () => {
+                calculateIL();
+            });
+        });
+
+        // Calcular ejemplo inicial
+        window.addEventListener('DOMContentLoaded', () => {
+            calculateIL();
+        });
+    </script>
+</body>
+</html>
