@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Plaza Consulting</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 5px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 15px 20px;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button.active {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .tab-content {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .result {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            box-shadow: 0 10px 30px rgba(40, 167, 69, 0.3);
+        }
+
+        .warning {
+            background: linear-gradient(45deg, #ffc107, #fd7e14);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .risk-low { background: linear-gradient(45deg, #28a745, #20c997); }
+        .risk-medium { background: linear-gradient(45deg, #ffc107, #fd7e14); }
+        .risk-high { background: linear-gradient(45deg, #dc3545, #e83e8c); }
+
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .recommendations {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .recommendations h3 {
+            margin-bottom: 15px;
+        }
+
+        .recommendations ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .recommendations li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .recommendations li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .crypto-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .crypto-option {
+            background: #f8f9fa;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .crypto-option:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .crypto-option.selected {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .progress-bar {
+            background: #e1e5e9;
+            border-radius: 10px;
+            height: 20px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 Crypto Plaza Consulting</h1>
+            <p class="subtitle">Asesoría especializada en implementación de criptoactivos para tesorería corporativa</p>
+        </header>
+
+        <div class="nav-tabs">
+            <button class="tab-button active" data-tab="assessment" onclick="showTab('assessment', event)">Evaluación de Riesgo</button>
+            <button class="tab-button" data-tab="calculator" onclick="showTab('calculator', event)">Calculadora ROI</button>
+            <button class="tab-button" data-tab="strategy" onclick="showTab('strategy', event)">Estrategia</button>
+            <button class="tab-button" data-tab="compliance" onclick="showTab('compliance', event)">Cumplimiento</button>
+        </div>
+
+        <!-- EVALUACIÓN DE RIESGO -->
+        <div id="assessment" class="tab-content active">
+            <h2>📊 Evaluación de Riesgo Corporativo</h2>
+            
+            <div class="grid">
+                <div class="card">
+                    <h3>Información de la Empresa</h3>
+                    <div class="form-group">
+                        <label>Industria</label>
+                        <select id="industry">
+                            <option value="">Seleccione su industria</option>
+                            <option value="tech">Tecnología</option>
+                            <option value="finance">Servicios Financieros</option>
+                            <option value="retail">Comercio Minorista</option>
+                            <option value="manufacturing">Manufactura</option>
+                            <option value="real-estate">Bienes Raíces</option>
+                            <option value="other">Otra</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Tamaño de Tesorería (USD)</label>
+                        <select id="treasury-size">
+                            <option value="">Seleccione el rango</option>
+                            <option value="small">$1M - $10M</option>
+                            <option value="medium">$10M - $100M</option>
+                            <option value="large">$100M - $1B</option>
+                            <option value="enterprise">$1B+</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Experiencia con Criptoactivos</label>
+                        <select id="crypto-experience">
+                            <option value="">Seleccione nivel</option>
+                            <option value="none">Sin experiencia</option>
+                            <option value="basic">Conocimiento básico</option>
+                            <option value="intermediate">Experiencia intermedia</option>
+                            <option value="advanced">Experiencia avanzada</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Objetivos de Inversión</h3>
+                    <div class="form-group">
+                        <label>Porcentaje de tesorería en cripto (%)</label>
+                        <input type="range" id="crypto-percentage" min="1" max="50" value="5" oninput="updatePercentageDisplay()">
+                        <div style="text-align: center; margin-top: 10px;">
+                            <span id="percentage-display">5%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Horizonte de inversión</label>
+                        <select id="investment-horizon">
+                            <option value="">Seleccione plazo</option>
+                            <option value="short">Corto plazo (< 1 año)</option>
+                            <option value="medium">Mediano plazo (1-3 años)</option>
+                            <option value="long">Largo plazo (3+ años)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Tolerancia al riesgo</label>
+                        <select id="risk-tolerance">
+                            <option value="">Seleccione nivel</option>
+                            <option value="conservative">Conservador</option>
+                            <option value="moderate">Moderado</option>
+                            <option value="aggressive">Agresivo</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn" onclick="calculateRiskAssessment()">Evaluar Perfil de Riesgo</button>
+            
+            <div id="risk-result"></div>
+        </div>
+
+        <!-- CALCULADORA ROI -->
+        <div id="calculator" class="tab-content">
+            <h2>💰 Calculadora de ROI y Diversificación</h2>
+            
+            <div class="grid">
+                <div class="card">
+                    <h3>Parámetros de Inversión</h3>
+                    <div class="form-group">
+                        <label>Monto inicial (USD)</label>
+                        <input type="number" id="initial-amount" placeholder="100000" min="1000">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Período de análisis (meses)</label>
+                        <input type="number" id="analysis-period" placeholder="12" min="1" max="60">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Contribución mensual (USD)</label>
+                        <input type="number" id="monthly-contribution" placeholder="10000" min="0">
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Selección de Criptoactivos</h3>
+                    <div class="crypto-selector">
+                        <div class="crypto-option" onclick="toggleCrypto('BTC', event)">
+                            <strong>Bitcoin (BTC)</strong>
+                            <div>Reserva de valor</div>
+                        </div>
+                        <div class="crypto-option" onclick="toggleCrypto('ETH', event)">
+                            <strong>Ethereum (ETH)</strong>
+                            <div>Ecosistema DeFi</div>
+                        </div>
+                        <div class="crypto-option" onclick="toggleCrypto('USDC', event)">
+                            <strong>USDC</strong>
+                            <div>Stablecoin</div>
+                        </div>
+                        <div class="crypto-option" onclick="toggleCrypto('USDT', event)">
+                            <strong>Tether (USDT)</strong>
+                            <div>Liquidez</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn" onclick="calculateROI()">Calcular Proyección ROI</button>
+            
+            <div id="roi-result"></div>
+            <div class="chart-container">
+                <canvas id="roiChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+
+        <!-- ESTRATEGIA -->
+        <div id="strategy" class="tab-content">
+            <h2>🎯 Estrategia de Implementación</h2>
+            
+            <div class="card">
+                <h3>Configuración de Estrategia</h3>
+                <div class="form-group">
+                    <label>Tipo de estrategia</label>
+                    <select id="strategy-type">
+                        <option value="">Seleccione estrategia</option>
+                        <option value="conservative">Conservadora (70% Stablecoins, 30% BTC/ETH)</option>
+                        <option value="balanced">Balanceada (50% Stablecoins, 50% BTC/ETH)</option>
+                        <option value="growth">Crecimiento (30% Stablecoins, 70% BTC/ETH)</option>
+                        <option value="custom">Personalizada</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Frecuencia de rebalanceo</label>
+                    <select id="rebalancing-frequency">
+                        <option value="">Seleccione frecuencia</option>
+                        <option value="monthly">Mensual</option>
+                        <option value="quarterly">Trimestral</option>
+                        <option value="biannual">Semestral</option>
+                        <option value="annual">Anual</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Límite de pérdida máxima (%)</label>
+                    <input type="number" id="max-loss" placeholder="20" min="5" max="50">
+                </div>
+            </div>
+
+            <button class="btn" onclick="generateStrategy()">Generar Plan Estratégico</button>
+            
+            <div id="strategy-result"></div>
+        </div>
+
+        <!-- CUMPLIMIENTO -->
+        <div id="compliance" class="tab-content">
+            <h2>⚖️ Marco Regulatorio y Cumplimiento</h2>
+            
+            <div class="grid">
+                <div class="card">
+                    <h3>Información Jurisdiccional</h3>
+                    <div class="form-group">
+                        <label>País de operación</label>
+                        <select id="country">
+                            <option value="">Seleccione país</option>
+                            <option value="US">Estados Unidos</option>
+                            <option value="EU">Unión Europea</option>
+                            <option value="UK">Reino Unido</option>
+                            <option value="CA">Canadá</option>
+                            <option value="MX">México</option>
+                            <option value="AR">Argentina</option>
+                            <option value="BR">Brasil</option>
+                            <option value="Other">Otro</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Tipo de empresa</label>
+                        <select id="company-type">
+                            <option value="">Seleccione tipo</option>
+                            <option value="public">Empresa pública (cotiza en bolsa)</option>
+                            <option value="private">Empresa privada</option>
+                            <option value="subsidiary">Subsidiaria</option>
+                            <option value="nonprofit">Sin fines de lucro</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Requisitos de Reporte</h3>
+                    <div class="form-group">
+                        <label>¿Requiere auditoría externa?</label>
+                        <select id="audit-required">
+                            <option value="">Seleccione</option>
+                            <option value="yes">Sí</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Estándar contable</label>
+                        <select id="accounting-standard">
+                            <option value="">Seleccione estándar</option>
+                            <option value="GAAP">US GAAP</option>
+                            <option value="IFRS">IFRS</option>
+                            <option value="Local">Estándares locales</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn" onclick="generateCompliance()">Generar Marco de Cumplimiento</button>
+            
+            <div id="compliance-result"></div>
+        </div>
+    </div>
+
+    <script>
+        let selectedCryptos = [];
+        let roiChart = null;
+
+        function showTab(tabName, event) {
+            // Hide all tabs
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            // Remove active class from buttons
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            // Add active class to clicked button
+            if (event && event.currentTarget) {
+                event.currentTarget.classList.add('active');
+            } else {
+                // fallback: activate by data-tab
+                const btn = document.querySelector(`.tab-button[data-tab="${tabName}"]`);
+                if (btn) btn.classList.add('active');
+            }
+        }
+
+        function updatePercentageDisplay() {
+            const value = document.getElementById('crypto-percentage').value;
+            document.getElementById('percentage-display').textContent = value + '%';
+        }
+
+        function toggleCrypto(crypto, event) {
+            const element = event.target.closest('.crypto-option');
+            if (selectedCryptos.includes(crypto)) {
+                selectedCryptos = selectedCryptos.filter(c => c !== crypto);
+                element.classList.remove('selected');
+            } else {
+                selectedCryptos.push(crypto);
+                element.classList.add('selected');
+            }
+        }
+
+        function calculateRiskAssessment() {
+            const industry = document.getElementById('industry').value;
+            const treasurySize = document.getElementById('treasury-size').value;
+            const experience = document.getElementById('crypto-experience').value;
+            const percentage = document.getElementById('crypto-percentage').value;
+            const horizon = document.getElementById('investment-horizon').value;
+            const tolerance = document.getElementById('risk-tolerance').value;
+
+            if (!industry || !treasurySize || !experience || !horizon || !tolerance) {
+                alert('Por favor complete todos los campos');
+                return;
+            }
+
+            // Calculate risk score
+            let riskScore = 0;
+            
+            // Industry factor
+            const industryRisk = {
+                'tech': 2, 'finance': 4, 'retail': 3, 
+                'manufacturing': 3, 'real-estate': 3, 'other': 3
+            };
+            riskScore += industryRisk[industry] || 3;
+
+            // Experience factor
+            const experienceRisk = {
+                'none': 5, 'basic': 4, 'intermediate': 2, 'advanced': 1
+            };
+            riskScore += experienceRisk[experience];
+
+            // Tolerance factor
+            const toleranceRisk = {
+                'conservative': 1, 'moderate': 3, 'aggressive': 5
+            };
+            riskScore += toleranceRisk[tolerance];
+
+            // Percentage factor
+            if (percentage > 20) riskScore += 3;
+            else if (percentage > 10) riskScore += 2;
+            else riskScore += 1;
+
+            // Determine risk level
+            let riskLevel, riskClass, recommendations;
+            
+            if (riskScore <= 6) {
+                riskLevel = 'BAJO';
+                riskClass = 'risk-low';
+                recommendations = [
+                    'Comenzar con 1-5% de la tesorería en criptoactivos',
+                    'Enfocarse en Bitcoin y stablecoins',
+                    'Implementar gradualmente durante 6-12 meses',
+                    'Establecer políticas claras de custodia'
+                ];
+            } else if (riskScore <= 12) {
+                riskLevel = 'MEDIO';
+                riskClass = 'risk-medium';
+                recommendations = [
+                    'Considerar hasta 10% de la tesorería',
+                    'Diversificar entre BTC, ETH y stablecoins',
+                    'Implementar controles de riesgo robustos',
+                    'Capacitar al equipo financiero'
+                ];
+            } else {
+                riskLevel = 'ALTO';
+                riskClass = 'risk-high';
+                recommendations = [
+                    'Limitar exposición inicial al 2-3%',
+                    'Priorizar educación y capacitación',
+                    'Implementar fase piloto de 3-6 meses',
+                    'Consultar con asesores especializados'
+                ];
+            }
+
+            const resultHTML = `
+                <div class="result ${riskClass}">
+                    <h3>Nivel de Riesgo: ${riskLevel}</h3>
+                    <p>Puntuación de Riesgo: ${riskScore}/15</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${(riskScore/15)*100}%"></div>
+                    </div>
+                </div>
+                <div class="recommendations">
+                    <h3>Recomendaciones Personalizadas</h3>
+                    <ul>
+                        ${recommendations.map(rec => `<li>${rec}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+
+            document.getElementById('risk-result').innerHTML = resultHTML;
+        }
+
+        function calculateROI() {
+            const initialAmount = parseFloat(document.getElementById('initial-amount').value);
+            const period = parseInt(document.getElementById('analysis-period').value);
+            const monthlyContribution = parseFloat(document.getElementById('monthly-contribution').value) || 0;
+
+            if (!initialAmount || !period || selectedCryptos.length === 0) {
+                alert('Por favor complete los campos requeridos y seleccione al menos un criptoactivo');
+                return;
+            }
+
+            // Simulate historical returns (simplified)
+            const cryptoReturns = {
+                'BTC': { annual: 45, volatility: 80 },
+                'ETH': { annual: 55, volatility: 90 },
+                'USDC': { annual: 3, volatility: 1 },
+                'USDT': { annual: 2, volatility: 1 }
+            };
+
+            let totalReturnSum = 0;
+            let avgVolatility = 0;
+            
+            selectedCryptos.forEach(crypto => {
+                totalReturnSum += cryptoReturns[crypto].annual;
+                avgVolatility += cryptoReturns[crypto].volatility;
+            });
+
+            const avgReturn = totalReturnSum / selectedCryptos.length;
+            avgVolatility = avgVolatility / selectedCryptos.length;
+
+            // Calculate projections
+            const monthlyReturn = avgReturn / 12 / 100;
+            let projectedValue = initialAmount;
+            const projectionData = [];
+
+            for (let month = 0; month <= period; month++) {
+                if (month > 0) {
+                    projectedValue += monthlyContribution;
+                    projectedValue *= (1 + monthlyReturn);
+                }
+                projectionData.push({
+                    month: month,
+                    value: Math.round(projectedValue)
+                });
+            }
+
+            const finalValue = projectedValue;
+            const totalInvested = initialAmount + (monthlyContribution * period);
+            const totalReturnValue = finalValue - totalInvested;
+            const roiPercentage = (totalReturnValue / totalInvested) * 100;
+
+            const resultHTML = `
+                <div class="result">
+                    <h3>Proyección de Rendimiento</h3>
+                    <div class="grid">
+                        <div>
+                            <strong>Inversión Total:</strong><br>
+                            $${totalInvested.toLocaleString()}
+                        </div>
+                        <div>
+                            <strong>Valor Proyectado:</strong><br>
+                            $${Math.round(finalValue).toLocaleString()}
+                        </div>
+                        <div>
+                            <strong>Ganancia Estimada:</strong><br>
+                            $${Math.round(totalReturnValue).toLocaleString()}
+                        </div>
+                        <div>
+                            <strong>ROI Estimado:</strong><br>
+                            ${roiPercentage.toFixed(1)}%
+                        </div>
+                    </div>
+                </div>
+                <div class="warning">
+                    <strong>⚠️ Importante:</strong> Estas proyecciones son estimaciones basadas en datos históricos. 
+                    Los criptoactivos son altamente volátiles y las pérdidas pueden ser significativas.
+                </div>
+            `;
+
+            document.getElementById('roi-result').innerHTML = resultHTML;
+
+            // Create chart
+            createROIChart(projectionData);
+        }
+
+        function createROIChart(data) {
+            const ctx = document.getElementById('roiChart').getContext('2d');
+            
+            if (roiChart) {
+                roiChart.destroy();
+            }
+
+            roiChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.map(d => `Mes ${d.month}`),
+                    datasets: [{
+                        label: 'Valor Proyectado (USD)',
+                        data: data.map(d => d.value),
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Proyección de Crecimiento de Inversión'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function generateStrategy() {
+            const strategyType = document.getElementById('strategy-type').value;
+            const rebalancing = document.getElementById('rebalancing-frequency').value;
+            const maxLoss = document.getElementById('max-loss').value;
+
+            if (!strategyType || !rebalancing || !maxLoss) {
+                alert('Por favor complete todos los campos');
+                return;
+            }
+
+            const strategies = {
+                'conservative': {
+                    name: 'Estrategia Conservadora',
+                    allocation: 'BTC: 20%, ETH: 10%, Stablecoins: 70%',
+                    description: 'Enfoque en preservación de capital con exposición limitada a volatilidad'
+                },
+                'balanced': {
+                    name: 'Estrategia Balanceada',
+                    allocation: 'BTC: 30%, ETH: 20%, Stablecoins: 50%',
+                    description: 'Balance entre crecimiento y estabilidad'
+                },
+                'growth': {
+                    name: 'Estrategia de Crecimiento',
+                    allocation: 'BTC: 40%, ETH: 30%, Stablecoins: 30%',
+                    description: 'Maximización de potencial de crecimiento con mayor tolerancia al riesgo'
+                },
+                'custom': {
+                    name: 'Estrategia Personalizada',
+                    allocation: 'Personalizada según necesidades específicas',
+                    description: 'Estrategia adaptada a requisitos únicos de la empresa'
+                }
+            };
+
+            const strategy = strategies[strategyType];
+            const rebalancingText = {
+                'monthly': 'Mensual',
+                'quarterly': 'Trimestral', 
+                'biannual': 'Semestral',
+                'annual': 'Anual'
+            };
+
+            const resultHTML = `
+                <div class="result">
+                    <h3>${strategy.name}</h3>
+                    <p><strong>Asignación recomendada:</strong> ${strategy.allocation}</p>
+                    <p><strong>Descripción:</strong> ${strategy.description}</p>
+                    <p><strong>Frecuencia de rebalanceo:</strong> ${rebalancingText[rebalancing]}</p>
+                    <p><strong>Stop-loss establecido en:</strong> ${maxLoss}%</p>
+                </div>
+                <div class="recommendations">
+                    <h3>Plan de Implementación</h3>
+                    <ul>
+                        <li>Fase 1: Establecimiento de infraestructura y políticas (4-6 semanas)</li>
+                        <li>Fase 2: Implementación gradual del ${strategy.allocation.split(',')[0]} (2-4 semanas)</li>
+                        <li>Fase 3: Diversificación completa según estrategia (4-8 semanas)</li>
+                        <li>Fase 4: Monitoreo continuo y rebalanceo ${rebalancingText[rebalancing].toLowerCase()}</li>
+                        <li>Evaluación y ajustes trimestrales de la estrategia</li>
+                    </ul>
+                </div>
+            `;
+
+            document.getElementById('strategy-result').innerHTML = resultHTML;
+        }
+
+        function generateCompliance() {
+            const country = document.getElementById('country').value;
+            const companyType = document.getElementById('company-type').value;
+            const auditRequired = document.getElementById('audit-required').value;
+            const accountingStandard = document.getElementById('accounting-standard').value;
+
+            if (!country || !companyType || !auditRequired || !accountingStandard) {
+                alert('Por favor complete todos los campos');
+                return;
+            }
+
+            const complianceFrameworks = {
+                'US': 'SEC, CFTC, FinCEN, IRS',
+                'EU': 'MiCA, AMLD5, GDPR',
+                'UK': 'FCA, HMRC',
+                'CA': 'CSA, FINTRAC, CRA',
+                'MX': 'CNBV, Banco de México',
+                'AR': 'BCRA, CNV, AFIP',
+                'BR': 'BACEN, CVM, RFB',
+                'Other': 'Regulaciones locales aplicables'
+            };
+
+            const reportingRequirements = {
+                'public': ['Reportes trimestrales SEC/equivalente', 'Auditoría anual obligatoria', 'Divulgación de riesgos'],
+                'private': ['Reportes internos mensuales', 'Auditoría según requerimientos', 'Control interno robusto'],
+                'subsidiary': ['Consolidación con matriz', 'Reportes regulatorios locales', 'Cumplimiento corporativo'],
+                'nonprofit': ['Reportes de transparencia', 'Auditoría de fondos', 'Divulgación pública']
+            };
+
+            const resultHTML = `
+                <div class="result">
+                    <h3>Marco Regulatorio Aplicable</h3>
+                    <p><strong>Jurisdicción:</strong> ${country}</p>
+                    <p><strong>Reguladores principales:</strong> ${complianceFrameworks[country]}</p>
+                    <p><strong>Estándar contable:</strong> ${accountingStandard}</p>
+                </div>
+                <div class="recommendations">
+                    <h3>Requisitos de Cumplimiento</h3>
+                    <ul>
+                        ${reportingRequirements[companyType].map(req => `<li>${req}</li>`).join('')}
+                        <li>Implementación de políticas AML/KYC</li>
+                        <li>Documentación de transacciones y custodia</li>
+                        <li>Evaluación continua de riesgos regulatorios</li>
+                    </ul>
+                </div>
+                <div class="warning">
+                    <strong>⚠️ Importante:</strong> Este es un marco general. Se recomienda consultar con asesores legales 
+                    especializados en cada jurisdicción para asegurar cumplimiento completo.
+                </div>
+            `;
+
+            document.getElementById('compliance-result').innerHTML = resultHTML;
+        }
+    </script>
