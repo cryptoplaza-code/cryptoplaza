@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentación Interactiva: Web3 y Criptoactivos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Visualization & Content Choices:
+        - Evolución Web1/Web2/Web3: Goal: Informar/Comparar. Viz: Columnas/Tarjetas HTML/Tailwind con iconos Unicode. Interaction: Hover suave. Justification: Claridad visual y comparación directa.
+        - Definición Criptoactivos: Goal: Informar. Viz: Bloque de texto. Interaction: Ninguna. Justification: Explicación directa.
+        - Oportunidades: Goal: Informar/Persuadir. Viz: Rejilla de tarjetas HTML/Tailwind expandibles. Interaction: Clic para expandir/colapsar (JS). Justification: Escaneo fácil, profundización opcional.
+        - Desafíos: Goal: Informar/Advertir. Viz: Rejilla de tarjetas HTML/Tailwind expandibles. Interaction: Clic para expandir/colapsar (JS). Justification: Consistente con Oportunidades.
+        - Volatilidad (dentro de Desafíos): Goal: Ilustrar. Viz: Gráfico de líneas Chart.js con datos simulados. Interaction: Estático. Justification: Representación visual de fluctuaciones. Library: Chart.js.
+        - Casos de Uso: Goal: Ilustrar/Inspirar. Viz: Tarjetas filtrables por categoría (botones). Interaction: Clic en botón de filtro para mostrar/ocultar tarjetas (JS). Justification: Exploración personalizada.
+        - Próximos Pasos: Goal: Guiar/Accionar. Viz: Lista numerada HTML/CSS. Interaction: Hover suave. Justification: Consejos claros y accionables.
+        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .smooth-scroll {
+            scroll-behavior: smooth;
+        }
+        .nav-link {
+            @apply px-3 py-2 rounded-md text-sm font-medium text-neutral-700 hover:bg-sky-100 hover:text-sky-700 transition-colors;
+        }
+        .nav-link.active {
+            @apply bg-sky-600 text-white hover:bg-sky-700;
+        }
+        .section-title {
+            @apply text-3xl font-bold text-neutral-800 mb-3 text-center;
+        }
+        .section-subtitle {
+            @apply text-xl text-neutral-600 mb-8 text-center max-w-3xl mx-auto;
+        }
+        .card {
+            @apply bg-white p-6 rounded-xl shadow-lg transition-all duration-300 ease-in-out;
+        }
+        .card-title {
+            @apply text-xl font-semibold text-sky-700 mb-2;
+        }
+        .card-content p {
+            @apply text-neutral-600 text-sm leading-relaxed;
+        }
+        .expandable-card .details {
+            display: none;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb; /* neutral-200 */
+        }
+        .tag {
+            @apply inline-block bg-teal-100 text-teal-700 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* md:max-w-xl */
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; /* sm:h-72 md:h-80 */
+            max-height: 350px; /* sm:max-h-80 md:max-h-96 */
+        }
+         /* Estilo para el botón activo del filtro */
+        .filter-btn.active {
+            @apply bg-sky-600 text-white;
+        }
+        .filter-btn {
+            @apply px-4 py-2 mr-2 mb-2 rounded-lg bg-sky-100 text-sky-700 hover:bg-sky-200 transition-colors focus:outline-none focus:ring-2 focus:ring-sky-500;
+        }
+        /* Animación para subrayado en el menú */
+        .nav-underline {
+            position: relative;
+        }
+        .nav-underline::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #2e5aac 0%, #0a2540 100%);
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            transform: scaleX(0.7);
+        }
+        .nav-underline:hover::after, .nav-underline.active::after {
+            opacity: 1;
+            transform: scaleX(1);
+        }
+        /* Glassmorphism para menú */
+        .glass {
+            background: linear-gradient(90deg, #2e5aac 0%, #0a2540 100%);
+            box-shadow: 0 4px 24px 0 rgba(10,37,64,0.08);
+            backdrop-filter: blur(8px);
+        }
+        /* Glow para botones filtro activos */
+        .filter-btn.active {
+            box-shadow: 0 0 0 2px #2e5aac, 0 2px 8px 0 #2e5aac33;
+        }
+    </style>
+</head>
+<body class="bg-neutral-100 text-neutral-800 smooth-scroll">
+
+    <nav class="glass fixed top-0 left-0 right-0 z-50 transition-all duration-300 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <!-- Logo con icono SVG -->
+                    <span class="flex items-center font-bold text-xl text-white tracking-tight select-none">
+                        <svg class="w-8 h-8 mr-2" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="16" cy="16" r="16" fill="#00b86b"/>
+                            <path d="M10 16c0-3.314 2.686-6 6-6s6 2.686 6 6-2.686 6-6 6-6-2.686-6-6zm6-4a4 4 0 100 8 4 4 0 000-8z" fill="#fff"/>
+                            <path d="M16 12v8M12 16h8" stroke="#0a2540" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                        Web3 & Cripto
+                    </span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#introduccion" class="nav-underline px-4 py-2 rounded-md text-base font-medium text-white hover:bg-white/10 transition-colors">Introducción</a>
+                        <a href="#oportunidades" class="nav-underline px-4 py-2 rounded-md text-base font-medium text-white hover:bg-white/10 transition-colors">Oportunidades</a>
+                        <a href="#desafios" class="nav-underline px-4 py-2 rounded-md text-base font-medium text-white hover:bg-white/10 transition-colors">Desafíos</a>
+                        <a href="#casos-de-uso" class="nav-underline px-4 py-2 rounded-md text-base font-medium text-white hover:bg-white/10 transition-colors">Casos de Uso</a>
+                        <a href="#proximos-pasos" class="nav-underline px-4 py-2 rounded-md text-base font-medium text-white hover:bg-white/10 transition-colors">Próximos Pasos</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-white hover:text-green-300 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-400">
+                        <span class="sr-only">Abrir menú principal</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="md:hidden hidden bg-gradient-to-r from-blue-700 to-blue-900" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#introduccion" class="block nav-underline text-white text-center px-4 py-2">Introducción</a>
+                <a href="#oportunidades" class="block nav-underline text-white text-center px-4 py-2">Oportunidades</a>
+                <a href="#desafios" class="block nav-underline text-white text-center px-4 py-2">Desafíos</a>
+                <a href="#casos-de-uso" class="block nav-underline text-white text-center px-4 py-2">Casos de Uso</a>
+                <a href="#proximos-pasos" class="block nav-underline text-white text-center px-4 py-2">Próximos Pasos</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-20 bg-[#f5f7fa] text-[#0a2540]">
+        <section id="introduccion" class="py-16 px-4 bg-white rounded-2xl shadow-lg max-w-6xl mx-auto mt-8">
+            <div class="max-w-6xl mx-auto">
+                <h2 class="text-3xl font-bold text-[#0a2540] mb-3 text-center">Introducción: ¿Qué son Web3 y los Criptoactivos?</h2>
+                <p class="text-xl text-[#2e5aac] mb-8 text-center max-w-3xl mx-auto">
+                    Esta sección introduce los conceptos fundamentales de Web3 y los criptoactivos, explicando su evolución desde las primeras etapas de internet. El objetivo es proporcionar una base sólida para comprender las discusiones posteriores sobre oportunidades y desafíos.
+                </p>
+                <p class="text-center text-[#6b7280] mb-12">Pensemos en la evolución de internet:</p>
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div class="bg-white p-6 rounded-2xl shadow-md border border-[#e5e7eb] hover:shadow-xl transition-all duration-300">
+                        <h3 class="text-2xl font-semibold text-[#2e5aac] mb-4 flex items-center justify-center">📜 Web1 <span class="text-sm text-[#6b7280] ml-2">(~1990-2004)</span></h3>
+                        <p class="text-[#6b7280]">La Internet de "Solo Lectura". Páginas estáticas, consumíamos información pasivamente. Ej: Primeros sitios corporativos.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-md border border-[#e5e7eb] hover:shadow-xl transition-all duration-300">
+                        <h3 class="text-2xl font-semibold text-[#2e5aac] mb-4 flex items-center justify-center">📱 Web2 <span class="text-sm text-[#6b7280] ml-2">(~2004-Actual)</span></h3>
+                        <p class="text-[#6b7280]">La Internet Social y Colaborativa. Plataformas interactivas, redes sociales, contenido generado por usuarios. Grandes empresas centralizan datos.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-md border border-[#e5e7eb] hover:shadow-xl transition-all duration-300">
+                        <h3 class="text-2xl font-semibold text-[#00b86b] mb-4 flex items-center justify-center">🔗 Web3 <span class="text-sm text-[#6b7280] ml-2">(Emergente)</span></h3>
+                        <p class="text-[#6b7280]">La Internet Descentralizada y Propiedad del Usuario. Busca devolver control de datos e identidad. Basada en blockchain. Mayor transparencia y seguridad.</p>
+                    </div>
+                </div>
+
+                <div class="mt-12 pt-8 border-t border-[#e5e7eb]">
+                    <h3 class="text-2xl font-semibold text-[#0a2540] mb-4 text-center">¿Y los Criptoactivos?</h3>
+                    <div class="max-w-3xl mx-auto text-[#6b7280] space-y-3 text-center">
+                        <p>Son activos digitales que utilizan criptografía para asegurar transacciones y controlar la creación de nuevas unidades (ej. Bitcoin, Ethereum, NFTs).</p>
+                        <p>Funcionan sobre la tecnología <strong class="text-[#00b86b]">blockchain</strong>: un libro de contabilidad digital, público, inmutable y distribuido.</p>
+                        <p>No dependen de intermediarios tradicionales como los bancos.</p>
+                        <p class="mt-4 font-semibold text-[#2e5aac]">En resumen: Web3 es la visión de una nueva internet más abierta y controlada por los usuarios, y los criptoactivos son herramientas fundamentales que habilitan esta visión.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="oportunidades" class="py-16 px-4 bg-[#f5f7fa]">
+            <div class="max-w-6xl mx-auto">
+                <h2 class="text-3xl font-bold text-[#0a2540] mb-3 text-center">Oportunidades Potenciales para las Empresas</h2>
+                <p class="text-xl text-[#2e5aac] mb-8 text-center max-w-3xl mx-auto">
+                    Explorar Web3 y los criptoactivos puede desbloquear un abanico de oportunidades innovadoras para las empresas. Esta sección detalla algunas de las ventajas más significativas, desde nuevos modelos de negocio hasta mejoras en eficiencia y transparencia. Haga clic en cada tarjeta para más detalles.
+                </p>
+                <div class="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-2xl shadow-md border border-[#e5e7eb] hover:shadow-green-200 hover:scale-[1.03] transition-all duration-300 cursor-pointer expandable-card">
+                        <h3 class="text-xl font-semibold text-[#00b86b] mb-2 flex items-center">💡 Nuevos Modelos de Negocio y Monetización</h3>
+                        <div class="text-[#6b7280] text-sm leading-relaxed card-content">
+                            <p>Crear valor de formas innovadoras.</p>
+                            <div class="details">
+                                <p><strong class="text-[#00b86b]">Tokenización de Activos:</strong> Convertir activos (arte, inmuebles) en tokens digitales para facilitar inversión y liquidez.</p>
+                                <p><strong class="text-[#00b86b]">Comunidades y Fidelización Mejorados:</strong> Tokens para recompensar lealtad y participación.</p>
+                                <p><strong class="text-[#00b86b]">Micropagos Eficientes:</strong> Transacciones pequeñas sin altos costes.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-md border border-[#e5e7eb] hover:shadow-green-200 hover:scale-[1.03] transition-all duration-300 cursor-pointer expandable-card">
+                        <h3 class="text-xl font-semibold text-[#2e5aac] mb-2 flex items-center">🛡️ Mayor Transparencia y Seguridad</h3>
+                        <div class="text-[#6b7280] text-sm leading-relaxed card-content">
+                            <p>Aumentar la confianza y la protección de datos.</p>
+                            <div class="details">
+                                <p><strong class="text-[#2e5aac]">Trazabilidad en Cadena de Suministro:</strong> Seguir productos, combatir falsificación.</p>
+                                <p><strong class="text-[#2e5aac]">Registros Inmutables:</strong> Datos seguros y difíciles de alterar en la blockchain.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-md border border-[#e5e7eb] hover:shadow-green-200 hover:scale-[1.03] transition-all duration-300 cursor-pointer expandable-card">
+                        <h3 class="text-xl font-semibold text-[#00b86b] mb-2 flex items-center">⚙️ Desintermediación y Eficiencia</h3>
+                        <div class="text-[#6b7280] text-sm leading-relaxed card-content">
+                            <p>Optimizar procesos y reducir costes.</p>
+                            <div class="details">
+                                <p><strong class="text-[#00b86b]">Reducción de Intermediarios:</strong> Menos costes en pagos transfronterizos, gestión de derechos, etc.</p>
+                                <p><strong class="text-[#00b86b]">Contratos Inteligentes (Smart Contracts):</strong> Acuerdos auto-ejecutables que automatizan procesos.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-md border border-[#e5e7eb] hover:shadow-green-200 hover:scale-[1.03] transition-all duration-300 cursor-pointer expandable-card">
+                        <h3 class="text-xl font-semibold text-[#2e5aac] mb-2 flex items-center">🌍 Acceso a Nuevos Mercados y Audiencias</h3>
+                        <div class="text-[#6b7280] text-sm leading-relaxed card-content">
+                            <p>Expandir el alcance y la participación global.</p>
+                            <div class="details">
+                                <p><strong class="text-[#2e5aac]">Finanzas Descentralizadas (DeFi):</strong> Acceder a servicios financieros sin banca tradicional.</p>
+                                <p><strong class="text-[#2e5aac]">Organizaciones Autónomas Descentralizadas (DAOs):</strong> Nuevas formas de gobernanza y colaboración comunitaria.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="desafios" class="py-16 px-4 bg-white rounded-2xl shadow-lg max-w-6xl mx-auto mt-8">
+            <div class="max-w-6xl mx-auto">
+                <h2 class="text-3xl font-bold text-[#0a2540] mb-3 text-center">Riesgos y Desafíos a Considerar</h2>
+                <p class="text-xl text-[#2e5aac] mb-8 text-center max-w-3xl mx-auto">
+                    Si bien las oportunidades son atractivas, es crucial abordar Web3 y los criptoactivos con una comprensión clara de los riesgos y desafíos inherentes. Esta sección los describe para una toma de decisiones informada. Haga clic en cada tarjeta para más detalles.
+                </p>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="bg-white p-6 rounded-2xl shadow-md border border-[#2e5aac] hover:shadow-blue-200 hover:scale-[1.03] transition-all duration-300 cursor-pointer expandable-card">
+                        <h3 class="text-xl font-semibold text-[#2e5aac] mb-2 flex items-center">📉 Volatilidad del Mercado</h3>
+                        <div class="text-[#6b7280] text-sm leading-relaxed card-content">
+                            <p>Precios de criptoactivos pueden fluctuar drásticamente.</p>
+                            <div class="details">
+                                <p>La alta volatilidad puede impactar inversiones y la estabilidad de proyectos basados en criptoactivos. Requiere estrategias de gestión de riesgo.</p>
+                                <div class="chart-container mt-4">
+                                    <canvas id="volatilityChart"></canvas>
+                                </div>
+                                <p class="text-xs text-center text-[#6b7280] mt-2">Gráfico ilustrativo de volatilidad (datos simulados).</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-md border border-[#2e5aac] hover:shadow-blue-200 hover:scale-[1.03] transition-all duration-300 cursor-pointer expandable-card">
+                        <h3 class="text-xl font-semibold text-[#2e5aac] mb-2 flex items-center">🏛️ Incertidumbre Regulatoria</h3>
+                        <div class="text-[#6b7280] text-sm leading-relaxed card-content">
+                            <p>Marco legal y fiscal en desarrollo.</p>
+                            <div class="details">
+                                <p>Leyes y normativas varían por jurisdicción y cambian constantemente, creando riesgos de cumplimiento y operativos.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-md border border-[#00b86b] hover:shadow-green-200 hover:scale-[1.03] transition-all duration-300 cursor-pointer expandable-card">
+                        <h3 class="text-xl font-semibold text-[#00b86b] mb-2 flex items-center">🧠 Complejidad Tecnológica</h3>
+                        <div class="text-[#6b7280] text-sm leading-relaxed card-content">
+                            <p>Requiere conocimientos especializados.</p>
+                            <div class="details">
+                                <p>La curva de aprendizaje es pronunciada para entender y aplicar blockchain y criptoactivos. Falta de talento especializado.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-md border border-[#2e5aac] hover:shadow-blue-200 hover:scale-[1.03] transition-all duration-300 cursor-pointer expandable-card">
+                        <h3 class="text-xl font-semibold text-[#2e5aac] mb-2 flex items-center">🔒 Seguridad y Custodia</h3>
+                        <div class="text-[#6b7280] text-sm leading-relaxed card-content">
+                            <p>Usuarios responsables de sus activos.</p>
+                            <div class="details">
+                                <p>Aunque la blockchain es segura, errores o hackeos a carteras digitales (wallets) pueden causar pérdidas irrecuperables. La auto-custodia implica responsabilidad.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-md border border-[#00b86b] hover:shadow-green-200 hover:scale-[1.03] transition-all duration-300 cursor-pointer expandable-card">
+                        <h3 class="text-xl font-semibold text-[#00b86b] mb-2 flex items-center">⚡ Escalabilidad y Consumo Energético</h3>
+                        <div class="text-[#6b7280] text-sm leading-relaxed card-content">
+                            <p>Algunas blockchains enfrentan límites.</p>
+                            <div class="details">
+                                <p>Desafíos en transacciones por segundo y alto consumo energético en algunas redes (Nota: nuevas tecnologías están abordando esto).</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-md border border-[#2e5aac] hover:shadow-blue-200 hover:scale-[1.03] transition-all duration-300 cursor-pointer expandable-card">
+                        <h3 class="text-xl font-semibold text-[#2e5aac] mb-2 flex items-center">🤔 Riesgos de Adopción y Usabilidad</h3>
+                        <div class="text-[#6b7280] text-sm leading-relaxed card-content">
+                            <p>Necesitan ser más fáciles de usar.</p>
+                            <div class="details">
+                                <p>Para adopción masiva, las DApps (aplicaciones descentralizadas) deben mejorar su experiencia de usuario y ser tan intuitivas como las Web2.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-md border border-[#00b86b] hover:shadow-green-200 hover:scale-[1.03] transition-all duration-300 cursor-pointer expandable-card md:col-span-2 lg:col-span-1 lg:col-start-2">
+                        <h3 class="text-xl font-semibold text-[#00b86b] mb-2 flex items-center">🚫 Potencial de Uso Ilícito</h3>
+                        <div class="text-[#6b7280] text-sm leading-relaxed card-content">
+                            <p>Pueden ser mal utilizados sin controles.</p>
+                            <div class="details">
+                                <p>Como cualquier tecnología financiera, pueden usarse para actividades ilegales si no se implementan medidas AML/KYC adecuadas.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="casos-de-uso" class="py-16 px-4 bg-[#f5f7fa]">
+            <div class="max-w-6xl mx-auto">
+                <h2 class="text-3xl font-bold text-[#0a2540] mb-3 text-center">Casos de Uso Relevantes</h2>
+                <p class="text-xl text-[#2e5aac] mb-8 text-center max-w-3xl mx-auto">
+                    Web3 y los criptoactivos ya están siendo aplicados en diversos sectores. Esta sección muestra ejemplos prácticos que ilustran su potencial transformador. Utilice los filtros para explorar las categorías de su interés.
+                </p>
+                <div class="mb-8 text-center" id="filter-buttons">
+                    <button class="filter-btn active px-4 py-2 mr-2 mb-2 rounded-lg bg-[#e3e8f0] text-[#2e5aac] hover:bg-[#d1d9e6] transition-colors focus:outline-none focus:ring-2 focus:ring-[#2e5aac] font-semibold" data-filter="all">Todos</button>
+                    <button class="filter-btn px-4 py-2 mr-2 mb-2 rounded-lg bg-[#e3e8f0] text-[#2e5aac] hover:bg-[#d1d9e6] transition-colors focus:outline-none focus:ring-2 focus:ring-[#2e5aac] font-semibold" data-filter="suministro">Cadena Suministro</button>
+                    <button class="filter-btn px-4 py-2 mr-2 mb-2 rounded-lg bg-[#e3e8f0] text-[#2e5aac] hover:bg-[#d1d9e6] transition-colors focus:outline-none focus:ring-2 focus:ring-[#2e5aac] font-semibold" data-filter="defi">DeFi</button>
+                    <button class="filter-btn px-4 py-2 mr-2 mb-2 rounded-lg bg-[#e3e8f0] text-[#2e5aac] hover:bg-[#d1d9e6] transition-colors focus:outline-none focus:ring-2 focus:ring-[#2e5aac] font-semibold" data-filter="nfts">NFTs</button>
+                    <button class="filter-btn px-4 py-2 mr-2 mb-2 rounded-lg bg-[#e3e8f0] text-[#2e5aac] hover:bg-[#d1d9e6] transition-colors focus:outline-none focus:ring-2 focus:ring-[#2e5aac] font-semibold" data-filter="identidad">Identidad</button>
+                    <button class="filter-btn px-4 py-2 mr-2 mb-2 rounded-lg bg-[#e3e8f0] text-[#2e5aac] hover:bg-[#d1d9e6] transition-colors focus:outline-none focus:ring-2 focus:ring-[#2e5aac] font-semibold" data-filter="daos">DAOs</button>
+                    <button class="filter-btn px-4 py-2 mr-2 mb-2 rounded-lg bg-[#e3e8f0] text-[#2e5aac] hover:bg-[#d1d9e6] transition-colors focus:outline-none focus:ring-2 focus:ring-[#2e5aac] font-semibold" data-filter="metaverso">Metaverso</button>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="use-cases-grid">
+                    <div class="bg-white p-6 rounded-2xl shadow-md border border-[#e5e7eb] hover:shadow-blue-200 hover:scale-[1.03] transition-all duration-300 card use-case-card" data-category="suministro">
+                        <h3 class="text-xl font-semibold text-[#2e5aac] mb-2 flex items-center">📦 Cadena de Suministro</h3>
+                        <div class="text-[#6b7280] text-sm leading-relaxed card-content">
+                            <p>Trazabilidad de productos para garantizar autenticidad y origen (ej. alimentos, lujo). Mejora confianza y combate falsificación.</p>
+                            <p class="mt-2"><span class="inline-block bg-[#e0f7fa] text-[#00b86b] text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">Walmart</span> <span class="inline-block bg-[#e0f7fa] text-[#00b86b] text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">De Beers</span></p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-md border border-[#e5e7eb] hover:shadow-blue-200 hover:scale-[1.03] transition-all duration-300 card use-case-card" data-category="defi">
+                        <h3 class="text-xl font-semibold text-[#00b86b] mb-2 flex items-center">💸 Finanzas Descentralizadas (DeFi)</h3>
+                        <div class="text-[#6b7280] text-sm leading-relaxed card-content">
+                            <p>Préstamos, intercambios, rendimientos sin bancos tradicionales. Acceso a servicios financieros para no bancarizados.</p>
+                            <p class="mt-2"><span class="inline-block bg-[#e0f7fa] text-[#00b86b] text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">Aave</span> <span class="inline-block bg-[#e0f7fa] text-[#00b86b] text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">Uniswap</span> <span class="inline-block bg-[#e0f7fa] text-[#00b86b] text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">Compound</span></p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-md border border-[#e5e7eb] hover:shadow-blue-200 hover:scale-[1.03] transition-all duration-300 card use-case-card" data-category="nfts">
+                        <h3 class="text-xl font-semibold text-[#2e5aac] mb-2 flex items-center">🖼️ Tokens No Fungibles (NFTs)</h3>
+                        <div class="text-[#6b7280] text-sm leading-relaxed card-content">
+                            <p>Representación digital única de activos (arte, coleccionables, gaming, entradas). Artistas venden directo, marcas crean exclusividad.</p>
+                             <p class="mt-2"><span class="inline-block bg-[#e0f7fa] text-[#2e5aac] text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">Arte Digital</span> <span class="inline-block bg-[#e0f7fa] text-[#2e5aac] text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">Gaming</span> <span class="inline-block bg-[#e0f7fa] text-[#2e5aac] text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">Coleccionables</span></p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-md border border-[#e5e7eb] hover:shadow-blue-200 hover:scale-[1.03] transition-all duration-300 card use-case-card" data-category="identidad">
+                        <h3 class="text-xl font-semibold text-[#00b86b] mb-2 flex items-center">🆔 Identidad Digital Soberana</h3>
+                        <div class="text-[#6b7280] text-sm leading-relaxed card-content">
+                            <p>Usuarios controlan sus datos de identidad, compartiéndolos selectiva y seguramente. Simplifica inicios de sesión y verificaciones.</p>
+                             <p class="mt-2"><span class="inline-block bg-[#e0f7fa] text-[#00b86b] text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">uPort</span> <span class="inline-block bg-[#e0f7fa] text-[#00b86b] text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">Civic</span></p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-md border border-[#e5e7eb] hover:shadow-blue-200 hover:scale-[1.03] transition-all duration-300 card use-case-card" data-category="daos">
+                        <h3 class="text-xl font-semibold text-[#2e5aac] mb-2 flex items-center">🗳️ Gobernanza (DAOs)</h3>
+                        <div class="text-[#6b7280] text-sm leading-relaxed card-content">
+                            <p>Comunidades auto-organizadas toman decisiones colectivas y transparentes con tokens de gobernanza.</p>
+                            <p class="mt-2"><span class="inline-block bg-[#e0f7fa] text-[#2e5aac] text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">MakerDAO</span> <span class="inline-block bg-[#e0f7fa] text-[#2e5aac] text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">Aragon</span></p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-md border border-[#e5e7eb] hover:shadow-blue-200 hover:scale-[1.03] transition-all duration-300 card use-case-card" data-category="metaverso">
+                        <h3 class="text-xl font-semibold text-[#00b86b] mb-2 flex items-center">🕶️ Mundos Virtuales y Metaverso</h3>
+                        <div class="text-[#6b7280] text-sm leading-relaxed card-content">
+                            <p>Compra-venta de terrenos virtuales, avatares, ítems y experiencias con criptoactivos. Economías digitales internas.</p>
+                            <p class="mt-2"><span class="inline-block bg-[#e0f7fa] text-[#00b86b] text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">Decentraland</span> <span class="inline-block bg-[#e0f7fa] text-[#00b86b] text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">The Sandbox</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="proximos-pasos" class="py-16 px-4 bg-white rounded-2xl shadow-lg max-w-4xl mx-auto mt-8">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold text-[#0a2540] mb-3 text-center">Próximos Pasos y Recomendaciones Estratégicas</h2>
+                 <p class="text-xl text-[#2e5aac] mb-8 text-center max-w-3xl mx-auto">
+                    Para navegar con éxito el emergente panorama de Web3, es fundamental un enfoque estratégico y medido. Esta sección ofrece recomendaciones clave para que su organización comience a explorar y capitalizar estas tecnologías.
+                </p>
+                <ol class="list-decimal list-inside space-y-6 text-[#6b7280]">
+                    <li class="text-lg"><strong class="text-[#2e5aac]">Educación y Formación Continua:</strong> Fomentar la comprensión interna de Web3 y criptoactivos. Mantenerse actualizado sobre tendencias y evolución del mercado.</li>
+                    <li class="text-lg"><strong class="text-[#2e5aac]">Identificar Oportunidades Específicas:</strong> Analizar cómo estas tecnologías pueden resolver problemas o crear ventajas en su sector. No adoptar por adoptar.</li>
+                    <li class="text-lg"><strong class="text-[#2e5aac]">Proyectos Piloto y Experimentación Controlada:</strong> Comenzar con proyectos pequeños y de bajo riesgo para probar conceptos y aprender (ej. programa de fidelización con tokens, NFT conmemorativo).</li>
+                    <li class="text-lg"><strong class="text-[#2e5aac]">Colaboración y Alianzas:</strong> Considerar asociarse con startups o expertos en Web3 para acelerar aprendizaje e implementación.</li>
+                    <li class="text-lg"><strong class="text-[#2e5aac]">Evaluación de Riesgos y Cumplimiento:</strong> Consultar asesores legales y financieros para navegar la regulación y gestionar riesgos.</li>
+                    <li class="text-lg"><strong class="text-[#2e5aac]">Enfoque en el Usuario:</strong> Cualquier iniciativa Web3 debe aportar valor real y buena experiencia al usuario final.</li>
+                </ol>
+                <p class="mt-10 text-center text-xl font-semibold text-[#0a2540]">
+                    Web3 y los criptoactivos representan un cambio potencialmente transformador. Aunque los riesgos son reales, ignorar su evolución podría significar perder oportunidades significativas.
+                </p>
+            </div>
+        </section>
+
+        <footer class="bg-[#0a2540] text-[#e3e8f0] py-12 px-4 text-center mt-12 rounded-t-2xl shadow-lg">
+            <p>&copy; <span id="currentYear"></span> Presentación Interactiva Web3 y Criptoactivos. Todos los derechos reservados (simulado).</p>
+            <p class="text-sm mt-2">Esta es una demostración con fines ilustrativos.</p>
+        </footer>
+
+    </main>
+
+    <script>
+        // Menú Móvil
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            mobileMenuButton.querySelectorAll('svg').forEach(icon => icon.classList.toggle('hidden'));
+        });
+
+        // Cerrar menú móvil al hacer clic en un enlace
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                mobileMenuButton.querySelectorAll('svg').forEach(icon => {
+                    if(icon.classList.contains('block')) { // Asegurar que el icono de hamburguesa se muestre
+                        icon.classList.remove('hidden');
+                    } else {
+                        icon.classList.add('hidden');
+                    }
+                });
+                 mobileMenuButton.querySelector('svg:first-child').classList.remove('hidden'); // Muestra hamburguesa
+                 mobileMenuButton.querySelector('svg:last-child').classList.add('hidden'); // Oculta X
+            });
+        });
+
+
+        // Expandable Cards
+        document.querySelectorAll('.expandable-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const details = card.querySelector('.details');
+                if (details) {
+                    if (details.style.display === 'block') {
+                        details.style.display = 'none';
+                        card.classList.remove('shadow-xl', 'shadow-teal-200', 'shadow-amber-200');
+                    } else {
+                        details.style.display = 'block';
+                        card.classList.add('shadow-xl');
+                         if (card.querySelector('.text-teal-700')) card.classList.add('shadow-teal-200');
+                         if (card.querySelector('.text-amber-700')) card.classList.add('shadow-amber-200');
+                    }
+                }
+            });
+        });
+
+        // Volatility Chart (Chart.js)
+        const ctxVolatility = document.getElementById('volatilityChart');
+        if (ctxVolatility) {
+            new Chart(ctxVolatility, {
+                type: 'line',
+                data: {
+                    labels: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8'],
+                    datasets: [{
+                        label: 'Valor Simulado',
+                        data: [65, 59, 80, 81, 56, 55, 90, 70],
+                        fill: true,
+                        backgroundColor: 'rgba(46,90,172,0.08)', // azul claro translúcido
+                        borderColor: '#2e5aac', // azul fintech
+                        tension: 0.2,
+                        borderWidth: 3,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#ffd600' // amarillo oro
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: '#6b7280' },
+                            grid: { color: '#e5e7eb' }
+                        },
+                        x: {
+                            ticks: { color: '#6b7280' },
+                            grid: { display: false }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: '#0a2540',
+                            titleColor: '#ffd600',
+                            bodyColor: '#e3e8f0'
+                        }
+                    }
+                }
+            });
+        }
+
+        // Use Case Filtering
+        const filterButtonsContainer = document.getElementById('filter-buttons');
+        const useCaseCards = document.querySelectorAll('.use-case-card');
+        
+        if (filterButtonsContainer) {
+            filterButtonsContainer.addEventListener('click', (event) => {
+                if (event.target.tagName === 'BUTTON') {
+                    const filter = event.target.dataset.filter;
+
+                    // Actualizar botón activo
+                    filterButtonsContainer.querySelectorAll('.filter-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    event.target.classList.add('active');
+
+                    useCaseCards.forEach(card => {
+                        if (filter === 'all' || card.dataset.category === filter) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                }
+            });
+        }
+        
+        // Active Nav Link Scrolling
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('nav a.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= (sectionTop - sectionHeight / 3)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').substring(1) === current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Current Year for Footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+    </script>
+</body>
+</html>
