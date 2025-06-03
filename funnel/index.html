@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funnel de Conversión Interactivo - Crypto Plaza Consulting</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Visualization & Content Choices: 
+        - Report Info: 6 Funnel Stages -> Goal: Organize/Inform -> Viz/Presentation: Interactive Stepper (HTML/CSS/JS) -> Interaction: Click to view stage details -> Justification: Provides intuitive, user-controlled navigation through a linear process, enhancing comprehension.
+        - Report Info: Email Nurturing Sequence -> Goal: Inform/Compare -> Viz/Presentation: Tabbed Content Viewer (JS-driven) -> Interaction: Click tabs to switch between email templates -> Justification: Efficiently presents related, sequential content in a compact space, preventing clutter and cognitive overload.
+        - Report Info: Overall Conversion Process -> Goal: Inform -> Viz/Presentation: Conceptual Funnel Chart (Chart.js Bar Chart) -> Interaction: Static visual anchor -> Justification: Offers a high-level visual metaphor for the entire funnel, making the concept of lead attrition immediately understandable.
+        - Report Info: Treasury Yield Comparison (1-2% vs 4-6%) -> Goal: Compare/Persuade -> Viz/Presentation: Bar Chart (Chart.js) -> Interaction: Dynamically displayed within the "Nurturing" stage content -> Justification: Visually reinforces a critical sales argument at the most contextually relevant point in the user's journey through the funnel.
+    -->
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 320px; max-height: 400px; }
+        @media (min-width: 768px) { .chart-container { height: 350px; } }
+        .tab-active { background-color: #0284c7; color: white; }
+        .tab-inactive { background-color: #e2e8f0; color: #334155; }
+        .stage-active { border-color: #0284c7; background-color: #f0f9ff; transform: scale(1.05); }
+        .stage-inactive { border-color: #cbd5e1; background-color: white; }
+        .content-fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-8 md:mb-12">
+            <h1 class="text-3xl md:text-4xl font-bold text-slate-900">Funnel de Conversión Profesional</h1>
+            <p class="text-slate-600 mt-2 text-lg">Visualización interactiva del sistema para <span class="font-semibold text-sky-700">Crypto Plaza Consulting</span></p>
+        </header>
+
+        <main>
+            <section id="funnel-visualization" class="mb-8 md:mb-12">
+                 <div class="chart-container">
+                    <canvas id="funnelChart"></canvas>
+                </div>
+                 <p class="text-center text-slate-500 mt-2 text-sm">Gráfico conceptual del flujo de conversión de leads.</p>
+            </section>
+
+            <section id="funnel-stages">
+                <nav id="stage-navigation" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 md:gap-4 mb-8">
+                </nav>
+
+                <div id="stage-content-wrapper" class="bg-white p-4 sm:p-6 md:p-8 rounded-2xl shadow-lg border border-slate-200 min-h-[400px]">
+                </div>
+            </section>
+        </main>
+
+        <footer class="text-center mt-12 py-4">
+            <p class="text-slate-500 text-sm">Diseñado como una herramienta de visualización interactiva.</p>
+        </footer>
+    </div>
+
+    <script>
+        const funnelData = {
+            stages: [
+                {
+                    name: "Atracción",
+                    icon: "📢",
+                    title: "Etapa 1: Atracción (Awareness)",
+                    objective: "Dar a conocer Crypto Plaza Consulting entre CFOs y responsables financieros.",
+                    content: `
+                        <h4 class="font-semibold text-lg text-slate-800 mb-3">Canales Principales</h4>
+                        <ul class="list-disc list-inside space-y-2 mb-6 text-slate-600">
+                            <li>Publicaciones estratégicas en LinkedIn</li>
+                            <li>Newsletter semanal: "Crypto Treasury Weekly"</li>
+                            <li>Organización de eventos y webinars temáticos</li>
+                            <li>SEO en web (artículos, recursos, preguntas frecuentes)</li>
+                        </ul>
+                        <div class="bg-sky-50 border border-sky-200 rounded-lg p-4">
+                            <h4 class="font-semibold text-lg text-slate-800 mb-2">Lead Magnet Principal: Crypto Treasury Blueprint 2025</h4>
+                            <p class="text-slate-700 mb-4">Un PDF descargable que actúa como imán de leads, ofreciendo una guía práctica para integrar stablecoins y criptoactivos en la tesorería corporativa sin asumir riesgos regulatorios.</p>
+                            <div class="bg-white p-4 rounded shadow-inner border border-slate-200">
+                                <p class="font-semibold text-slate-700 mb-2">📄 Post sugerido en LinkedIn:</p>
+                                <p class="text-sm text-slate-600 italic">"Las empresas que se preparen este año serán las líderes en 2026. ¿Y si pudieras optimizar tu tesorería, mejorar la rentabilidad y reducir costes de forma segura con activos digitales? Descubre el Blueprint 2025..."</p>
+                                <a href="#" class="text-sky-600 font-semibold text-sm mt-2 inline-block">[Enlace al recurso]</a>
+                            </div>
+                        </div>
+                    `
+                },
+                {
+                    name: "Captura",
+                    icon: "🎣",
+                    title: "Etapa 2: Captura de Leads",
+                    objective: "Convertir visitas interesadas en contactos calificados a través de una landing page optimizada.",
+                    content: `
+                        <div class="bg-slate-50 border border-slate-200 rounded-lg p-6">
+                            <h4 class="font-bold text-xl text-center text-slate-800 mb-2">Crypto Treasury Blueprint 2025</h4>
+                            <p class="text-center text-slate-600 mb-6">🔢 ¿Está preparada tu empresa para la nueva era financiera?</p>
+                            <p class="mb-4 text-slate-700">Descarga gratis la guía para CFOs que quieren empezar a integrar activos digitales en la tesorería corporativa de forma segura, eficiente y conforme a MiCA.</p>
+                            <div class="mb-6">
+                                <p class="font-semibold text-slate-800">Incluye:</p>
+                                <ul class="list-disc list-inside space-y-1 text-slate-600 mt-2">
+                                    <li>Casos de estudio reales y aplicables</li>
+                                    <li>Framework de implementación en 30 días</li>
+                                    <li>Hoja de evaluación de "cripto-readiness"</li>
+                                </ul>
+                            </div>
+                            <div class="border-t border-slate-300 pt-6">
+                                <p class="font-semibold text-slate-800 mb-3">Formulario de descarga:</p>
+                                <div class="space-y-3">
+                                    <div class="bg-white p-2 border rounded">Nombre</div>
+                                    <div class="bg-white p-2 border rounded">Email</div>
+                                    <div class="bg-white p-2 border rounded">Empresa / Cargo</div>
+                                </div>
+                                <button class="w-full bg-sky-600 text-white font-bold py-3 rounded-lg mt-4 hover:bg-sky-700 transition-colors">Descargar Blueprint</button>
+                            </div>
+                        </div>
+                    `
+                },
+                {
+                    name: "Nutrición",
+                    icon: " nurtured",
+                    title: "Etapa 3: Nutrición de Leads (Email Nurturing)",
+                    objective: "Generar confianza y educar al lead hasta llevarlo a una conversación comercial.",
+                    content: `
+                        <div id="email-nurturing-section">
+                            <div id="email-tabs" class="flex flex-wrap gap-2 mb-4">
+                                <button data-email="0" class="email-tab px-4 py-2 text-sm font-semibold rounded-md transition-colors">📧 Email 1: Bienvenida</button>
+                                <button data-email="1" class="email-tab px-4 py-2 text-sm font-semibold rounded-md transition-colors">📈 Email 2: Casos de Éxito</button>
+                                <button data-email="2" class="email-tab px-4 py-2 text-sm font-semibold rounded-md transition-colors">💰 Email 3: Rendimientos</button>
+                            </div>
+                            <div id="email-content" class="bg-slate-50 border border-slate-200 rounded-lg p-4 min-h-[250px]"></div>
+                        </div>
+                        <div id="rendimiento-chart-container" class="mt-8 hidden">
+                            <h4 class="font-semibold text-lg text-slate-800 mb-3 text-center">Comparativa de Rendimientos Anuales</h4>
+                            <div class="chart-container">
+                                <canvas id="rendimientoChart"></canvas>
+                            </div>
+                             <p class="text-center text-slate-500 mt-2 text-sm">Visualización del rendimiento potencial mencionado en el Email 3.</p>
+                        </div>
+                    `,
+                    emails: [
+                        {
+                            subject: "¡Gracias por descargar el Blueprint 2025!",
+                            body: `Hola {{Nombre}},<br><br>Gracias por tu interés en el Blueprint 2025. Este documento está ayudando a CFOs a reimaginar sus estrategias de liquidez con herramientas digitales seguras y rentables.<br><br>🔹 <strong>Descarga aquí tu copia:</strong> [enlace]<br><br>En breve te compartiré casos reales y oportunidades que podrías aplicar en tu empresa.<br><br>Si lo prefieres, puedes agendar una sesión de diagnóstico gratuita para explorar cómo podría ayudarte personalmente:<br><br><strong>[Calendly] → Agendar reunión</strong>`
+                        },
+                        {
+                            subject: "¿Sabías que algunas empresas ya han reducido un 94% sus costes con stablecoins?",
+                            body: `Hola {{Nombre}},<br><br>Una multinacional europea recortó más de 1 millón € al año en costes de transferencias internacionales tras implementar un sistema de pagos con stablecoins.<br><br>Estas estrategias no son futuras. Ya están en marcha, y en Crypto Plaza Consulting te ayudamos a evaluarlas sin riesgos.<br><br>🔹 <strong>Te dejo el caso completo aquí:</strong> [enlace al PDF/caso]<br><br>Recuerda que puedes pedir tu sesión gratuita de diagnóstico aquí:<br><strong>[Calendly]</strong>`
+                        },
+                        {
+                            subject: "¿Tus excedentes de tesorería están rindiendo menos del 2%?",
+                            body: `Hola {{Nombre}},<br><br>Hoy muchas empresas tienen su liquidez corporativa aparcada en cuentas que rinden un 1-2% anual.<br><br>¿Sabías que existen instrumentos digitales regulados que ofrecen entre un <strong>4% y 6% anual</strong>, con liquidez diaria y custodia institucional?<br><br>En la sesión gratuita de diagnóstico te mostramos cómo podría funcionar para tu empresa, sin asumir riesgos innecesarios.<br><br><button class="bg-sky-600 text-white font-bold py-2 px-4 rounded-lg">Solicitar sesión</button>`
+                        }
+                    ]
+                },
+                {
+                    name: "Conversión",
+                    icon: "🤝",
+                    title: "Etapa 4: Conversión (Reunión Diagnóstico)",
+                    objective: "Mantener una reunión 1:1 para identificar las necesidades específicas del cliente y calificarlo.",
+                    content: `
+                        <h4 class="font-semibold text-lg text-slate-800 mb-4">Guía Interna para la Reunión</h4>
+                        <p class="text-slate-600 mb-6">Puntos clave a tratar para entender la situación y los objetivos del prospecto.</p>
+                        <ul class="space-y-4">
+                            <li class="flex items-start gap-3"><span class="text-sky-600 font-bold">1.</span><div><strong class="text-slate-700">Ámbito de operación:</strong> ¿Tiene pagos internacionales o multicurrency?</div></li>
+                            <li class="flex items-start gap-3"><span class="text-sky-600 font-bold">2.</span><div><strong class="text-slate-700">Volumen de liquidez:</strong> ¿Supera los 500k € en liquidez ociosa?</div></li>
+                            <li class="flex items-start gap-3"><span class="text-sky-600 font-bold">3.</span><div><strong class="text-slate-700">Área de mejora buscada:</strong> ¿Reducción de coste, aumento de rendimiento, diversificación?</div></li>
+                            <li class="flex items-start gap-3"><span class="text-sky-600 font-bold">4.</span><div><strong class="text-slate-700">Percepción sobre activos digitales:</strong> ¿Hay curiosidad o reticencia?</div></li>
+                            <li class="flex items-start gap-3"><span class="text-sky-600 font-bold">5.</span><div><strong class="text-slate-700">Obstáculos internos:</strong> ¿Compliance, consejo directivo, regulación?</div></li>
+                        </ul>
+                        <div class="mt-8 border-t border-slate-200 pt-6">
+                             <h4 class="font-semibold text-slate-800 mb-2">Cierre de la Reunión</h4>
+                             <p class="text-slate-600">Al finalizar, el siguiente paso es enviar un resumen por email y la propuesta personalizada en menos de 48 horas.</p>
+                        </div>
+                    `
+                },
+                {
+                    name: "Cierre",
+                    icon: "✍️",
+                    title: "Etapa 5: Cierre",
+                    objective: "Convertir al prospecto calificado en cliente a través de una propuesta de valor clara y personalizada.",
+                    content: `
+                        <h4 class="font-semibold text-lg text-slate-800 mb-3">Email Base de Entrega de Propuesta</h4>
+                        <div class="bg-slate-50 border border-slate-200 rounded-lg p-6">
+                            <p class="font-semibold text-slate-700">Asunto: Propuesta para optimizar tu tesorería con activos digitales</p>
+                            <div class="border-t my-3"></div>
+                            <p class="text-slate-700 leading-relaxed">
+                                Hola {{Nombre}},<br><br>
+                                Tal y como comentamos, te adjunto nuestra propuesta personalizada para {{Nombre Empresa}}.<br><br>
+                                Incluye:
+                                <ul class="list-disc list-inside my-3 space-y-1">
+                                    <li>Módulo de infraestructura y custodia</li>
+                                    <li>Opciones de diversificación con stablecoins</li>
+                                    <li>Estimación de beneficios esperados (3-6% anual sobre liquidez designada)</li>
+                                </ul>
+                                Puedes revisarla con tu equipo y agendar una segunda llamada para aclaraciones.<br><br>
+                                <strong>[Adjunto PDF + enlace Calendly]</strong><br><br>
+                                Un placer haberte conocido,<br>
+                                Jesús Pérez
+                            </p>
+                        </div>
+                    `
+                },
+                {
+                    name: "Fidelización",
+                    icon: "❤️",
+                    title: "Etapa 6: Fidelización y Upsell",
+                    objective: "Asegurar la satisfacción del cliente y explorar nuevas oportunidades de colaboración.",
+                    content: `
+                        <h4 class="font-semibold text-lg text-slate-800 mb-3">Acciones Clave Post-Proyecto</h4>
+                        <ul class="list-disc list-inside space-y-2 mb-6 text-slate-600">
+                            <li>Enviar encuesta de satisfacción (NPS) al primer mes.</li>
+                            <li>Compartir el caso de uso logrado (con previo permiso del cliente).</li>
+                            <li>Invitar a formaciones y eventos exclusivos para clientes.</li>
+                            <li>Proponer siguientes etapas: gestión activa, tokenización o formación interna.</li>
+                        </ul>
+                        <div class="bg-slate-50 border border-slate-200 rounded-lg p-6">
+                             <h4 class="font-semibold text-slate-700 mb-2">Email de Seguimiento (30 días)</h4>
+                             <p class="font-semibold text-slate-700">Asunto: ¿Cómo valoras nuestra colaboración? 👍😔</p>
+                            <div class="border-t my-3"></div>
+                            <p class="text-slate-700 leading-relaxed">
+                                Hola {{Nombre}},<br><br>
+                                Hemos finalizado la primera etapa juntos y queremos saber tu opinión para seguir mejorando.<br><br>
+                                Te agradeceríamos mucho si pudieras completar esta breve encuesta (2 min):<br>
+                                <strong>[Link encuesta]</strong><br><br>
+                                Además, tenemos una sesión de clientes exclusivos donde compartimos casos reales y formación continua. Te reservo plaza sin coste:<br>
+                                <strong>[Enlace al evento]</strong><br><br>
+                                Un fuerte saludo,<br>
+                                Jesús
+                            </p>
+                        </div>
+                    `
+                }
+            ]
+        };
+
+        const stageNavigation = document.getElementById('stage-navigation');
+        const stageContentWrapper = document.getElementById('stage-content-wrapper');
+        let activeStage = 0;
+        let funnelChartInstance = null;
+        let rendimientoChartInstance = null;
+
+        function showEmail(emailIndex) {
+            const email = funnelData.stages[2].emails[emailIndex];
+            const emailContent = document.getElementById('email-content');
+            if (emailContent) {
+                emailContent.innerHTML = `
+                    <p class="font-semibold text-slate-700 mb-2">Asunto: ${email.subject}</p>
+                    <div class="border-t border-slate-300 pt-3 text-slate-600 text-sm leading-relaxed">${email.body}</div>
+                `;
+            }
+            document.querySelectorAll('.email-tab').forEach((tab, index) => {
+                tab.classList.toggle('tab-active', index === emailIndex);
+                tab.classList.toggle('tab-inactive', index !== emailIndex);
+            });
+        }
+
+        function showStage(stageIndex) {
+            activeStage = stageIndex;
+            const stage = funnelData.stages[stageIndex];
+            
+            stageContentWrapper.innerHTML = `
+                <div class="content-fade-in">
+                    <h3 class="text-2xl font-bold text-slate-900 mb-2">${stage.title}</h3>
+                    <p class="text-slate-600 mb-6 italic">${stage.objective}</p>
+                    <div class="border-t border-slate-200 pt-6">${stage.content}</div>
+                </div>
+            `;
+            
+            document.querySelectorAll('.stage-button').forEach((button, index) => {
+                button.classList.toggle('stage-active', index === stageIndex);
+                button.classList.toggle('stage-inactive', index !== stageIndex);
+            });
+
+            if (stage.name === "Nutrición") {
+                document.getElementById('rendimiento-chart-container').classList.remove('hidden');
+                document.querySelectorAll('.email-tab').forEach(tab => {
+                    tab.addEventListener('click', (e) => showEmail(parseInt(e.target.dataset.email)));
+                });
+                showEmail(0);
+                renderRendimientoChart();
+            } else {
+                 if(rendimientoChartInstance) {
+                    rendimientoChartInstance.destroy();
+                    rendimientoChartInstance = null;
+                }
+            }
+        }
+        
+        function renderFunnelChart() {
+            const ctx = document.getElementById('funnelChart').getContext('2d');
+            const data = {
+                labels: ['Visitantes', 'Leads (Descarga)', 'Reuniones', 'Clientes'],
+                datasets: [{
+                    label: 'Conversión del Funnel',
+                    data: [1000, 150, 45, 10],
+                    backgroundColor: [
+                        '#7dd3fc',
+                        '#38bdf8',
+                        '#0ea5e9',
+                        '#0284c7'
+                    ],
+                    borderColor: '#f8fafc',
+                    borderWidth: 2
+                }]
+            };
+            if(funnelChartInstance) funnelChartInstance.destroy();
+            funnelChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: data,
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` ${context.dataset.label}: ${context.formattedValue}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Volumen' }
+                        },
+                        y: {
+                           grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderRendimientoChart() {
+             if (rendimientoChartInstance) return;
+             const ctx = document.getElementById('rendimientoChart').getContext('2d');
+             const data = {
+                labels: ['Cuentas Tradicionales', 'Instrumentos Digitales Regulados'],
+                datasets: [{
+                    label: 'Rendimiento Anual (%)',
+                    data: [1.5, 5],
+                    backgroundColor: ['#fca5a5', '#4ade80'],
+                    borderColor: ['#ef4444', '#22c55e'],
+                    borderWidth: 1,
+                    barPercentage: 0.5,
+                }]
+            };
+            if(rendimientoChartInstance) rendimientoChartInstance.destroy();
+            rendimientoChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 7,
+                            title: { display: true, text: 'Rendimiento Anual (%)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function init() {
+            funnelData.stages.forEach((stage, index) => {
+                const button = document.createElement('button');
+                button.className = 'stage-button p-4 rounded-lg text-left transition-all duration-300 ease-in-out shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2';
+                button.innerHTML = `
+                    <span class="text-2xl">${stage.icon}</span>
+                    <h4 class="font-bold text-slate-800 mt-2">${stage.name}</h4>
+                    <p class="text-xs text-slate-500">Etapa ${index + 1}</p>
+                `;
+                button.addEventListener('click', () => showStage(index));
+                stageNavigation.appendChild(button);
+            });
+            renderFunnelChart();
+            showStage(0);
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
