@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playbook Interactivo de Ventas: Crypto Plaza</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+        }
+        .active-tab {
+            border-bottom-color: #0f766e; /* teal-700 */
+            color: #134e4a; /* teal-900 */
+            font-weight: 600;
+        }
+        .inactive-tab {
+            border-bottom-color: transparent;
+            color: #64748b; /* slate-500 */
+        }
+        .active-persona {
+            background-color: #0f766e; /* teal-700 */
+            color: white;
+        }
+        .inactive-persona {
+            background-color: #f1f5f9; /* slate-100 */
+            color: #334155; /* slate-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .card-enter {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="antialiased text-slate-800">
+
+    <div class="min-h-screen">
+        <header class="bg-white shadow-sm">
+            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                <h1 class="text-3xl font-bold leading-tight text-slate-900">Playbook Interactivo de Ventas</h1>
+                <p class="mt-1 text-slate-600">Estrategias para Crypto Plaza</p>
+            </div>
+        </header>
+
+        <main class="py-10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="mb-8">
+                    <h2 class="text-xl font-semibold mb-3 text-slate-800">Seleccione el Servicio</h2>
+                    <div class="flex space-x-2 bg-slate-100 p-1 rounded-lg max-w-md">
+                        <button id="persona-consultoria" class="persona-selector w-1/2 p-3 rounded-md text-sm font-medium transition-colors duration-200">
+                            &#128188; Consultoría Corporativa (B2B)
+                        </button>
+                        <button id="persona-traders" class="persona-selector w-1/2 p-3 rounded-md text-sm font-medium transition-colors duration-200">
+                            &#128200; Curso de Market Making (B2C)
+                        </button>
+                    </div>
+                </div>
+
+                <div id="content-area">
+                    </div>
+
+            </div>
+        </main>
+    </div>
+
+<script>
+const salesData = {
+    consultoria: {
+        profile: {
+            title: "Perfil del Cliente: Ejecutivo Corporativo",
+            description: "Directivos C-level (CFO, CEO), Directores Financieros y de Innovación. Perfil analítico, averso al riesgo, enfocado en ROI, seguridad y cumplimiento normativo. Valoran la autoridad, la confianza y las soluciones estratégicas a largo plazo.",
+            motivations: [
+                "Mitigación de riesgos financieros.",
+                "Optimización y rendimiento de la tesorería.",
+                "Cumplimiento normativo (MiCA).",
+                "Innovación y ventaja competitiva."
+            ]
+        },
+        messaging: {
+            title: "Argumentario y Tono de Venta",
+            description: "El discurso debe ser estratégico, profesional y consultivo. Evitar la jerga cripto excesiva. Centrarse en la creación de valor, la seguridad y la gobernanza.",
+            points: [
+                {
+                    title: "Seguridad y Cumplimiento",
+                    text: "Nuestro enfoque es seguro, eficiente y conforme a la regulación europea. Le ayudamos a navegar la complejidad normativa con confianza."
+                },
+                {
+                    title: "Beneficios Tangibles",
+                    text: "Explore la diversificación de reservas, la protección frente a la inflación y las oportunidades de rentabilidad en finanzas descentralizadas."
+                },
+                {
+                    title: "Visión de Futuro",
+                    text: "Posicione su empresa a la vanguardia de la innovación financiera y no se quede atrás en la adopción tecnológica."
+                }
+            ]
+        },
+        playbook: {
+            digital: {
+                title: "Estrategias Digitales",
+                tactics: [
+                    "<strong>Email Marketing:</strong> Embudos largos y educativos con 'lead magnets' de alto valor (guías, whitepapers). Nutrir con 'insights' financieros.",
+                    "<strong>LinkedIn:</strong> Esencial. Publicar contenido de 'thought leadership' (artículos, análisis). Usar Ads segmentados por cargo e industria.",
+                    "<strong>Webinars:</strong> Organizar seminarios online para ejecutivos sobre riesgos, oportunidades y casos de estudio, con expertos de Crypto Plaza.",
+                    "<strong>SEO y Contenidos:</strong> Crear artículos y guías profundas sobre 'tesorería cripto corporativa', 'cumplimiento', etc., para atraer tráfico orgánico cualificado."
+                ]
+            },
+            comunidad: {
+                title: "Estrategias de Comunidad y Presenciales",
+                tactics: [
+                    "<strong>Eventos Exclusivos:</strong> Organizar mesas redondas o desayunos de trabajo para CFOs/CEOs en un ambiente exclusivo para generar confianza.",
+                    "<strong>Networking Dirigido:</strong> Invitar a prospectos a conocer el hub. Conectarlos con otros miembros que ya hayan implementado soluciones cripto.",
+                    "<strong>Programa de Referidos:</strong> Incentivar a clientes y partners estratégicos (auditores, despachos legales) a referir nuevos clientes.",
+                    "<strong>Embajadores de Marca:</strong> Colaborar con CFOs innovadores y figuras respetadas del sector financiero para que actúen como aval de la marca."
+                ]
+            },
+            consultiva: {
+                title: "Técnicas de Venta Consultiva",
+                tactics: [
+                    "<strong>Diagnóstico Primero:</strong> Actuar como asesor. En reuniones, priorizar la escucha para entender objetivos, preocupaciones y contexto antes de ofrecer soluciones.",
+                    "<strong>Venta Educativa:</strong> Aportar valor enseñando. Compartir informes, ofrecer diagnósticos iniciales gratuitos y explicar conceptos complejos de forma sencilla.",
+                    "<strong>Demostrar Autoridad:</strong> Resaltar la experiencia, credenciales, casos de éxito y menciones en prensa para construir una base sólida de confianza."
+                ]
+            }
+        },
+        channels: {
+            labels: ["LinkedIn", "Eventos Exclusivos", "Email Marketing", "Webinars", "Referencias", "SEO"],
+            data: [90, 85, 80, 75, 70, 60],
+            description: "Los canales más efectivos son aquellos que permiten construir relaciones de confianza y demostrar autoridad. LinkedIn y los eventos presenciales son cruciales para el contacto directo con ejecutivos."
+        },
+        content: {
+            title: "Ideas de Contenido (Lead Magnets)",
+            items: [
+                {
+                    title: "Whitepaper: Guía Práctica de Tesorería Cripto",
+                    text: "Un informe descargable detallando consideraciones legales, fiscales y estratégicas para directores financieros."
+                },
+                {
+                    title: "Caso de Éxito Detallado",
+                    text: "Mostrar un caso real (o simulado) de implementación de una política de tesorería cripto, destacando los resultados obtenidos."
+                },
+                {
+                    title: "Webinar: 'Clínica de Tesorería Cripto'",
+                    text: "Una sesión interactiva de preguntas y respuestas con expertos para resolver las dudas de los ejecutivos."
+                },
+                {
+                    title: "Assessment de Madurez Cripto",
+                    text: "Ofrecer una evaluación básica y gratuita para que una empresa entienda sus oportunidades en el ecosistema blockchain."
+                }
+            ]
+        }
+    },
+    traders: {
+        profile: {
+            title: "Perfil del Cliente: Trader Técnico",
+            description: "Traders con experiencia, analistas cuantitativos o desarrolladores interesados en estrategias avanzadas de provisión de liquidez. Perfil técnico, motivado por la mejora de habilidades, la obtención de beneficios y la pertenencia a una comunidad de expertos.",
+            motivations: [
+                "Aprender estrategias de trading rentables.",
+                "Profesionalizar sus habilidades y carrera.",
+                "Acceder a nichos de mercado como el Market Making.",
+                "Conectar con otros traders y expertos."
+            ]
+        },
+        messaging: {
+            title: "Argumentario y Tono de Venta",
+            description: "El discurso debe ser especializado, directo y aspiracional. Usar terminología técnica relevante para demostrar credibilidad y conectar con la audiencia.",
+            points: [
+                {
+                    title: "Domina el Mercado",
+                    text: "Aprende a programar bots, gestionar 'order books' y entender la dinámica de liquidez en DeFi como un profesional."
+                },
+                {
+                    title: "Valor Práctico y Aplicado",
+                    text: "Este no es un curso teórico. Es formación aplicada que te permitirá generar ingresos de nuevas formas y potenciar tu carrera."
+                },
+                {
+                    title: "Comunidad de Élite",
+                    text: "Únete a la red de expertos de Crypto Plaza. Aprende de los mejores y forma parte de la próxima generación de market makers."
+                }
+            ]
+        },
+        playbook: {
+            digital: {
+                title: "Estrategias Digitales",
+                tactics: [
+                    "<strong>Email Marketing:</strong> Embudos cortos y directos con 'lead magnets' técnicos (guías, mini-cursos) y ofertas 'early bird' para crear urgencia.",
+                    "<strong>Twitter (X) y Telegram:</strong> Canales clave. Participar activamente en la 'cripto-Twitter'. Anunciar el curso en grupos de trading y comunidades DeFi.",
+                    "<strong>Webinars / Masterclass:</strong> Realizar demostraciones en vivo (ej. programar un bot sencillo) para mostrar la calidad del instructor y el contenido.",
+                    "<strong>Publicidad Segmentada:</strong> Anuncios en plataformas cripto (CoinGecko), Twitter Ads y foros (Reddit) dirigidos a audiencias de trading."
+                ]
+            },
+            comunidad: {
+                title: "Estrategias de Comunidad y Presenciales",
+                tactics: [
+                    "<strong>Talleres y Meetups:</strong> Organizar workshops técnicos gratuitos o de bajo coste en el hub de Crypto Plaza como 'clase de muestra'.",
+                    "<strong>Presencia en Eventos Cripto:</strong> Participar con ponencias en hackathons, conferencias blockchain y campus fintech para posicionar la academia.",
+                    "<strong>Programa de Afiliados:</strong> Permitir que ex-alumnos y miembros obtengan beneficios por referir a nuevos estudiantes.",
+                    "<strong>Embajadores de Marca:</strong> Colaborar con influencers de trading y youtubers respetados para que validen la calidad y el contenido del curso."
+                ]
+            },
+            consultiva: {
+                title: "Técnicas de Venta Consultiva",
+                tactics: [
+                    "<strong>Llamada de Orientación:</strong> Para un curso de alto valor, ofrecer una llamada corta para evaluar el perfil del interesado y aconsejarle sobre cómo el curso encaja en sus objetivos.",
+                    "<strong>Venta Educativa:</strong> Ofrecer mini-cursos gratuitos o demos en vivo. La 'muestra gratis' de conocimiento genera confianza y reciprocidad.",
+                    "<strong>Prueba Social:</strong> Utilizar testimonios de ex-alumnos, mostrando resultados concretos (ej. 'aumenté mis rendimientos un 20%') para reducir la ansiedad de compra."
+                ]
+            }
+        },
+        channels: {
+            labels: ["Twitter (X)", "Telegram/Discord", "Eventos Cripto", "YouTube/Podcasts", "SEO Técnico", "Afiliados"],
+            data: [95, 90, 80, 75, 70, 65],
+            description: "Los canales más eficaces son las comunidades nativas de cripto donde los traders pasan su tiempo. La credibilidad y la prueba social son fundamentales en estos entornos."
+        },
+        content: {
+            title: "Ideas de Contenido (Lead Magnets)",
+            items: [
+                {
+                    title: "E-book: 10 Estrategias de Market Making",
+                    text: "Una guía técnica y gratuita con definiciones clave, ejemplos sencillos y errores comunes a evitar."
+                },
+                {
+                    title: "Mini-Curso en Vídeo Gratuito",
+                    text: "Una serie de 3 vídeos cortos donde el instructor enseña conceptos introductorios, demostrando su calidad pedagógica."
+                },
+                {
+                    title: "Masterclass: Bot de Market Making en Vivo",
+                    text: "Una sesión donde se programa un bot sencillo en directo. Es un contenido de alto impacto que genera conversiones rápidas."
+                },
+                {
+                    title: "Trading Challenge",
+                    text: "Organizar un reto de trading gratuito de 1 semana en una testnet. Fomenta el 'engagement' y la viralidad."
+                }
+            ]
+        }
+    }
+};
+
+let currentService = 'consultoria';
+let channelChart = null;
+
+function renderContent() {
+    const data = salesData[currentService];
+    const contentArea = document.getElementById('content-area');
+
+    contentArea.innerHTML = `
+        <div class="space-y-12 card-enter">
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-3">${data.profile.title}</h3>
+                    <p class="text-slate-600 mb-4">${data.profile.description}</p>
+                    <ul class="space-y-2">
+                        ${data.profile.motivations.map(item => `<li class="flex items-start"><span class="text-teal-600 mr-2">&#10004;</span><span class="text-slate-700">${item}</span></li>`).join('')}
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-3">${data.messaging.title}</h3>
+                    <p class="text-slate-600 mb-4">${data.messaging.description}</p>
+                    <div class="space-y-3">
+                        ${data.messaging.points.map(point => `
+                            <div>
+                                <h4 class="font-semibold text-slate-800">${point.title}</h4>
+                                <p class="text-slate-600">${point.text}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="text-2xl font-bold text-slate-900 mb-4 text-center">Playbook Estratégico</h2>
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <div class="border-b border-slate-200">
+                        <nav class="-mb-px flex space-x-6" aria-label="Tabs">
+                            <button class="playbook-tab py-4 px-1 border-b-2 text-sm font-medium" data-tab="digital">Digital</button>
+                            <button class="playbook-tab py-4 px-1 border-b-2 text-sm font-medium" data-tab="comunidad">Comunidad y Presencial</button>
+                            <button class="playbook-tab py-4 px-1 border-b-2 text-sm font-medium" data-tab="consultiva">Venta Consultiva</button>
+                        </nav>
+                    </div>
+                    <div id="playbook-content" class="pt-6">
+                        </div>
+                </div>
+            </section>
+
+            <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-1">Canales Más Efectivos</h3>
+                    <p class="text-sm text-slate-500 mb-4">${data.channels.description}</p>
+                    <div class="chart-container">
+                        <canvas id="channelChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-4">${data.content.title}</h3>
+                    <div class="space-y-4">
+                        ${data.content.items.map(item => `
+                            <div class="border border-slate-200 p-4 rounded-md">
+                                <h4 class="font-semibold text-slate-800">${item.title}</h4>
+                                <p class="text-slate-600 text-sm">${item.text}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            </section>
+        </div>
+    `;
+
+    renderPlaybookTab('digital');
+    renderChart();
+    setupEventListeners();
+}
+
+function renderPlaybookTab(tab) {
+    const data = salesData[currentService].playbook[tab];
+    const playbookContent = document.getElementById('playbook-content');
+
+    playbookContent.innerHTML = `
+        <div class="card-enter">
+            <h4 class="text-md font-semibold text-slate-800 mb-3">${data.title}</h4>
+            <ul class="space-y-3 list-disc list-inside text-slate-700">
+                ${data.tactics.map(item => `<li>${item}</li>`).join('')}
+            </ul>
+        </div>
+    `;
+    
+    document.querySelectorAll('.playbook-tab').forEach(button => {
+        if(button.dataset.tab === tab) {
+            button.classList.add('active-tab');
+            button.classList.remove('inactive-tab');
+        } else {
+            button.classList.add('inactive-tab');
+            button.classList.remove('active-tab');
+        }
+    });
+}
+
+function renderChart() {
+    const data = salesData[currentService].channels;
+    const ctx = document.getElementById('channelChart').getContext('2d');
+    
+    if (channelChart) {
+        channelChart.destroy();
+    }
+
+    channelChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: data.labels,
+            datasets: [{
+                label: 'Efectividad Relativa',
+                data: data.data,
+                backgroundColor: '#0d9488', // teal-600
+                borderColor: '#0f766e', // teal-700
+                borderWidth: 1
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: '#0f172a', // slate-900
+                    titleFont: { size: 14, weight: 'bold' },
+                    bodyFont: { size: 12 },
+                    padding: 10,
+                    cornerRadius: 4
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    max: 100,
+                    grid: {
+                        color: '#e2e8f0' // slate-200
+                    },
+                    ticks: {
+                       color: '#475569' // slate-600
+                    }
+                },
+                y: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                       color: '#475569' // slate-600
+                    }
+                }
+            }
+        }
+    });
+}
+
+function setActivePersona(persona) {
+    currentService = persona;
+    const btnConsultoria = document.getElementById('persona-consultoria');
+    const btnTraders = document.getElementById('persona-traders');
+
+    if (persona === 'consultoria') {
+        btnConsultoria.classList.add('active-persona');
+        btnConsultoria.classList.remove('inactive-persona');
+        btnTraders.classList.add('inactive-persona');
+        btnTraders.classList.remove('active-persona');
+    } else {
+        btnTraders.classList.add('active-persona');
+        btnTraders.classList.remove('inactive-persona');
+        btnConsultoria.classList.add('inactive-persona');
+        btnConsultoria.classList.remove('active-persona');
+    }
+
+    renderContent();
+}
+
+function setupEventListeners() {
+    document.querySelectorAll('.playbook-tab').forEach(button => {
+        button.addEventListener('click', (e) => {
+            renderPlaybookTab(e.target.dataset.tab);
+        });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('persona-consultoria').addEventListener('click', () => setActivePersona('consultoria'));
+    document.getElementById('persona-traders').addEventListener('click', () => setActivePersona('traders'));
+
+    setActivePersona('consultoria');
+});
+
+</script>
+</body>
+</html>
