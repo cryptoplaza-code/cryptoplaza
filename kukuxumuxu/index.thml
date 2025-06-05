@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de Implementación - Guía de Actualización Web</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Guía de Actualización Web</h1>
+            <h2>Crypto Plaza</h2>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="analisis.html">Análisis UI/UX</a></li>
+                <li><a href="propuesta.html">Propuesta de Mejoras</a></li>
+                <li><a href="herramientas.html">Herramientas</a></li>
+                <li><a href="estructura.html">Estructura</a></li>
+                <li><a href="wireframes.html">Wireframes</a></li>
+                <li><a href="validacion.html">Validación</a></li>
+                <li><a href="implementacion.html" class="active">Implementación</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <div class="container">
+            <div class="content-page">
+                <h2>Guía Detallada para Implementación Sin Código</h2>
+
+                <section>
+                    <h3>Introducción</h3>
+                    <p>Esta guía proporciona instrucciones paso a paso para implementar la nueva versión de CryptoPlaza.es utilizando herramientas no-code y de IA, sin necesidad de conocimientos de programación.</p>
+                </section>
+
+                <section>
+                    <h3>1. Preparación y Planificación</h3>
+                    
+                    <h4>1.1 Organización de Recursos</h4>
+                    
+                    <p><strong>Paso 1: Crear una estructura de carpetas</strong></p>
+                    <p>Organiza todos los recursos necesarios en una estructura clara:</p>
+                    
+                    <pre>
+CryptoPlaza-Rediseño/
+├── Diseño/
+│   ├── Wireframes/
+│   ├── Maquetas/
+│   ├── Prototipos/
+│   └── Recursos visuales/
+├── Contenido/
+│   ├── Textos/
+│   ├── Imágenes/
+│   └── Documentos descargables/
+├── Datos/
+│   ├── Formularios/
+│   └── Integraciones/
+└── Implementación/
+    └── Tutoriales y guías/
+                    </pre>
+                    
+                    <p><strong>Paso 2: Recopilar activos de marca</strong></p>
+                    <ul>
+                        <li>Logo en diferentes formatos (PNG, SVG)</li>
+                        <li>Paleta de colores (códigos HEX, RGB)</li>
+                        <li>Tipografías</li>
+                        <li>Imágenes y fotografías</li>
+                        <li>Iconos y elementos gráficos</li>
+                    </ul>
+                    
+                    <p><strong>Paso 3: Preparar plan de migración</strong></p>
+                    <ul>
+                        <li>Listar todas las páginas a crear</li>
+                        <li>Establecer prioridades (páginas críticas primero)</li>
+                        <li>Definir cronograma de implementación</li>
+                        <li>Asignar responsables para cada tarea</li>
+                    </ul>
+                    
+                    <h4>1.2 Preparación de Contenido</h4>
+                    
+                    <p><strong>Paso 1: Auditoría de contenido existente</strong></p>
+                    <ul>
+                        <li>Revisar el contenido actual de CryptoPlaza.es</li>
+                        <li>Identificar contenido a conservar, actualizar o eliminar</li>
+                        <li>Organizar el contenido según la nueva estructura</li>
+                    </ul>
+                    
+                    <p><strong>Paso 2: Planificación de nuevo contenido</strong></p>
+                    <ul>
+                        <li>Crear un documento con todos los textos necesarios</li>
+                        <li>Organizar por secciones según la arquitectura propuesta</li>
+                        <li>Incluir metadatos (títulos, descripciones, palabras clave)</li>
+                    </ul>
+                    
+                    <p><strong>Paso 3: Preparación de recursos visuales</strong></p>
+                    <ul>
+                        <li>Seleccionar imágenes profesionales alineadas con la estética deseada</li>
+                        <li>Optimizar imágenes para web (tamaño, formato)</li>
+                        <li>Nombrar archivos de forma descriptiva y consistente</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>2. Configuración de Herramientas</h3>
+                    
+                    <h4>2.1 Configuración de Webflow</h4>
+                    
+                    <p><strong>Paso 1: Crear cuenta en Webflow</strong></p>
+                    <ol>
+                        <li>Visita <a href="https://webflow.com" target="_blank">webflow.com</a></li>
+                        <li>Haz clic en "Get Started" o "Comenzar"</li>
+                        <li>Completa el formulario de registro</li>
+                        <li>Verifica tu correo electrónico</li>
+                    </ol>
+                    
+                    <p><strong>Paso 2: Configurar un nuevo proyecto</strong></p>
+                    <ol>
+                        <li>En el dashboard, haz clic en "New Site" o "Nuevo Sitio"</li>
+                        <li>Selecciona "Start from scratch" o "Comenzar desde cero"</li>
+                        <li>Elige un nombre para tu proyecto (ej. "CryptoPlaza-Rediseño")</li>
+                        <li>Configura las dimensiones del lienzo (recomendado: 1440px)</li>
+                    </ol>
+                    
+                    <p><strong>Paso 3: Configurar ajustes básicos</strong></p>
+                    <ol>
+                        <li>Ve a "Project Settings" o "Ajustes del Proyecto"</li>
+                        <li>Configura el nombre del sitio, favicon y metadatos generales</li>
+                        <li>Establece la tipografía predeterminada (Inter)</li>
+                        <li>Define la paleta de colores del proyecto según los códigos HEX establecidos</li>
+                    </ol>
+                    
+                    <h4>2.2 Configuración de Herramientas Complementarias</h4>
+                    
+                    <p><strong>Paso 1: Configurar Tally para formularios</strong></p>
+                    <ol>
+                        <li>Visita <a href="https://tally.so" target="_blank">tally.so</a></li>
+                        <li>Crea una cuenta gratuita</li>
+                        <li>Familiarízate con la interfaz explorando ejemplos</li>
+                    </ol>
+                    
+                    <p><strong>Paso 2: Configurar Make (Integromat) para automatizaciones</strong></p>
+                    <ol>
+                        <li>Visita <a href="https://make.com" target="_blank">make.com</a></li>
+                        <li>Crea una cuenta gratuita</li>
+                        <li>Explora las plantillas disponibles para inspiración</li>
+                    </ol>
+                    
+                    <p><strong>Paso 3: Configurar Jasper para generación de contenido</strong></p>
+                    <ol>
+                        <li>Visita <a href="https://jasper.ai" target="_blank">jasper.ai</a></li>
+                        <li>Regístrate para una prueba o suscripción</li>
+                        <li>Configura tu perfil con el tono y estilo deseados</li>
+                    </ol>
+                    
+                    <p><strong>Paso 4: Configurar herramientas de análisis</strong></p>
+                    <ol>
+                        <li>Crea o accede a tu cuenta de Google Analytics</li>
+                        <li>Configura una nueva propiedad para el sitio</li>
+                        <li>Guarda el código de seguimiento para implementación posterior</li>
+                    </ol>
+                </section>
+
+                <section>
+                    <h3>3. Implementación en Webflow</h3>
+                    
+                    <h4>3.1 Configuración de Estructura Base</h4>
+                    
+                    <p><strong>Paso 1: Crear estructura de navegación</strong></p>
+                    <ol>
+                        <li>Ve a la pestaña "Navigator" o "Navegador"</li>
+                        <li>Crea una estructura de carpetas que refleje la arquitectura del sitio:
+                            <ul>
+                                <li>Header (Encabezado)</li>
+                                <li>Footer (Pie de página)</li>
+                                <li>Pages (Páginas)</li>
+                                <li>Components (Componentes)</li>
+                                <li>Symbols (Símbolos)</li>
+                            </ul>
+                        </li>
+                    </ol>
+                    
+                    <p><strong>Paso 2: Configurar estilos globales</strong></p>
+                    <ol>
+                        <li>Ve a la pestaña "Styles" o "Estilos"</li>
+                        <li>Configura los estilos de texto para:
+                            <ul>
+                                <li>Headings (H1-H6)</li>
+                                <li>Paragraph (Párrafo)</li>
+                                <li>Link (Enlace)</li>
+                                <li>Button (Botón)</li>
+                            </ul>
+                        </li>
+                        <li>Define clases para espaciados consistentes:
+                            <ul>
+                                <li>Section (Sección)</li>
+                                <li>Container (Contenedor)</li>
+                                <li>Padding (Relleno)</li>
+                                <li>Margin (Margen)</li>
+                            </ul>
+                        </li>
+                    </ol>
+                    
+                    <p><strong>Paso 3: Crear componentes reutilizables</strong></p>
+                    <ol>
+                        <li>Crea símbolos para elementos recurrentes:
+                            <ul>
+                                <li>Botones (primario, secundario, terciario)</li>
+                                <li>Tarjetas (servicios, cursos, eventos)</li>
+                                <li>Testimonios</li>
+                                <li>Formularios básicos</li>
+                                <li>Secciones de CTA</li>
+                            </ul>
+                        </li>
+                    </ol>
+                    
+                    <h4>3.2 Implementación de Páginas Principales</h4>
+                    
+                    <p><strong>Paso 1: Crear página de inicio</strong></p>
+                    <ol>
+                        <li>Crea una nueva página llamada "Home" o "Inicio"</li>
+                        <li>Implementa las secciones según el wireframe:
+                            <ul>
+                                <li>Hero Section</li>
+                                <li>Tres Pilares</li>
+                                <li>Casos de Éxito</li>
+                                <li>Últimas Publicaciones</li>
+                                <li>Próximos Eventos</li>
+                                <li>Newsletter</li>
+                            </ul>
+                        </li>
+                    </ol>
+                    
+                    <p><strong>Instrucciones detalladas para la Hero Section:</strong></p>
+                    <ol>
+                        <li>Añade una sección (div block) con clase "hero-section"</li>
+                        <li>Configura un contenedor dentro con ancho máximo (1200px)</li>
+                        <li>Crea una estructura de dos columnas (60/40)</li>
+                        <li>En la columna izquierda:
+                            <ul>
+                                <li>Añade un heading H1 con el mensaje principal</li>
+                                <li>Añade un párrafo con la descripción</li>
+                                <li>Inserta el botón CTA principal</li>
+                            </ul>
+                        </li>
+                        <li>En la columna derecha:
+                            <ul>
+                                <li>Añade una imagen o gráfico relevante</li>
+                            </ul>
+                        </li>
+                        <li>Configura el responsive para dispositivos móviles:
+                            <ul>
+                                <li>Cambia a una columna en breakpoint tablet/móvil</li>
+                                <li>Ajusta tamaños de texto y espaciados</li>
+                            </ul>
+                        </li>
+                    </ol>
+                    
+                    <p><strong>Paso 2: Crear página de consultoría</strong></p>
+                    <p>Sigue la estructura del wireframe para implementar:</p>
+                    <ul>
+                        <li>Hero Section específica</li>
+                        <li>Propuesta de valor</li>
+                        <li>Equipo consultor</li>
+                        <li>Proceso de trabajo</li>
+                        <li>Clientes destacados</li>
+                        <li>Testimonios</li>
+                        <li>CTA secundario</li>
+                    </ul>
+                    
+                    <p><strong>Paso 3: Crear páginas adicionales</strong></p>
+                    <p>Repite el proceso para cada página principal:</p>
+                    <ul>
+                        <li>Diagnóstico Gratuito</li>
+                        <li>Formación Ejecutiva</li>
+                        <li>Detalle de Curso</li>
+                        <li>Think Tank & Comunidad</li>
+                        <li>Recursos (Newsletter, etc.)</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>4. Creación de Contenido con IA</h3>
+                    
+                    <h4>4.1 Generación de Textos con Jasper</h4>
+                    
+                    <p><strong>Paso 1: Preparar brief de contenido</strong></p>
+                    <ol>
+                        <li>Define el tono de voz (formal pero divulgativo)</li>
+                        <li>Establece palabras clave principales</li>
+                        <li>Proporciona ejemplos de estilo deseado (similar a PwC o McKinsey)</li>
+                    </ol>
+                    
+                    <p><strong>Paso 2: Generar contenido para secciones principales</strong></p>
+                    <p>Para generar la descripción de un servicio de consultoría:</p>
+                    <ol>
+                        <li>En Jasper, selecciona "Long-form Assistant" o "Asistente de formato largo"</li>
+                        <li>Proporciona un título descriptivo: "Servicio de Estrategia de Tesorería Cripto para Empresas"</li>
+                        <li>Incluye instrucciones detalladas:
+                            <pre>
+Escribe una descripción profesional para un servicio de consultoría sobre estrategia de tesorería con criptoactivos para empresas. 
+El tono debe ser formal y técnicamente preciso, similar al de consultoras como PwC o McKinsey. 
+Incluye: definición del servicio, beneficios para CFOs, proceso de implementación y resultados esperados. 
+Extensión: 250-300 palabras.
+                            </pre>
+                        </li>
+                        <li>Revisa y edita el resultado para asegurar precisión técnica</li>
+                    </ol>
+                    
+                    <p><strong>Paso 3: Generar variaciones y optimizar</strong></p>
+                    <ol>
+                        <li>Para cada texto generado, 
+(Content truncated due to size limit. Use line ranges to read in chunks)
