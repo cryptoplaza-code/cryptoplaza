@@ -1,321 +1,439 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guía de Implementación - Guía de Actualización Web</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Kukuxumuxu NFT - Plataforma Estratégica</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Earthy Neutrals -->
+    <!-- Application Structure Plan: The SPA is designed as an interactive strategic roadmap, moving beyond the linear structure of the source PDF. The information architecture is thematic: 1. Visión (Core Concept), 2. Colección (The Product), 3. Lanzamiento (Go-to-Market Strategy), 4. Comunidad (Post-Sale Value), 5. Futuro (Long-Term Vision), and 6. Claves (Success Factors). This flow guides the user from the high-level concept to the execution details and future potential, making the strategy more intuitive and digestible. Interactions like clickable cards and a dynamic chart are used to reveal information progressively, encouraging exploration rather than passive reading. -->
+    <!-- Visualization & Content Choices: 
+    - Report Info: "Punto de intersección" (Kukuxumuxu, Web3, Crypto Plaza). Goal: Inform. Viz: Hero section with icons. Interaction: Static visual anchor. Justification: Immediately establishes the unique project proposition. Method: HTML/Tailwind.
+    - Report Info: "Modelo de Negocio Potencial". Goal: Organize/Inform. Viz: Interactive cards for each model (Venta Directa, Experiencias, Phygital, etc.). Interaction: Click to reveal details. Justification: Allows users to explore each revenue stream without being overwhelmed by text. Method: HTML/Tailwind/JS.
+    - Report Info: "Ventas y Go-To-Market" (Venta escalonada). Goal: Show Change/Process. Viz: Horizontal Bar Chart. Interaction: Tooltips on hover. Justification: Clearly visualizes the phased launch process. Library: Chart.js.
+    - Report Info: "Marketing & Posicionamiento". Goal: Inform. Viz: Grid with icons. Interaction: Subtle hover effects. Justification: Provides a quick, scannable overview of marketing tactics. Method: HTML/Tailwind.
+    - Report Info: "Activación y Comunidad". Goal: Organize. Viz: Titled sections for different community tactics. Interaction: N/A, clear typography. Justification: Simple, clear presentation of community engagement strategies. Method: HTML/Tailwind.
+    - Report Info: "Riesgos y Siguientes Pasos". Goal: Inform. Viz: Two-column layout with icons. Interaction: N/A. Justification: Separates critical factors for clarity and emphasis. Method: HTML/Tailwind.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F5;
+            color: #403D39;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 250px;
+            max-height: 300px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 300px;
+                max-height: 350px;
+            }
+        }
+        .card-active {
+            border-color: #EB5E28;
+            background-color: #FFFCF9;
+        }
+        .details-hidden {
+            max-height: 0;
+            opacity: 0;
+            transform: translateY(-10px);
+            overflow: hidden;
+            transition: max-height 0.5s ease-out, opacity 0.5s ease-in-out, transform 0.5s ease-out;
+        }
+        .details-visible {
+            max-height: 500px;
+            opacity: 1;
+            transform: translateY(0);
+            transition: max-height 0.7s ease-in, opacity 0.7s ease-in-out, transform 0.7s ease-in;
+        }
+    </style>
 </head>
-<body>
-    <header>
-        <div class="container">
-            <h1>Guía de Actualización Web</h1>
-            <h2>Crypto Plaza</h2>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold text-[#EB5E28]">Kukuxumuxu <span class="text-[#403D39]">x Web3</span></h1>
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#vision" class="text-sm font-semibold hover:text-[#EB5E28] transition-colors">Visión</a>
+                    <a href="#coleccion" class="text-sm font-semibold hover:text-[#EB5E28] transition-colors">La Colección</a>
+                    <a href="#lanzamiento" class="text-sm font-semibold hover:text-[#EB5E28] transition-colors">Lanzamiento</a>
+                    <a href="#comunidad" class="text-sm font-semibold hover:text-[#EB5E28] transition-colors">Comunidad</a>
+                    <a href="#futuro" class="text-sm font-semibold hover:text-[#EB5E28] transition-colors">Futuro</a>
+                    <a href="#claves" class="text-sm font-semibold hover:text-[#EB5E28] transition-colors">Claves</a>
+                </nav>
+            </div>
         </div>
     </header>
 
-    <nav>
-        <div class="container">
-            <ul>
-                <li><a href="index.html">Inicio</a></li>
-                <li><a href="analisis.html">Análisis UI/UX</a></li>
-                <li><a href="propuesta.html">Propuesta de Mejoras</a></li>
-                <li><a href="herramientas.html">Herramientas</a></li>
-                <li><a href="estructura.html">Estructura</a></li>
-                <li><a href="wireframes.html">Wireframes</a></li>
-                <li><a href="validacion.html">Validación</a></li>
-                <li><a href="implementacion.html" class="active">Implementación</a></li>
-            </ul>
-        </div>
-    </nav>
-
     <main>
-        <div class="container">
-            <div class="content-page">
-                <h2>Guía Detallada para Implementación Sin Código</h2>
+        <section id="vision" class="py-20 md:py-32">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-4xl md:text-6xl font-bold mb-4">La Intersección de Tres Mundos</h2>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto text-gray-600 mb-12">
+                    Este proyecto representa una propuesta de valor única, fusionando la icónica marca de moda <span class="font-bold text-[#EB5E28]">Kukuxumuxu</span>, el innovador ecosistema <span class="font-bold text-[#EB5E28]">NFT/Web3</span>, y la influyente comunidad de <span class="font-bold text-[#EB5E28]">Crypto Plaza</span>.
+                </p>
+                <div class="flex justify-center items-center space-x-4 md:space-x-8">
+                    <div class="text-center p-4 rounded-lg">
+                        <div class="text-5xl mb-2">🎨</div>
+                        <span class="font-semibold">Moda & Diseño</span>
+                    </div>
+                    <div class="text-5xl font-light text-gray-300">+</div>
+                    <div class="text-center p-4 rounded-lg">
+                        <div class="text-5xl mb-2">🔗</div>
+                        <span class="font-semibold">Tecnología Web3</span>
+                    </div>
+                     <div class="text-5xl font-light text-gray-300">+</div>
+                    <div class="text-center p-4 rounded-lg">
+                        <div class="text-5xl mb-2">🤝</div>
+                        <span class="font-semibold">Comunidad Cripto</span>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-                <section>
-                    <h3>Introducción</h3>
-                    <p>Esta guía proporciona instrucciones paso a paso para implementar la nueva versión de CryptoPlaza.es utilizando herramientas no-code y de IA, sin necesidad de conocimientos de programación.</p>
-                </section>
+        <section id="coleccion" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold">La Colección NFT: Más que Arte Digital</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-gray-600">
+                        Cada NFT está diseñado para ser una pieza de valor con múltiples utilidades. Esta sección explora el modelo de negocio potencial y el valor intrínseco de la colección. Haz clic en cada tarjeta para descubrir más.
+                    </p>
+                </div>
+                <div id="business-model-cards" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                </div>
+            </div>
+        </section>
+        
+        <section id="lanzamiento" class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold">Estrategia de Lanzamiento</h2>
+                     <p class="mt-4 max-w-2xl mx-auto text-gray-600">
+                        Nuestra estrategia de marketing y ventas está diseñada para generar expectación y exclusividad. A continuación se detallan las tácticas de posicionamiento y el proceso de venta escalonada.
+                    </p>
+                </div>
 
-                <section>
-                    <h3>1. Preparación y Planificación</h3>
-                    
-                    <h4>1.1 Organización de Recursos</h4>
-                    
-                    <p><strong>Paso 1: Crear una estructura de carpetas</strong></p>
-                    <p>Organiza todos los recursos necesarios en una estructura clara:</p>
-                    
-                    <pre>
-CryptoPlaza-Rediseño/
-├── Diseño/
-│   ├── Wireframes/
-│   ├── Maquetas/
-│   ├── Prototipos/
-│   └── Recursos visuales/
-├── Contenido/
-│   ├── Textos/
-│   ├── Imágenes/
-│   └── Documentos descargables/
-├── Datos/
-│   ├── Formularios/
-│   └── Integraciones/
-└── Implementación/
-    └── Tutoriales y guías/
-                    </pre>
-                    
-                    <p><strong>Paso 2: Recopilar activos de marca</strong></p>
-                    <ul>
-                        <li>Logo en diferentes formatos (PNG, SVG)</li>
-                        <li>Paleta de colores (códigos HEX, RGB)</li>
-                        <li>Tipografías</li>
-                        <li>Imágenes y fotografías</li>
-                        <li>Iconos y elementos gráficos</li>
-                    </ul>
-                    
-                    <p><strong>Paso 3: Preparar plan de migración</strong></p>
-                    <ul>
-                        <li>Listar todas las páginas a crear</li>
-                        <li>Establecer prioridades (páginas críticas primero)</li>
-                        <li>Definir cronograma de implementación</li>
-                        <li>Asignar responsables para cada tarea</li>
-                    </ul>
-                    
-                    <h4>1.2 Preparación de Contenido</h4>
-                    
-                    <p><strong>Paso 1: Auditoría de contenido existente</strong></p>
-                    <ul>
-                        <li>Revisar el contenido actual de CryptoPlaza.es</li>
-                        <li>Identificar contenido a conservar, actualizar o eliminar</li>
-                        <li>Organizar el contenido según la nueva estructura</li>
-                    </ul>
-                    
-                    <p><strong>Paso 2: Planificación de nuevo contenido</strong></p>
-                    <ul>
-                        <li>Crear un documento con todos los textos necesarios</li>
-                        <li>Organizar por secciones según la arquitectura propuesta</li>
-                        <li>Incluir metadatos (títulos, descripciones, palabras clave)</li>
-                    </ul>
-                    
-                    <p><strong>Paso 3: Preparación de recursos visuales</strong></p>
-                    <ul>
-                        <li>Seleccionar imágenes profesionales alineadas con la estética deseada</li>
-                        <li>Optimizar imágenes para web (tamaño, formato)</li>
-                        <li>Nombrar archivos de forma descriptiva y consistente</li>
-                    </ul>
-                </section>
+                <div class="bg-white p-8 rounded-2xl shadow-md mb-16">
+                    <h3 class="text-2xl font-bold text-center mb-6">Marketing y Posicionamiento</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                        <div class="p-4">
+                            <div class="text-4xl mb-3">💎</div>
+                            <h4 class="font-semibold">Lujo y Exclusividad</h4>
+                            <p class="text-sm text-gray-500">Una pieza de diseño única de una gran marca.</p>
+                        </div>
+                        <div class="p-4">
+                            <div class="text-4xl mb-3">📖</div>
+                            <h4 class="font-semibold">Storytelling</h4>
+                            <p class="text-sm text-gray-500">Destacar el proceso creativo detrás de la colección.</p>
+                        </div>
+                        <div class="p-4">
+                           <div class="text-4xl mb-3">⏱️</div>
+                            <h4 class="font-semibold">Marketing de Escasez</h4>
+                            <p class="text-sm text-gray-500">Colección limitada y campañas FOMO.</p>
+                        </div>
+                        <div class="p-4">
+                            <div class="text-4xl mb-3">🚀</div>
+                            <h4 class="font-semibold">Alianzas Estratégicas</h4>
+                            <p class="text-sm text-gray-500">Colaboraciones con marketplaces y cripto medios.</p>
+                        </div>
+                    </div>
+                </div>
 
-                <section>
-                    <h3>2. Configuración de Herramientas</h3>
-                    
-                    <h4>2.1 Configuración de Webflow</h4>
-                    
-                    <p><strong>Paso 1: Crear cuenta en Webflow</strong></p>
-                    <ol>
-                        <li>Visita <a href="https://webflow.com" target="_blank">webflow.com</a></li>
-                        <li>Haz clic en "Get Started" o "Comenzar"</li>
-                        <li>Completa el formulario de registro</li>
-                        <li>Verifica tu correo electrónico</li>
-                    </ol>
-                    
-                    <p><strong>Paso 2: Configurar un nuevo proyecto</strong></p>
-                    <ol>
-                        <li>En el dashboard, haz clic en "New Site" o "Nuevo Sitio"</li>
-                        <li>Selecciona "Start from scratch" o "Comenzar desde cero"</li>
-                        <li>Elige un nombre para tu proyecto (ej. "CryptoPlaza-Rediseño")</li>
-                        <li>Configura las dimensiones del lienzo (recomendado: 1440px)</li>
-                    </ol>
-                    
-                    <p><strong>Paso 3: Configurar ajustes básicos</strong></p>
-                    <ol>
-                        <li>Ve a "Project Settings" o "Ajustes del Proyecto"</li>
-                        <li>Configura el nombre del sitio, favicon y metadatos generales</li>
-                        <li>Establece la tipografía predeterminada (Inter)</li>
-                        <li>Define la paleta de colores del proyecto según los códigos HEX establecidos</li>
-                    </ol>
-                    
-                    <h4>2.2 Configuración de Herramientas Complementarias</h4>
-                    
-                    <p><strong>Paso 1: Configurar Tally para formularios</strong></p>
-                    <ol>
-                        <li>Visita <a href="https://tally.so" target="_blank">tally.so</a></li>
-                        <li>Crea una cuenta gratuita</li>
-                        <li>Familiarízate con la interfaz explorando ejemplos</li>
-                    </ol>
-                    
-                    <p><strong>Paso 2: Configurar Make (Integromat) para automatizaciones</strong></p>
-                    <ol>
-                        <li>Visita <a href="https://make.com" target="_blank">make.com</a></li>
-                        <li>Crea una cuenta gratuita</li>
-                        <li>Explora las plantillas disponibles para inspiración</li>
-                    </ol>
-                    
-                    <p><strong>Paso 3: Configurar Jasper para generación de contenido</strong></p>
-                    <ol>
-                        <li>Visita <a href="https://jasper.ai" target="_blank">jasper.ai</a></li>
-                        <li>Regístrate para una prueba o suscripción</li>
-                        <li>Configura tu perfil con el tono y estilo deseados</li>
-                    </ol>
-                    
-                    <p><strong>Paso 4: Configurar herramientas de análisis</strong></p>
-                    <ol>
-                        <li>Crea o accede a tu cuenta de Google Analytics</li>
-                        <li>Configura una nueva propiedad para el sitio</li>
-                        <li>Guarda el código de seguimiento para implementación posterior</li>
-                    </ol>
-                </section>
+                <div>
+                    <h3 class="text-2xl font-bold text-center mb-6">Fases de la Venta</h3>
+                     <div class="chart-container">
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-                <section>
-                    <h3>3. Implementación en Webflow</h3>
-                    
-                    <h4>3.1 Configuración de Estructura Base</h4>
-                    
-                    <p><strong>Paso 1: Crear estructura de navegación</strong></p>
-                    <ol>
-                        <li>Ve a la pestaña "Navigator" o "Navegador"</li>
-                        <li>Crea una estructura de carpetas que refleje la arquitectura del sitio:
-                            <ul>
-                                <li>Header (Encabezado)</li>
-                                <li>Footer (Pie de página)</li>
-                                <li>Pages (Páginas)</li>
-                                <li>Components (Componentes)</li>
-                                <li>Symbols (Símbolos)</li>
-                            </ul>
-                        </li>
-                    </ol>
-                    
-                    <p><strong>Paso 2: Configurar estilos globales</strong></p>
-                    <ol>
-                        <li>Ve a la pestaña "Styles" o "Estilos"</li>
-                        <li>Configura los estilos de texto para:
-                            <ul>
-                                <li>Headings (H1-H6)</li>
-                                <li>Paragraph (Párrafo)</li>
-                                <li>Link (Enlace)</li>
-                                <li>Button (Botón)</li>
-                            </ul>
-                        </li>
-                        <li>Define clases para espaciados consistentes:
-                            <ul>
-                                <li>Section (Sección)</li>
-                                <li>Container (Contenedor)</li>
-                                <li>Padding (Relleno)</li>
-                                <li>Margin (Margen)</li>
-                            </ul>
-                        </li>
-                    </ol>
-                    
-                    <p><strong>Paso 3: Crear componentes reutilizables</strong></p>
-                    <ol>
-                        <li>Crea símbolos para elementos recurrentes:
-                            <ul>
-                                <li>Botones (primario, secundario, terciario)</li>
-                                <li>Tarjetas (servicios, cursos, eventos)</li>
-                                <li>Testimonios</li>
-                                <li>Formularios básicos</li>
-                                <li>Secciones de CTA</li>
-                            </ul>
-                        </li>
-                    </ol>
-                    
-                    <h4>3.2 Implementación de Páginas Principales</h4>
-                    
-                    <p><strong>Paso 1: Crear página de inicio</strong></p>
-                    <ol>
-                        <li>Crea una nueva página llamada "Home" o "Inicio"</li>
-                        <li>Implementa las secciones según el wireframe:
-                            <ul>
-                                <li>Hero Section</li>
-                                <li>Tres Pilares</li>
-                                <li>Casos de Éxito</li>
-                                <li>Últimas Publicaciones</li>
-                                <li>Próximos Eventos</li>
-                                <li>Newsletter</li>
-                            </ul>
-                        </li>
-                    </ol>
-                    
-                    <p><strong>Instrucciones detalladas para la Hero Section:</strong></p>
-                    <ol>
-                        <li>Añade una sección (div block) con clase "hero-section"</li>
-                        <li>Configura un contenedor dentro con ancho máximo (1200px)</li>
-                        <li>Crea una estructura de dos columnas (60/40)</li>
-                        <li>En la columna izquierda:
-                            <ul>
-                                <li>Añade un heading H1 con el mensaje principal</li>
-                                <li>Añade un párrafo con la descripción</li>
-                                <li>Inserta el botón CTA principal</li>
-                            </ul>
-                        </li>
-                        <li>En la columna derecha:
-                            <ul>
-                                <li>Añade una imagen o gráfico relevante</li>
-                            </ul>
-                        </li>
-                        <li>Configura el responsive para dispositivos móviles:
-                            <ul>
-                                <li>Cambia a una columna en breakpoint tablet/móvil</li>
-                                <li>Ajusta tamaños de texto y espaciados</li>
-                            </ul>
-                        </li>
-                    </ol>
-                    
-                    <p><strong>Paso 2: Crear página de consultoría</strong></p>
-                    <p>Sigue la estructura del wireframe para implementar:</p>
-                    <ul>
-                        <li>Hero Section específica</li>
-                        <li>Propuesta de valor</li>
-                        <li>Equipo consultor</li>
-                        <li>Proceso de trabajo</li>
-                        <li>Clientes destacados</li>
-                        <li>Testimonios</li>
-                        <li>CTA secundario</li>
-                    </ul>
-                    
-                    <p><strong>Paso 3: Crear páginas adicionales</strong></p>
-                    <p>Repite el proceso para cada página principal:</p>
-                    <ul>
-                        <li>Diagnóstico Gratuito</li>
-                        <li>Formación Ejecutiva</li>
-                        <li>Detalle de Curso</li>
-                        <li>Think Tank & Comunidad</li>
-                        <li>Recursos (Newsletter, etc.)</li>
-                    </ul>
-                </section>
+        <section id="comunidad" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold">Activación y Comunidad</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-gray-600">
+                        El valor de un NFT va más allá de la compra. Nuestro objetivo es crear una comunidad activa y comprometida a través de diversas iniciativas de activación para los holders.
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="bg-gray-50 p-6 rounded-lg text-center">
+                        <div class="text-4xl mb-3">💬</div>
+                        <h3 class="font-bold text-lg mb-2">Canales Exclusivos</h3>
+                        <p class="text-sm text-gray-600">Acceso a un Discord/Telegram privado solo para holders, con noticias y beneficios.</p>
+                    </div>
+                     <div class="bg-gray-50 p-6 rounded-lg text-center">
+                        <div class="text-4xl mb-3">🏆</div>
+                        <h3 class="font-bold text-lg mb-2">Gamificación</h3>
+                        <p class="text-sm text-gray-600">Misiones, recompensas y retos para incentivar el engagement con la marca.</p>
+                    </div>
+                     <div class="bg-gray-50 p-6 rounded-lg text-center">
+                        <div class="text-4xl mb-3">🌐</div>
+                        <h3 class="font-bold text-lg mb-2">Eventos y Metaverso</h3>
+                        <p class="text-sm text-gray-600">Eventos físicos y presencia en plataformas como Decentraland o Spatial.</p>
+                    </div>
+                     <div class="bg-gray-50 p-6 rounded-lg text-center">
+                        <div class="text-4xl mb-3">🎁</div>
+                        <h3 class="font-bold text-lg mb-2">Airdrops Sorpresa</h3>
+                        <p class="text-sm text-gray-600">Nuevas piezas, accesorios o merchandising para los holders más fieles.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-                <section>
-                    <h3>4. Creación de Contenido con IA</h3>
+        <section id="futuro" class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold">Potencial de Expansión y Rol Estratégico</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-gray-600">
+                        Este proyecto piloto tiene el potencial de convertirse en una nueva línea de negocio y escalar globalmente, redefiniendo la moda en el espacio Web3.
+                    </p>
+                </div>
+                 <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-white p-8 rounded-lg shadow-md">
+                        <h3 class="font-bold text-xl mb-4">Oportunidades de Expansión</h3>
+                        <ul class="space-y-3 text-gray-600">
+                            <li class="flex items-start"><span class="mr-3 text-[#EB5E28] font-bold">›</span> Internacionalización del modelo.</li>
+                            <li class="flex items-start"><span class="mr-3 text-[#EB5E28] font-bold">›</span> Licencias para otras colecciones o marcas.</li>
+                            <li class="flex items-start"><span class="mr-3 text-[#EB5E28] font-bold">›</span> Creación de una Fashion DAO para decisiones colectivas.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-8 rounded-lg shadow-md">
+                        <h3 class="font-bold text-xl mb-4">El Rol Estratégico</h3>
+                        <ul class="space-y-3 text-gray-600">
+                            <li class="flex items-start"><span class="mr-3 text-[#EB5E28] font-bold">›</span> <span class="font-semibold">Arquitecto del Proyecto:</span> Diseñar la experiencia completa.</li>
+                            <li class="flex items-start"><span class="mr-3 text-[#EB5E28] font-bold">›</span> <span class="font-semibold">Intermediario de Mundos:</span> Conectar moda con Web3.</li>
+                            <li class="flex items-start"><span class="mr-3 text-[#EB5E28] font-bold">›</span> <span class="font-semibold">Curador de Propuestas:</span> Atraer nuevas marcas al modelo.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="claves" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                 <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold">Factores Clave para el Éxito</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-gray-600">
+                       Para asegurar el éxito y mitigar riesgos, nos enfocamos en una ejecución impecable y en los siguientes pasos estratégicos.
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8 md:gap-12">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4 flex items-center">
+                            <span class="text-2xl mr-3">⚠️</span>Riesgos y Advertencias
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="bg-orange-50 border-l-4 border-orange-400 p-4 rounded-r-lg">
+                                <h4 class="font-bold">Market Timing</h4>
+                                <p class="text-sm text-gray-600">Analizar bien la narrativa actual del mercado NFT para encontrar el nicho correcto.</p>
+                            </div>
+                            <div class="bg-orange-50 border-l-4 border-orange-400 p-4 rounded-r-lg">
+                                <h4 class="font-bold">Ejecución con Excelencia</h4>
+                                <p class="text-sm text-gray-600">La experiencia de usuario debe ser impecable para no dañar el prestigio de la marca.</p>
+                            </div>
+                             <div class="bg-orange-50 border-l-4 border-orange-400 p-4 rounded-r-lg">
+                                <h4 class="font-bold">Legalidad y Propiedad Intelectual</h4>
+                                <p class="text-sm text-gray-600">Asegurar que todos los términos de uso, royalties y derechos estén bien definidos.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                         <h3 class="text-2xl font-bold mb-4 flex items-center">
+                            <span class="text-2xl mr-3">✅</span>Siguientes Pasos
+                        </h3>
+                        <div class="space-y-4">
+                             <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg">
+                                <h4 class="font-bold">1. Definir el Por Qué y Para Quién</h4>
+                                <p class="text-sm text-gray-600">Establecer el propósito de la colección y el perfil del público objetivo.</p>
+                            </div>
+                             <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg">
+                                <h4 class="font-bold">2. Identificar el Valor Real</h4>
+                                <p class="text-sm text-gray-600">Definir la utilidad del NFT más allá del arte (acceso, comunidad, etc.).</p>
+                            </div>
+                             <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg">
+                                <h4 class="font-bold">3. Asegurar Experiencia de Usuario Fluida</h4>
+                                <p class="text-sm text-gray-600">Optimizar el proceso de compra y el disfrute posterior del NFT.</p>
+                            </div>
+                            <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg">
+                                <h4 class="font-bold">4. Validar la Narrativa</h4>
+                                <p class="text-sm text-gray-600">Alinear el storytelling y la estrategia con el equipo de marketing de la marca.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-[#403D39] text-white">
+        <div class="container mx-auto px-6 py-8 text-center text-sm">
+            <p>&copy; 2025 Plataforma Estratégica Kukuxumuxu x Web3. Generado a partir de "Mapa de Ideas inicial".</p>
+             <p class="mt-2 text-gray-400">Una visualización interactiva para explorar el futuro de la moda digital.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            const businessModelData = [
+                {
+                    icon: '💰',
+                    title: 'Venta Directa de NFTs',
+                    description: 'Coleccionables con valor artístico, diseñados para ser exclusivos y de edición limitada. Cada pieza es una obra de arte digital única.'
+                },
+                {
+                    icon: '🎟️',
+                    title: 'Acceso a Experiencias',
+                    description: 'Los NFTs sirven como llave de acceso a eventos exclusivos, desfiles de moda, tours por el backstage, y encuentros privados con los diseñadores.'
+                },
+                {
+                    icon: '�',
+                    title: 'Físico + Digital (Phygital)',
+                    description: 'Cada NFT puede estar vinculado a una prenda física de edición limitada o dar acceso preferente a la compra de productos exclusivos.'
+                },
+                {
+                    icon: '⭐',
+                    title: 'Club VIP y Membresías',
+                    description: 'Los holders pertenecerán a un círculo exclusivo con ventajas y beneficios recurrentes, creando un club de fans de élite.'
+                },
+                {
+                    icon: '💸',
+                    title: 'Royalty Compartido',
+                    description: 'Se establece un reparto de ingresos inteligente en las reventas del mercado secundario, beneficiando a la marca, la plataforma y el artista.'
+                }
+            ];
+
+            const cardsContainer = document.getElementById('business-model-cards');
+            businessModelData.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'card-item bg-white p-6 rounded-lg shadow-sm border-2 border-transparent hover:shadow-lg transition-all duration-300 cursor-pointer';
+                card.innerHTML = `
+                    <div class="flex items-center text-lg font-bold mb-3">
+                        <span class="text-3xl mr-4">${item.icon}</span>
+                        <h3>${item.title}</h3>
+                    </div>
+                    <div class="card-details details-hidden pl-10">
+                        <p class="text-sm text-gray-600">${item.description}</p>
+                    </div>
+                `;
+                cardsContainer.appendChild(card);
+            });
+            
+            document.querySelectorAll('.card-item').forEach(card => {
+                card.addEventListener('click', () => {
+                    const details = card.querySelector('.card-details');
                     
-                    <h4>4.1 Generación de Textos con Jasper</h4>
-                    
-                    <p><strong>Paso 1: Preparar brief de contenido</strong></p>
-                    <ol>
-                        <li>Define el tono de voz (formal pero divulgativo)</li>
-                        <li>Establece palabras clave principales</li>
-                        <li>Proporciona ejemplos de estilo deseado (similar a PwC o McKinsey)</li>
-                    </ol>
-                    
-                    <p><strong>Paso 2: Generar contenido para secciones principales</strong></p>
-                    <p>Para generar la descripción de un servicio de consultoría:</p>
-                    <ol>
-                        <li>En Jasper, selecciona "Long-form Assistant" o "Asistente de formato largo"</li>
-                        <li>Proporciona un título descriptivo: "Servicio de Estrategia de Tesorería Cripto para Empresas"</li>
-                        <li>Incluye instrucciones detalladas:
-                            <pre>
-Escribe una descripción profesional para un servicio de consultoría sobre estrategia de tesorería con criptoactivos para empresas. 
-El tono debe ser formal y técnicamente preciso, similar al de consultoras como PwC o McKinsey. 
-Incluye: definición del servicio, beneficios para CFOs, proceso de implementación y resultados esperados. 
-Extensión: 250-300 palabras.
-                            </pre>
-                        </li>
-                        <li>Revisa y edita el resultado para asegurar precisión técnica</li>
-                    </ol>
-                    
-                    <p><strong>Paso 3: Generar variaciones y optimizar</strong></p>
-                    <ol>
-                        <li>Para cada texto generado, 
-(Content truncated due to size limit. Use line ranges to read in chunks)
+                    document.querySelectorAll('.card-item').forEach(otherCard => {
+                        if (otherCard !== card) {
+                           otherCard.querySelector('.card-details').classList.remove('details-visible');
+                           otherCard.querySelector('.card-details').classList.add('details-hidden');
+                           otherCard.classList.remove('card-active');
+                        }
+                    });
+
+                    details.classList.toggle('details-visible');
+                    details.classList.toggle('details-hidden');
+                    card.classList.toggle('card-active');
+                });
+            });
+
+
+            const salesCtx = document.getElementById('salesChart').getContext('2d');
+            new Chart(salesCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Whitelist', 'Pre-Venta (Insiders)', 'Venta Pública'],
+                    datasets: [{
+                        label: 'Acceso',
+                        data: [33, 66, 100],
+                        backgroundColor: [
+                            'rgba(169, 132, 103, 0.6)',
+                            'rgba(235, 94, 40, 0.6)',
+                            'rgba(64, 61, 57, 0.7)'
+                        ],
+                        borderColor: [
+                             'rgba(169, 132, 103, 1)',
+                            'rgba(235, 94, 40, 1)',
+                            'rgba(64, 61, 57, 1)'
+                        ],
+                        borderWidth: 2,
+                        barPercentage: 0.6,
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if(context.label === 'Whitelist') {
+                                        label += 'Acceso anticipado para la comunidad inicial.'
+                                    }
+                                    if(context.label === 'Pre-Venta (Insiders)') {
+                                        label += 'Venta privada para socios y fashion insiders.'
+                                    }
+                                    if(context.label === 'Venta Pública') {
+                                        label += 'Apertura al público general.'
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            display: false,
+                            max: 100,
+                        },
+                        y: {
+                           grid: {
+                                display: false
+                           },
+                           ticks: {
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                           }
+                        }
+                    }
+                }
+            });
+            
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+�
