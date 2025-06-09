@@ -17,72 +17,112 @@
 
   <style>
     body {
-      background: #121212;
-      color: #f1f1f1;
-      font-family: 'Segoe UI', sans-serif;
+      background: hsl(210, 10%, 15%); /* Dark blue-gray background */
+      color: hsl(210, 20%, 90%); /* Light gray for text */
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       padding: 2rem;
       display: flex;
       flex-direction: column;
       align-items: center;
+      line-height: 1.6;
     }
     h1 {
-      margin-bottom: 1rem;
-      color: #ffcc00;
+      margin-bottom: 1.5rem;
+      color: hsl(40, 90%, 60%); /* Professional gold/amber accent */
+      font-size: 2.5rem;
+      text-align: center;
     }
     .contenedor {
-      background: #1e1e1e;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 0 12px rgba(255, 204, 0, 0.2);
-      max-width: 800px;
+      background: hsl(210, 10%, 20%); /* Lighter dark blue-gray for containers */
+      padding: 2.5rem;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+      max-width: 850px;
       width: 100%;
+      margin-bottom: 2rem;
     }
     label {
       display: block;
-      margin-top: 1rem;
-      color: #ccc;
+      margin-top: 1.2rem;
+      color: hsl(210, 10%, 70%);
+      font-weight: 600;
+      margin-bottom: 0.4rem;
     }
-    input {
-      width: 100%;
-      padding: 0.5rem;
-      margin-top: 0.3rem;
-      border: none;
-      border-radius: 8px;
+    input[type="number"] {
+      width: calc(100% - 1.2rem);
+      padding: 0.8rem;
+      background-color: hsl(210, 10%, 25%);
+      border: 1px solid hsl(210, 10%, 35%);
+      border-radius: 10px;
+      color: hsl(210, 20%, 90%);
+      font-size: 1.1rem;
+      -moz-appearance: textfield;
+    }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
     }
     button {
-      margin-top: 1.2rem;
-      padding: 0.7rem 1.5rem;
-      background-color: #ffcc00;
-      color: #121212;
+      margin-top: 2rem;
+      padding: 0.9rem 2rem;
+      background-color: hsl(40, 90%, 60%); /* Professional gold/amber */
+      color: hsl(210, 10%, 15%); /* Dark text on button */
       font-weight: bold;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
+      font-size: 1.1rem;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      width: 100%;
     }
     button:hover {
-      background-color: #e6b800;
+      background-color: hsl(40, 100%, 55%);
+      transform: translateY(-2px);
+    }
+    button:active {
+        transform: translateY(0);
     }
     .resultado {
-      margin-top: 2rem;
-      padding: 1rem;
-      background-color: #2a2a2a;
-      border-radius: 8px;
+      margin-top: 2.5rem;
+      padding: 1.5rem;
+      background-color: hsl(210, 10%, 22%);
+      border-radius: 10px;
+      border: 1px solid hsl(210, 10%, 30%);
     }
     .resultado span {
       display: block;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.6rem;
+      font-size: 1.1rem;
+    }
+    .resultado strong {
+        color: hsl(40, 90%, 65%);
     }
     canvas {
-      margin-top: 2rem;
-      background-color: #fff;
+      margin-top: 2.5rem;
+      background-color: hsl(210, 10%, 22%); /* Dark background for chart */
       border-radius: 10px;
+      padding: 1rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
     }
     .export-buttons {
-      margin-top: 1rem;
+      margin-top: 2rem;
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 15px;
+      justify-content: center;
+    }
+    .export-buttons button {
+        width: auto; /* Override 100% width for these buttons */
+        flex-grow: 1;
+        padding: 0.8rem 1.8rem;
+        font-size: 1rem;
+        background-color: hsl(210, 10%, 30%); /* Darker button for export */
+        color: hsl(210, 20%, 90%);
+    }
+    .export-buttons button:hover {
+        background-color: hsl(210, 10%, 40%);
     }
   </style>
 </head>
@@ -90,25 +130,25 @@
   <h1>Simulador de Tesorería con Criptoactivos</h1>
   <div class="contenedor">
     <label for="monto">Tesorería inicial (€):</label>
-    <input type="number" id="monto" value="100000" />
+    <input type="number" id="monto" value="100000" min="0" step="1000" />
 
     <label for="horizonte">Horizonte temporal (años):</label>
-    <input type="number" id="horizonte" value="5" />
+    <input type="number" id="horizonte" value="5" min="1" max="50" step="1" />
 
     <label for="porcentajeCripto">% en Criptoactivos:</label>
-    <input type="number" id="porcentajeCripto" value="30" />
+    <input type="number" id="porcentajeCripto" value="30" min="0" max="100" step="1" />
 
     <label for="beneficioCripto">Rentabilidad esperada Cripto (% anual):</label>
-    <input type="number" id="beneficioCripto" value="12" />
+    <input type="number" id="beneficioCripto" value="12" step="0.1" />
 
     <label for="volatilidad">Volatilidad cripto anual (%):</label>
-    <input type="number" id="volatilidad" value="20" />
+    <input type="number" id="volatilidad" value="20" min="0" step="0.1" />
 
     <label for="beneficioTradicional">Rentabilidad tradicional (% anual):</label>
-    <input type="number" id="beneficioTradicional" value="2" />
+    <input type="number" id="beneficioTradicional" value="2" step="0.1" />
 
     <label for="inflacion">Inflación estimada (% anual):</label>
-    <input type="number" id="inflacion" value="3" />
+    <input type="number" id="inflacion" value="3" step="0.1" />
 
     <button onclick="simular()">Simular</button>
 
@@ -188,10 +228,10 @@
         data: {
           labels: años,
           datasets: [
-            { label: 'Tradicional (€)', data: tradicional, borderColor: '#00bfff', tension: 0.3 },
-            { label: 'Mixto Cripto (€)', data: mixto, borderColor: '#ffcc00', tension: 0.3 },
-            { label: 'Tradicional Real (€)', data: tradicionalReal, borderDash: [5,5], borderColor: '#00ffff', tension: 0.3 },
-            { label: 'Mixto Real (€)', data: mixtoReal, borderDash: [5,5], borderColor: '#ffd700', tension: 0.3 },
+            { label: 'Tradicional (€)', data: tradicional, borderColor: 'hsl(200, 70%, 50%)', backgroundColor: 'hsl(200, 70%, 50%, 0.2)', tension: 0.3, pointBackgroundColor: 'hsl(200, 70%, 50%)' },
+            { label: 'Mixto Cripto (€)', data: mixto, borderColor: 'hsl(40, 90%, 60%)', backgroundColor: 'hsl(40, 90%, 60%, 0.2)', tension: 0.3, pointBackgroundColor: 'hsl(40, 90%, 60%)' },
+            { label: 'Tradicional Real (€)', data: tradicionalReal, borderDash: [5,5], borderColor: 'hsl(200, 50%, 70%)', backgroundColor: 'hsl(200, 50%, 70%, 0.1)', tension: 0.3, pointBackgroundColor: 'hsl(200, 50%, 70%)' },
+            { label: 'Mixto Real (€)', data: mixtoReal, borderDash: [5,5], borderColor: 'hsl(40, 70%, 70%)', backgroundColor: 'hsl(40, 70%, 70%, 0.1)', tension: 0.3, pointBackgroundColor: 'hsl(40, 70%, 70%)' },
           ]
         },
         options: {
@@ -249,6 +289,9 @@
       XLSX.utils.book_append_sheet(wb, ws, "Simulación");
       XLSX.writeFile(wb, "simulador-cripto.xlsx");
     }
+
+    // Ejecutar simulación al cargar la página
+    simular();
   </script>
 </body>
 </html>
