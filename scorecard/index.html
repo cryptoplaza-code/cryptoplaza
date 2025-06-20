@@ -7,93 +7,97 @@
   <link rel="icon" href="https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=026" type="image/svg+xml">
   <style>
     body {
-      font-family: 'Arial', sans-serif; /* Use a common corporate font */
-      background: #f8f9fa; /* Light, neutral background */
-      color: #343a40; /* Standard dark text color */
+      font-family: 'Segoe UI', 'Arial', sans-serif;
+      background: linear-gradient(135deg, #1a2332 0%, #232f3e 100%);
+      color: #e3e6ea;
       padding: 30px;
-      max-width: 750px; /* Slightly wider content area */
+      max-width: 750px;
       margin: 40px auto;
       line-height: 1.6;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05); /* Subtle shadow for depth */
-      border-radius: 8px;
-      border: 1px solid #e9ecef; /* Light border around the main content area */
+      box-shadow: 0 4px 18px rgba(20,30,50,0.18);
+      border-radius: 10px;
+      border: 1px solid #2d3a4d;
     }
     h1 {
       text-align: center;
-      color: #0056b3; /* Primary corporate blue */
+      color: #00b4d8;
       margin-bottom: 30px;
       font-size: 2.2em;
       font-weight: 700;
+      letter-spacing: 0.5px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
     main {
       margin-top: 20px;
     }
     form {
-      background: white;
+      background: #232f3e;
       padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.03); /* Even lighter shadow for the form */
-      border: 1px solid #dee2e6; /* Light border for the form */
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(20,30,50,0.10);
+      border: 1px solid #2d3a4d;
     }
     label {
       display: block;
       margin: 15px 0 8px;
       font-weight: 700;
-      color: #495057; /* Slightly muted label color */
+      color: #b0bac9;
       font-size: 1em;
     }
     select {
       width: 100%;
       padding: 10px 15px;
       border-radius: 5px;
-      border: 1px solid #ced4da;
+      border: 1px solid #3a4a5e;
       margin-bottom: 20px;
       box-sizing: border-box;
       font-size: 1em;
-      appearance: none; /* Remove default select styling */
-      background-color: #fff;
-      background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20256%20448%22%20enable-background%3D%22new%200%200%20256%20448%22%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E.arrow%7Bfill%3A%23495057%3B%7D%3C%2Fstyle%3E%3Cpath%20class%3D%22arrow%22%20d%3D%22M255.9%20168c0%20-9.4%20-3.8%20-18.2%20-10%20-24.7l-112-112c-12.4%20-12.4%20-32.8%20-12.4%20-45.2%200l-112%20112c-12.4%2012.4%20-12.4%2032.8%200%2045.2c12.4%2012.4%2032.8%2012.4%2045.2%200l86.8%20-86.8l86.8%2086.8c12.4%2012.4%2032.8%2012.4%2045.2%200c6.2%20-6.1%2010%20-15%2010%20-24.4z%22%2F%3E%3C%2Fsvg%3E');
+      background-color: #1a2332;
+      color: #e3e6ea;
+      background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20256%20448%22%20enable-background%3D%22new%200%200%20256%20448%22%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E.arrow%7Bfill%3A%236c7a89%3B%7D%3C%2Fstyle%3E%3Cpath%20class%3D%22arrow%22%20d%3D%22M255.9%20168c0%20-9.4%20-3.8%20-18.2%20-10%20-24.7l-112-112c-12.4%20-12.4%20-32.8%20-12.4%20-45.2%200l-112%20112c-12.4%2012.4%20-12.4%2032.8%200%2045.2c12.4%2012.4%2032.8%2012.4%2045.2%200l86.8%20-86.8l86.8%2086.8c12.4%2012.4%2032.8%2012.4%2045.2%200c6.2%20-6.1%2010%20-15%2010%20-24.4z%22%2F%3E%3C%2Fsvg%3E');
       background-repeat: no-repeat;
       background-position: right 10px center;
       background-size: 12px;
       padding-right: 30px;
-      cursor: pointer; /* Indicate it's interactive */
+      cursor: pointer;
+      transition: border 0.2s;
     }
     select:hover {
-        border-color: #007bff; /* Highlight border on hover */
+        border-color: #00b4d8;
     }
     select:focus {
         outline: none;
-        border-color: #007bff;
-        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        border-color: #00b4d8;
+        box-shadow: 0 0 0 0.2rem rgba(0,180,216,0.18);
     }
     select::-ms-expand {
-        display: none; /* Hide default arrow in IE */
+        display: none;
     }
     button {
       margin-top: 30px;
-      background: #007bff; /* Standard Bootstrap primary blue */
-      color: white;
+      background: linear-gradient(90deg, #00b4d8 0%, #0077b6 100%);
+      color: #fff;
       border: none;
       padding: 12px 20px;
       width: 100%;
       border-radius: 5px;
       font-size: 1.1em;
       cursor: pointer;
-      transition: background 0.3s ease, transform 0.1s ease;
+      transition: background 0.3s, transform 0.1s;
       font-weight: 600;
-      text-transform: uppercase; /* Make button text uppercase */
+      text-transform: uppercase;
       letter-spacing: 0.5px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
     button:hover {
-      background: #0056b3; /* Darker blue on hover */
+      background: linear-gradient(90deg, #0077b6 0%, #00b4d8 100%);
     }
-     button:active {
-      transform: scale(0.99); /* Subtle press effect */
+    button:active {
+      transform: scale(0.99);
     }
     button:focus {
       outline: none;
-      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+      box-shadow: 0 0 0 0.2rem rgba(0,180,216,0.18);
     }
     .resultado {
       margin-top: 30px;
@@ -103,32 +107,36 @@
       font-size: 1.1em;
       opacity: 0;
       transform: translateY(20px);
-      transition: opacity 0.4s ease, transform 0.4s ease;
+      transition: opacity 0.4s, transform 0.4s;
+      box-shadow: 0 2px 10px rgba(20,30,50,0.10);
     }
     .resultado.visible {
       opacity: 1;
       transform: translateY(0);
     }
-    .verde { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; } /* Green for success */
-    .amarillo { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; } /* Yellow for warning */
-    .rojo { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; } /* Red for danger */
+    .verde { background: #1e2e22; color: #00b894; border: 1px solid #00b894; }
+    .amarillo { background: #2d2a1e; color: #ffe066; border: 1px solid #ffe066; }
+    .rojo { background: #2e1e22; color: #ff6f61; border: 1px solid #ff6f61; }
     .score-num {
-      font-size: 2.2em; /* Slightly larger score number */
+      font-size: 2.2em;
       font-weight: bold;
       margin-bottom: 15px;
-      color: #343a40;
+      color: #e3e6ea;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.10);
     }
     .cta a {
       display: inline-block;
-      margin-top: 20px; /* More space above CTA */
-      color: #007bff; /* CTA link color matching button */
+      margin-top: 20px;
+      color: #00b4d8;
       text-decoration: none;
       font-weight: 600;
       border-bottom: 1px solid transparent;
-      transition: border-bottom 0.2s ease;
+      transition: border-bottom 0.2s;
+      font-size: 1.05em;
     }
     .cta a:hover {
-      border-bottom-color: #0056b3; /* Underline on hover */
+      border-bottom-color: #00b4d8;
+      color: #90e0ef;
     }
     @media (max-width: 768px) {
       body { padding: 15px; margin: 20px auto; }
@@ -143,11 +151,22 @@
     }
     .brand {
       text-align: center;
-      font-size: 1.1em; /* Slightly larger than body text */
-      color: #5a6268; /* Muted grey color */
-      margin-bottom: 10px; /* Space below the brand */
+      font-size: 1.1em;
+      color: #90a4ae;
+      margin-bottom: 10px;
       font-weight: 600;
+      letter-spacing: 0.5px;
     }
+    footer {
+      background: none;
+      border-top: 1px solid #2d3a4d;
+      margin-top: 40px;
+      text-align: center;
+      font-size: 0.97em;
+      color: #90a4ae;
+      padding-top: 18px;
+    }
+    footer strong { color: #00b4d8; }
   </style>
 </head>
 <body>
@@ -156,6 +175,9 @@
   <main>
     <section>
       <form id="scoreForm" autocomplete="off">
+        <div style="background:#fff3cd;color:#856404;border:1px solid #ffeeba;padding:10px 18px;border-radius:6px;margin-bottom:18px;font-size:0.98em;">
+          Este scorecard tiene únicamente fines educativos e ilustrativos. No debe interpretarse como asesoramiento legal, fiscal o financiero.
+        </div>
         <label for="estrategia">¿Su empresa ha definido una estrategia clara para la posible integración de criptoactivos en la tesorería?</label>
         <select id="estrategia" name="estrategia" required>
           <option value="" disabled selected>Seleccione una opción</option>
@@ -208,6 +230,11 @@
       <div id="resultado" class="resultado" aria-live="polite"></div>
     </section>
   </main>
+  <footer style="margin-top:40px;text-align:center;font-size:0.97em;color:#6c757d;">
+    <div style="max-width:700px;margin:0 auto;padding:12px 0 0 0;">
+      <strong>Disclaimer:</strong> Esta herramienta tiene fines exclusivamente informativos y educativos. No constituye una recomendación de inversión ni un asesoramiento financiero personalizado. El uso de criptoactivos conlleva riesgos.
+    </div>
+  </footer>
   <script>
     const form = document.getElementById('scoreForm');
     const resultado = document.getElementById('resultado');
@@ -239,13 +266,13 @@
       let clase = '';
 
       if (score >= 12) {
-        mensaje = `✅ Tu empresa ha obtenido un Score de ${score}/${maxScore}. Nivel de preparación muy alto. ¡Excelente base para integrar criptoactivos en tu tesorería!<br><br><span class="cta"><a href="https://cryptoflow.xyz/scorecard" target="_blank" rel="noopener">Descarga nuestra guía avanzada para optimizar tu estrategia con criptoactivos</a></span>`;
+        mensaje = `✅ Tu empresa ha obtenido un Score de ${score}/${maxScore}. El diagnóstico indica un nivel de preparación muy alto según los criterios evaluados. Esto sugiere que existen buenas bases para explorar una integración de criptoactivos en tesorería de forma informada y controlada.<br><br><span class="cta">Recursos educativos adicionales estarán disponibles próximamente.</span>`;
         clase = 'verde';
       } else if (score >= 7) {
-        mensaje = `⚠️ Tu Score es de ${score}/${maxScore}. Nivel de preparación intermedio. Existen áreas clave que requieren atención para una integración segura y eficiente.<br><br><span class="cta"><a href="https://cryptoflow.xyz/scorecard" target="_blank" rel="noopener">Accede a recursos clave para fortalecer la preparación de tu empresa</a></span>`;
+        mensaje = `⚠️ Tu Score es de ${score}/${maxScore}. El diagnóstico refleja un nivel de preparación intermedio. Identificamos áreas clave que pueden requerir análisis adicional antes de tomar decisiones sobre la gestión de criptoactivos.<br><br><span class="cta">Recursos educativos adicionales estarán disponibles próximamente.</span>`;
         clase = 'amarillo';
       } else {
-        mensaje = `🚫 Tu Score es de ${score}/${maxScore}. Nivel de preparación inicial. Es crucial establecer bases sólidas en estrategia, riesgo y tecnología antes de proceder.<br><br><span class="cta"><a href="YOUR_CALENDLY_LINK_HERE" target="_blank" rel="noopener">Agenda una consultoría previa gratuita de 30 minutos</a></span>`;
+        mensaje = `🚫 Tu Score es de ${score}/${maxScore}. El diagnóstico sugiere un nivel de preparación inicial. Es recomendable avanzar en aspectos como estrategia, riesgos, tecnología y cumplimiento antes de considerar una integración operativa de criptoactivos.<br><br><span class="cta">¿Tienes dudas o necesitas orientación? Escríbenos a <a href="mailto:contacto@cryptoplaza.es?subject=Consulta%20Crypto%20Readiness%20Scorecard" target="_blank" rel="noopener">contacto@cryptoplaza.es</a> para una consulta gratuita.</span>`;
         clase = 'rojo';
       }
 
