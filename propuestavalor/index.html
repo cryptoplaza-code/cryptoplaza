@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIRECCIÓN FINANCIERA CRYPTO</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Light blue-gray background */
+        }
+        .tab-button.active {
+            background-color: #3b82f6; /* Blue-500 */
+            color: white;
+            box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.1);
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-6 shadow-lg rounded-b-xl">
+        <div class="container mx-auto flex flex-col md:flex-row items-center justify-between">
+            <h1 class="text-3xl font-bold mb-2 md:mb-0">DIRECCIÓN FINANCIERA CRYPTO</h1>
+            <p class="text-lg">Optimización de tesorería y gestión de activos digitales</p>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="container mx-auto p-6 flex-grow">
+        <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+            <!-- Navigation Tabs -->
+            <nav class="mb-8 overflow-x-auto">
+                <ul class="flex space-x-2 md:space-x-4 border-b-2 border-blue-200 pb-2">
+                    <li>
+                        <button class="tab-button px-4 py-2 rounded-lg text-gray-700 hover:bg-blue-100 transition-colors duration-200 font-medium whitespace-nowrap active" data-target="problemas">Problemas Actuales</button>
+                    </li>
+                    <li>
+                        <button class="tab-button px-4 py-2 rounded-lg text-gray-700 hover:bg-blue-100 transition-colors duration-200 font-medium whitespace-nowrap" data-target="propuesta">Nuestra Propuesta</button>
+                    </li>
+                    <li>
+                        <button class="tab-button px-4 py-2 rounded-lg text-gray-700 hover:bg-blue-100 transition-colors duration-200 font-medium whitespace-nowrap" data-target="servicios-inicial">Servicios: Infraestructura Inicial</button>
+                    </li>
+                    <li>
+                        <button class="tab-button px-4 py-2 rounded-lg text-gray-700 hover:bg-blue-100 transition-colors duration-200 font-medium whitespace-nowrap" data-target="servicios-operativa">Servicios: Gestión Operativa</button>
+                    </li>
+                    <li>
+                        <button class="tab-button px-4 py-2 rounded-lg text-gray-700 hover:bg-blue-100 transition-colors duration-200 font-medium whitespace-nowrap" data-target="servicios-contable">Servicios: Soporte Contable y Fiscal</button>
+                    </li>
+                    <li>
+                        <button class="tab-button px-4 py-2 rounded-lg text-gray-700 hover:bg-blue-100 transition-colors duration-200 font-medium whitespace-nowrap" data-target="colaboracion">Modelo de Colaboración</button>
+                    </li>
+                    <li>
+                        <button class="tab-button px-4 py-2 rounded-lg text-gray-700 hover:bg-blue-100 transition-colors duration-200 font-medium whitespace-nowrap" data-target="beneficios">Beneficios para tu Empresa</button>
+                    </li>
+                    <li>
+                        <button class="tab-button px-4 py-2 rounded-lg text-gray-700 hover:bg-blue-100 transition-colors duration-200 font-medium whitespace-nowrap" data-target="pasos">Próximos Pasos</button>
+                    </li>
+                    <li>
+                        <button class="tab-button px-4 py-2 rounded-lg text-gray-700 hover:bg-blue-100 transition-colors duration-200 font-medium whitespace-nowrap" data-target="disclaimer">Disclaimer</button>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Content Sections -->
+            <div id="problemas" class="content-section active">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Problemas Actuales en la Gestión de Tesorería</h2>
+                <ul class="list-disc list-inside text-gray-700 space-y-2">
+                    <li>Costes elevados en transferencias internacionales.</li>
+                    <li>Rendimientos limitados en instrumentos financieros tradicionales.</li>
+                    <li>Complejidad en la integración contable y fiscal de activos digitales.</li>
+                </ul>
+            </div>
+
+            <div id="propuesta" class="content-section">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Nuestra Propuesta</h2>
+                <ul class="list-disc list-inside text-gray-700 space-y-2">
+                    <li>Implementación de infraestructura segura para activos digitales.</li>
+                    <li>Gestión operativa de tesorería con soluciones digitales eficientes.</li>
+                    <li>Acompañamiento contable y fiscal adaptado al entorno cripto.</li>
+                </ul>
+            </div>
+
+            <div id="servicios-inicial" class="content-section">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Servicios Ofrecidos: Infraestructura Inicial</h2>
+                <ul class="list-disc list-inside text-gray-700 space-y-2">
+                    <li>Soluciones de custodia con enfoque en seguridad.</li>
+                    <li>Revisión inicial de procesos y control interno.</li>
+                    <li>Integración técnica con plataformas de uso empresarial.</li>
+                </ul>
+            </div>
+
+            <div id="servicios-operativa" class="content-section">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Servicios Ofrecidos: Gestión Operativa de Tesorería</h2>
+                <ul class="list-disc list-inside text-gray-700 space-y-2">
+                    <li>Uso de activos digitales como medios de pago alternativos.</li>
+                    <li>Optimización de transferencias internacionales.</li>
+                    <li>Acceso estructurado y controlado a instrumentos digitales.</li>
+                </ul>
+            </div>
+
+            <div id="servicios-contable" class="content-section">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Servicios Ofrecidos: Soporte Contable y Fiscal</h2>
+                <ul class="list-disc list-inside text-gray-700 space-y-2">
+                    <li>Digitalización contable adaptada a criptoactivos.</li>
+                    <li>Optimización del cumplimiento fiscal.</li>
+                    <li>Informes operativos y de auditoría personalizados.</li>
+                </ul>
+            </div>
+
+            <div id="colaboracion" class="content-section">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Modelo de Colaboración</h2>
+                <ul class="list-disc list-inside text-gray-700 space-y-2">
+                    <li><span class="font-semibold">Cuota Fija Mensual:</span> €1.000</li>
+                    <li><span class="font-semibold">Variable:</span> Por resultado operativo (sujeta a objetivos definidos conjuntamente).</li>
+                    <li><span class="font-semibold">Extra:</span> Servicios externos (no incluidos en la tarifa base).</li>
+                </ul>
+            </div>
+
+            <div id="beneficios" class="content-section">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Beneficios para tu Empresa</h2>
+                <ul class="list-disc list-inside text-gray-700 space-y-2">
+                    <li>Infraestructura digital adaptada a entornos corporativos.</li>
+                    <li>Ahorro en costes de transferencia y gestión de pagos.</li>
+                    <li>Cumplimiento contable y fiscal desde el primer día.</li>
+                    <li>Delegación en un equipo con experiencia especializada.</li>
+                    <li>Adaptabilidad a marcos regulatorios nacionales y europeos.</li>
+                </ul>
+            </div>
+
+            <div id="pasos" class="content-section">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Próximos Pasos</h2>
+                <ul class="list-disc list-inside text-gray-700 space-y-2">
+                    <li><span class="font-semibold">Sesión de diagnóstico gratuita:</span> Ofrecemos una sesión para identificar oportunidades.</li>
+                    <li><span class="font-semibold">Propuesta personalizada:</span> Diseñamos una propuesta operativa personalizada según tus objetivos.</li>
+                    <li><span class="font-semibold">Integración y control:</span> Acompañamos en la integración y control continuo de procesos.</li>
+                </ul>
+            </div>
+
+            <div id="disclaimer" class="content-section">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Disclaimer</h2>
+                <p class="text-gray-700">Crypto Plaza no ofrece asesoramiento financiero ni de inversión. Toda la información compartida tiene fines exclusivamente informativos y educativos.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white p-4 text-center mt-8 rounded-t-xl">
+        <p>&copy; 2025 DIRECCIÓN FINANCIERA CRYPTO. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const contentSections = document.querySelectorAll('.content-section');
+
+            // Function to show a specific tab content
+            function showContent(targetId) {
+                // Deactivate all buttons and hide all content sections
+                tabButtons.forEach(button => {
+                    button.classList.remove('active');
+                });
+                contentSections.forEach(section => {
+                    section.classList.remove('active');
+                });
+
+                // Activate the clicked button and show its corresponding content
+                const activeButton = document.querySelector(`.tab-button[data-target="${targetId}"]`);
+                const activeSection = document.getElementById(targetId);
+
+                if (activeButton) {
+                    activeButton.classList.add('active');
+                }
+                if (activeSection) {
+                    activeSection.classList.add('active');
+                }
+            }
+
+            // Add click event listeners to all tab buttons
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetId = button.dataset.target;
+                    showContent(targetId);
+                });
+            });
+
+            // Initially show the 'Problemas Actuales' section
+            showContent('problemas');
+        });
+    </script>
+</body>
+</html>
