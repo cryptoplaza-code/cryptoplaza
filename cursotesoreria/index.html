@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curso Avanzado de Tesorería Corporativa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5; /* Un gris muy claro para el fondo */
+        }
+        .main-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        .timeline {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            padding: 4rem 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #d1d5db; /* Gris claro */
+            transform: translateX(-50%);
+            z-index: -1;
+        }
+        .timeline-item {
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #ffffff;
+            border: 2px solid #d1d5db;
+            transition: all 0.3s ease;
+            margin: 1rem 0;
+        }
+        .timeline-item.active {
+            background-color: #8A7FF0;
+            border-color: #8A7FF0;
+            transform: scale(1.2);
+        }
+        .timeline-item.active .timeline-item-number {
+            color: #ffffff;
+        }
+        .timeline-item:hover {
+            border-color: #8A7FF0;
+        }
+        .timeline-item-number {
+            font-weight: 600;
+            color: #4b5563; /* Gris oscuro */
+            transition: color 0.3s ease;
+        }
+        .content-area {
+            width: 100%;
+            padding: 2rem;
+        }
+        .module-card {
+            background-color: #ffffff;
+            border-radius: 1rem;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e5e7eb;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .accordion-header {
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+        .accordion-icon {
+            transition: transform 0.3s ease;
+        }
+        .accordion-header.open .accordion-icon {
+            transform: rotate(180deg);
+        }
+        .tag {
+            background-color: #eef2ff; /* Indigo claro */
+            color: #4338ca; /* Indigo oscuro */
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        .accent-color {
+            color: #8A7FF0;
+        }
+        .bg-accent-color {
+            background-color: #8A7FF0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            .timeline {
+                position: relative;
+                height: auto;
+                flex-direction: row;
+                justify-content: space-around;
+                padding: 1rem;
+                width: 100%;
+                background-color: #fff;
+                box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            }
+            .timeline-line {
+                display: none;
+            }
+            .timeline-item {
+                margin: 0;
+            }
+            .content-area {
+                padding: 1rem;
+            }
+            .module-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <div class="main-container">
+        <!-- Barra de Navegación / Línea de Tiempo -->
+        <aside id="timeline-nav" class="timeline">
+            <div class="timeline-line"></div>
+            <!-- Los items de la línea de tiempo se generarán con JS -->
+        </aside>
+
+        <!-- Área de Contenido Principal -->
+        <main class="content-area">
+            <header class="mb-12 text-center md:text-left">
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-800">Curso Avanzado de Tesorería Corporativa</h1>
+                <p class="mt-4 text-lg text-gray-600">Una inmersión estratégica en la gestión financiera del siglo XXI.</p>
+            </header>
+            
+            <div id="modules-container">
+                <!-- El contenido de los módulos se generará con JS -->
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const courseData = [
+            {
+                title: "La nueva tesorería corporativa",
+                objective: "Comprender cómo los cambios macroeconómicos, tecnológicos y regulatorios están redefiniendo el rol del CFO y la estructura de la tesorería moderna.",
+                blocks: [
+                    { title: "La tesorería tradicional está quedando obsoleta", content: ["Gestión basada exclusivamente en fiat y productos bancarios tradicionales.", "Alta dependencia de bancos, cuentas, depósitos y productos estructurados.", "Baja eficiencia en pagos internacionales y diversificación de reservas.", "Tesorería como centro de coste, no de estrategia."] },
+                    { title: "El nuevo paradigma: liquidez híbrida y arquitectura digital", content: ["Integración de activos fiat + activos digitales (stablecoins, bonos tokenizados).", "Fragmentación de la liquidez: operativa, estratégica, especulativa.", "Uso de wallets institucionales y custodios como infraestructura básica.", "Acceso a rentabilidad sin pasar por productos bancarios."] },
+                    { title: "La disrupción normativa: MICA cambia las reglas", content: ["Reglamento MICA ya en vigor (UE 2023/1114).", "Las empresas pueden usar stablecoins, pero no asesorar ni custodiar por sí mismas.", "Separación entre uso empresarial y actividad regulada (CASP).", "Aumenta la claridad y seguridad para CFOs que actúan con criterio."] },
+                    { title: "El nuevo rol del CFO: arquitecto de valor digital", content: ["El CFO ya no solo custodia liquidez: la multiplica.", "Debe evaluar riesgos emergentes (cripto, custodia, regulación).", "Diseña políticas de acceso y gobernanza financiera digital.", "Lidera junto a IT, Legal y Operaciones la transformación digital."] }
+                ],
+                reflection: "¿Estoy actuando aún como un gestor financiero del siglo XX o como un arquitecto financiero del siglo XXI?"
+            },
+            {
+                title: "Stablecoins y activos digitales en la práctica",
+                objective: "Entender el funcionamiento, tipologías y usos estratégicos de stablecoins y activos digitales relevantes para la tesorería corporativa bajo el marco MICA.",
+                blocks: [
+                    { title: "¿Qué es una stablecoin y por qué importa al CFO?", content: ["Definición: activo digital con paridad 1:1 respecto a moneda fiat.", "No todas las stablecoins son iguales (colateral, emisor, liquidez).", "MICA regula las stablecoins emitidas en la UE (ARTs y EMTS).", "Casos de uso: pagos, diversificación, remuneración."] },
+                    { title: "Activos digitales relevantes para empresas", content: ["Stablecoins (USDC, EURC, PYUSD...).", "Bonos tokenizados (en plataformas reguladas como Euronext, SIX).", "ETPs (productos cotizados vinculados a BTC, ETH, etc.).", "Cuentas de liquidez tokenizada (Circle, OpenEden, StablR...)."] },
+                    { title: "Diferencias clave: stablecoin vs. criptomoneda vs. token", content: ["Stablecoin: paridad y reserva subyacente.", "Criptomoneda (BTC, ETH): sin respaldo ni emisor central.", "Token: representación digital de un activo, puede ser fungible o no.", "No todo token es útil para una empresa (criterio + regulación)."] },
+                    { title: "Criterios para evaluar una stablecoin 'apta' para tesorería", content: ["¿Está emitida por una entidad registrada y regulada?", "¿Posee reservas líquidas auditadas?", "¿Está cubierta por MICA (ART o EMT)?", "¿Cuenta con partners institucionales y custodios confiables?"] }
+                ],
+                reflection: "¿En qué situaciones reales podría usar mi empresa una stablecoin regulada hoy mismo? ¿Qué criterios de riesgo debería aplicar para seleccionarla?"
+            },
+            {
+                title: "Aplicaciones reales en pagos, liquidez y cobertura",
+                objective: "Identificar casos prácticos y estratégicos donde los activos digitales aportan ventajas reales en la gestión de pagos, liquidez y cobertura de riesgos financieros.",
+                blocks: [
+                    { title: "Pagos internacionales con stablecoins", content: ["Evita comisiones SWIFT, SEPA, FX y plazos de compensación.", "Transferencias casi instantáneas, 24/7, sin fronteras.", "Reducción de costes y fricción operativa.", "Uso creciente en proveedores, freelancers y contratos internacionales."] },
+                    { title: "Gestión de liquidez activa con activos digitales", content: ["Stablecoins en plataformas con remuneración diaria (sin bloquear fondos).", "Bonos tokenizados con liquidez instantánea en mercados regulados.", "Cuentas tokenizadas (yield wallets) reguladas y auditadas.", "Posibilidad de traspasos entre capas de liquidez en minutos."] },
+                    { title: "Cobertura de exposición en monedas extranjeras", content: ["Empresas que ingresan en USD/EUR pueden cubrir posiciones manteniendo stablecoins.", "Reducción de riesgo de tipo de cambio (forex hedge pasivo).", "Simplificación contable frente a derivados tradicionales.", "Casos reales en exportación/importación y empresas SaaS."] },
+                    { title: "Otras aplicaciones: incentivos, ahorro y eficiencia operativa", content: ["Bonificaciones a empleados tokenizadas.", "Incentivos de partners vía pagos programados en stablecoin.", "Tesorería digital para campañas, promociones o presupuestos descentralizados.", "Reducción de tiempos de conciliación contable."] }
+                ],
+                reflection: "¿En qué área concreta de la gestión financiera de mi empresa puedo empezar a probar estas herramientas? ¿Qué proveedor, partner o unidad de negocio se beneficiaría primero?"
+            },
+            {
+                title: "Infraestructura segura: custodios, wallets y políticas internas",
+                objective: "Dotar al CFO de los conocimientos necesarios para seleccionar, implantar y gobernar una infraestructura segura para la gestión de criptoactivos en la tesorería corporativa.",
+                blocks: [
+                    { title: "Fundamentos de custodia: ¿qué y quién?", content: ["Custodia tenencia técnica: implica responsabilidad legal y operativa.", "Tipos: self-custody, custodios institucionales, soluciones MPC.", "Regulación: custodia solo para CASPs autorizados bajo MICA.", "El CFO no debe asumir custodia directa sin partner regulado."] },
+                    { title: "Tipos de wallets y usos corporativos", content: ["Hot wallets (conectadas a internet): operativas y de pagos.", "Cold wallets (offline): reserva estratégica y seguridad avanzada.", "Smart contract wallets (multifirma, programables): automatización y control.", "Multisig y política de roles internos (Finance, Legal, CISO...)."] },
+                    { title: "Selección de custodios y criterios institucionales", content: ["¿Está regulado como CASP o equivalente?", "¿Ofrece segregación de fondos y seguro de custodia?", "¿Tiene experiencia con clientes institucionales?", "¿Integra con tus ERPs, TMS o herramientas contables?"] },
+                    { title: "Políticas internas: gobernanza y prevención de errores", content: ["Acceso delegado y controlado (principio de menor privilegio).", "Auditoría interna de transacciones con stablecoins o activos tokenizados.", "Registro y trazabilidad compatible con auditoría contable.", "Simulación de incidentes y back-ups (test de recuperación operativa)."] }
+                ],
+                reflection: "¿Qué parte de tu empresa estaría hoy lista para interactuar con un custodio institucional? ¿Qué estructura de gobernanza debes crear para asegurar uso controlado de wallets?"
+            },
+            {
+                title: "Contabilidad, reporting y trazabilidad de activos digitales",
+                objective: "Comprender cómo integrar activos digitales en la contabilidad corporativa, garantizar trazabilidad operativa y cumplir con exigencias de reporting interno y externo.",
+                blocks: [
+                    { title: "Principios contables aplicables a criptoactivos", content: ["NIC/NIIF aún sin norma específica, pero criterios de IFRS Interpretations Committee.", "Clasificación habitual: intangible no monetario (IAS 38).", "No se reconoce como efectivo ni equivalente de efectivo.", "Implicaciones en amortización, deterioro y valoración."] },
+                    { title: "Stablecoins y tokens: ¿cuándo son equivalentes de efectivo?", content: ["MiCA permite considerar EMTs (e-money tokens) como equivalentes de efectivo.", "El CFO debe evaluar: liquidez, convertibilidad inmediata, riesgo insignificante.", "Análisis de casos como USDC, EURC, PYUSD.", "Revisión con auditores antes de definir criterio interno."] },
+                    { title: "Trazabilidad, registro y conciliación contable", content: ["Cada transacción on-chain tiene hash, fecha, dirección y valor.", "Integración con ERPs y CRMs: API de custodios / wallets / exchanges.", "Registros automáticos vs. intervención manual.", "Conciliación periódica con informes de blockchain y custodio."] },
+                    { title: "Reporting interno y externo: qué y cómo reportar", content: ["Valoración: tipo de cambio oficial a fecha de cierre contable.", "Inventario de activos digitales: origen, uso, custodio.", "Reportes internos: liquidez, exposición, cumplimiento.", "Informes para consejo, auditoría y compliance."] }
+                ],
+                reflection: "¿Qué implicaciones contables y fiscales tendría hoy incluir stablecoins en mi balance? ¿Está mi sistema contable preparado para registrar y reportar operaciones digitales?"
+            },
+            {
+                title: "Compliance, auditoría y marco legal aplicable (MiCA & UE)",
+                objective: "Entender los límites legales, las obligaciones de cumplimiento y las responsabilidades de la empresa al integrar criptoactivos en su gestión financiera bajo el marco europeo MiCA.",
+                blocks: [
+                    { title: "Qué regula exactamente MiCA y a quién aplica", content: ["Reglamento UE 2023/1114 – MiCA (Markets in Crypto-Assets).", "Regula emisores y proveedores de servicios (no empresas usuarias finales).", "Se aplica a stablecoins (EMTs, ARTs), exchanges, custodios, asesores.", "Empresas usuarias no están obligadas a registrarse como CASP si no ofrecen servicios a terceros."] },
+                    { title: "Qué puede hacer legalmente una empresa y qué no", content: ["Puede: mantener stablecoins, pagar con ellas, recibir pagos, diversificar liquidez.", "No puede: custodiar para terceros, asesorar sobre inversiones, emitir tokens propios.", "Puede interactuar con proveedores regulados (CASPs).", "Debe seguir políticas internas de gobernanza y control."] },
+                    { title: "Compliance interno: obligaciones y buenas prácticas", content: ["Política interna de uso de criptoactivos firmada por dirección.", "Registro de operaciones y justificación económica.", "Gestión de contrapartes (KYC de custodios y proveedores).", "Reportes internos a compliance / auditoría."] },
+                    { title: "Relación con auditoría externa y asesoría legal", content: ["Alineación previa con auditores sobre clasificación y criterios contables.", "Documentación de procesos y decisiones estratégicas.", "Verificación del cumplimiento de MiCA y otras normativas aplicables.", "Apoyo legal para contratos con proveedores Web3."] }
+                ],
+                reflection: "¿Tengo hoy claro qué puede y no puede hacer mi empresa con criptoactivos según MiCA? ¿He establecido las políticas internas necesarias para operar con seguridad?"
+            },
+            {
+                title: "Estrategia de implementación progresiva en empresa",
+                objective: "Diseñar un plan de acción realista y progresivo para integrar activos digitales en la tesorería corporativa, de forma escalonada, segura y alineada con la cultura empresarial.",
+                blocks: [
+                    { title: "Principios de adopción progresiva: foco en riesgo y control", content: ["No “todo o nada”: fases iterativas, medibles y reversibles.", "Minimizar riesgos legales, operativos y reputacionales.", "Testear con flujos controlados (pago piloto, diversificación parcial…).", "Involucrar a Legal, Auditoría, IT y Dirección desde el inicio."] },
+                    { title: "Fases de implementación y qué hacer en cada una", content: ["Fase 0: diagnóstico de preparación interna.", "Fase 1: selección de proveedor regulado (custodio, wallet).", "Fase 2: piloto operativo (ej. pago internacional puntual).", "Fase 3: integración contable, gobernanza y trazabilidad.", "Fase 4: escalado interno y reporte ejecutivo."] },
+                    { title: "Selección de casos de uso prioritarios", content: ["Pagos a proveedores internacionales no bancarizados.", "Bonificaciones a empleados o partners con pago tokenizado.", "Diversificación parcial de liquidez a stablecoins reguladas.", "Ahorro de costes en remesas o transferencias urgentes."] },
+                    { title: "Herramientas para estructurar y gobernar el despliegue", content: ["Matriz de decisión: impacto vs. facilidad de implementación.", "Comité de pilotaje con roles claros (CFO, IT, Legal, Operaciones).", "Documentación del piloto: objetivo, KPI, riesgos, evaluación.", "Plantilla de informe para Dirección y Consejo."] }
+                ],
+                reflection: "¿Qué primer paso concreto podría dar mi empresa en los próximos 30 días? ¿Qué recurso, equipo o proveedor necesito para lanzar un piloto sin riesgos?"
+            },
+            {
+                title: "Gestión del riesgo y continuidad operativa con criptoactivos",
+                objective: "Establecer una estrategia clara para identificar, medir y mitigar los riesgos asociados al uso de criptoactivos en entornos corporativos, garantizando continuidad operativa y resiliencia.",
+                blocks: [
+                    { title: "Tipología de riesgos al integrar criptoactivos", content: ["Riesgo tecnológico (fallos en wallets, smart contracts, APIs).", "Riesgo operativo (errores humanos, pérdida de claves, procesos no definidos).", "Riesgo de contraparte (custodios, proveedores, plataformas).", "Riesgo regulatorio y reputacional."] },
+                    { title: "Continuidad operativa: escenarios y planes de contingencia", content: ["¿Qué ocurre si se cae el proveedor de custodia?", "¿Qué pasa si se pierde una clave? ¿O se bloquea una transacción?", "Plan B para acceso, recuperación y ejecución de pagos.", "Designación de custodios alternativos y backups operativos."] },
+                    { title: "Mitigación de riesgos mediante gobernanza y tecnología", content: ["Multifirma y control de accesos (principio de mínimo privilegio).", "Automatización de alertas y auditoría continua.", "Monitoreo de balances y transacciones en tiempo real.", "Selección de proveedores con SLA, soporte y auditorías externas."] },
+                    { title: "Cultura de riesgo y formación interna", content: ["No es solo tecnología: es comportamiento organizativo.", "Formación continua a equipos financieros y operativos.", "Simulacros periódicos de escenarios críticos.", "Cultura de mejora continua en procesos con activos digitales."] }
+                ],
+                reflection: "¿Qué incidentes podría enfrentar mi empresa si mañana integra stablecoins en su operativa? ¿Qué planes tengo hoy para mitigarlos y garantizar continuidad?"
+            },
+            {
+                title: "Casos reales y aprendizajes de pioneros",
+                objective: "Analizar casos reales de empresas que han integrado criptoactivos en su tesorería, aprender de sus aciertos y errores, e inspirar al CFO a construir su propio enfoque con base en la experiencia del mercado.",
+                blocks: [
+                    { title: "Casos reales: qué han hecho y cómo", content: ["Tesla: BTC en balance y venta parcial por liquidez.", "MicroStrategy: acumulación como estrategia de reserva.", "Bitso, Circle: uso operativo de stablecoins para pagos transfronterizos.", "Empresas Web2 (Shopify, Mercado Libre) que integran pagos tokenizados."] },
+                    { title: "Aprendizajes clave de aciertos y errores", content: ["El “por qué” estratégico es más importante que el “cómo técnico”.", "Custodia y gobernanza, fuente principal de errores operativos.", "Mala comunicación interna puede generar rechazo o confusión.", "La falta de criterios contables genera conflictos con auditoría."] },
+                    { title: "Casos cercanos: Europa, España y empresas medianas", content: ["Empresas de energía tokenizando créditos de carbono.", "Firmas tech europeas usando USDC para pagos en LatAm y Asia.", "Casos españoles (confidenciales) con stablecoins y DeFi corporativo.", "Modelos de negocio en fase piloto que integran activos tokenizados."] },
+                    { title: "Qué puede aprender mi empresa de estos casos", content: ["¿Cuál es la motivación estratégica en mi empresa?", "¿Qué error ajeno puedo evitar desde el principio?", "¿Qué enfoque de gobernanza o formación funcionó mejor?", "¿Qué caso me inspira más por su similitud con mi contexto?"] }
+                ],
+                reflection: "¿Qué empresa similar a la mía ha hecho algo inspirador con criptoactivos? ¿Qué caso me invita a dar el primer paso, y por qué?"
+            },
+            {
+                title: "Diseño de hoja de ruta personalizada",
+                objective: "Aplicar todo lo aprendido para construir una hoja de ruta adaptada a la realidad de cada empresa, permitiendo al CFO avanzar desde su punto de partida hacia una integración responsable de criptoactivos.",
+                blocks: [
+                    { title: "Revisión estructurada de los aprendizajes del curso", content: ["¿Qué he aprendido sobre stablecoins, custodia, reporting y MiCA?", "¿Qué me ha inspirado de los casos reales?", "¿Qué bloque o módulo ha sido más útil para mi contexto?", "¿Qué dudas sigo teniendo o debo resolver internamente?"] },
+                    { title: "Identificación de situación actual y grado de madurez", content: ["¿Mi empresa tiene hoy activos digitales? ¿En qué forma?", "¿Contamos con proveedores, wallets o políticas ya implementadas?", "¿En qué fase del roadmap de adopción estamos?", "¿Quiénes están implicados internamente?"] },
+                    { title: "Construcción de hoja de ruta personalizada", content: ["Paso 1: identificar un caso de uso viable y sin riesgo.", "Paso 2: seleccionar proveedor/custodio fiable.", "Paso 3: definir objetivos, responsables y plazos.", "Paso 4: establecer políticas internas mínimas y reporting."] },
+                    { title: "Presentación de rutas y feedback entre pares", content: ["Cada CFO presenta su hoja de ruta (2–3 minutos).", "Feedback constructivo del grupo y formador.", "Identificación de patrones comunes entre empresas.", "Cierre con compromisos individuales."] }
+                ],
+                reflection: "¿Qué decisión concreta voy a tomar esta semana como CFO? ¿Qué primer paso comprometo a dar antes de fin de mes?"
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const modulesContainer = document.getElementById('modules-container');
+            const timelineNav = document.getElementById('timeline-nav');
+
+            // Generar contenido de los módulos y la línea de tiempo
+            courseData.forEach((module, index) => {
+                // Crear item en la línea de tiempo
+                const timelineItem = document.createElement('div');
+                timelineItem.className = 'timeline-item';
+                timelineItem.dataset.target = `module-${index}`;
+                timelineItem.innerHTML = `<span class="timeline-item-number">${index + 1}</span>`;
+                timelineNav.appendChild(timelineItem);
+                
+                // Crear tarjeta de módulo
+                const moduleCard = document.createElement('div');
+                moduleCard.id = `module-${index}`;
+                moduleCard.className = 'module-card';
+                
+                let blocksHtml = '';
+                module.blocks.forEach((block, blockIndex) => {
+                    let listItems = block.content.map(item => `<li class="text-gray-600 mb-2 pl-4 border-l-2 border-gray-200">${item}</li>`).join('');
+                    blocksHtml += `
+                        <div class="border-b border-gray-200 last:border-b-0">
+                            <div class="accordion-header">
+                                <h4 class="text-lg font-semibold text-gray-700">${block.title}</h4>
+                                <svg class="accordion-icon w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </div>
+                            <div class="accordion-content">
+                                <ul class="pt-2 pb-4 space-y-2">
+                                    ${listItems}
+                                </ul>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                moduleCard.innerHTML = `
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                        <span class="tag mb-4 md:mb-0">Módulo ${index + 1}</span>
+                        <h2 class="text-2xl md:text-3xl font-bold text-gray-800 text-center md:text-right">${module.title}</h2>
+                    </div>
+                    <p class="text-gray-600 mb-8 italic">"${module.objective}"</p>
+                    
+                    <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+                        ${blocksHtml}
+                    </div>
+
+                    <div class="mt-8 bg-purple-50 border-l-4 border-purple-400 p-6 rounded-r-lg">
+                        <h4 class="font-bold text-purple-800 mb-2">Reflexión Final para Participantes</h4>
+                        <p class="text-purple-700 italic">"${module.reflection}"</p>
+                    </div>
+                `;
+                modulesContainer.appendChild(moduleCard);
+            });
+
+            // Funcionalidad de Acordeón
+            document.querySelectorAll('.accordion-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    header.classList.toggle('open');
+                    if (content.style.maxHeight) {
+                        content.style.maxHeight = null;
+                    } else {
+                        content.style.maxHeight = content.scrollHeight + "px";
+                    }
+                });
+            });
+
+            // Funcionalidad de la Línea de Tiempo
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            const moduleCards = document.querySelectorAll('.module-card');
+
+            function setActiveTimelineItem(index) {
+                timelineItems.forEach(item => item.classList.remove('active'));
+                if (timelineItems[index]) {
+                    timelineItems[index].classList.add('active');
+                }
+            }
+
+            timelineItems.forEach((item, index) => {
+                item.addEventListener('click', () => {
+                    moduleCards[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+            });
+
+            // Activar item de la línea de tiempo al hacer scroll
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const index = parseInt(entry.target.id.split('-')[1]);
+                        setActiveTimelineItem(index);
+                    }
+                });
+            }, { rootMargin: "-50% 0px -50% 0px" });
+
+            moduleCards.forEach(card => observer.observe(card));
+
+            // Activar el primer item al cargar
+            setActiveTimelineItem(0);
+        });
+    </script>
+</body>
+</html>
